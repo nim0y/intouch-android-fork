@@ -48,14 +48,14 @@ One line text field with the title.
  * Width by default is 280dp, but you can override it by applying Modifier.width().
  * Height based on text size and padding 16dp from both sides of the text.
 
- * @param modifier the [Modifier] to be applied to this text field.
  * @param value the input text to be shown in the text field.
  * @param onValueChange the callback that is triggered when the input service updates the text. An
  * updated text comes as a parameter of the callback.
- * @param titleText the title text above text field.
- * @param errorText the error text below text field.
  * @param isPasswordVisible applies to the password icon choice and [visualTransformation] applied to the text field
  * @param onPasswordVisibleIconClick the callback that is triggered when the password icon is clicked.
+ * @param modifier the [Modifier] to be applied to this text field.
+ * @param titleText the title text above text field.
+ * @param errorText the error text below text field.
  * @param hint the hint text to be shown in the text field, visible when the text field is empty.
  * @param error indicates if the text field's current value is in error. If set to true, the
  * border color will be red, error text appears(if it's not blank).
@@ -100,13 +100,13 @@ One line text field with the title.
 
 @Composable
 fun PasswordTextField(
-    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    titleText: StringVO = StringVO.Plain(BLANC_STRING),
-    errorText: StringVO = StringVO.Plain(BLANC_STRING),
     isPasswordVisible: Boolean,
     onPasswordVisibleIconClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    titleText: StringVO = StringVO.Plain(BLANC_STRING),
+    errorText: StringVO = StringVO.Plain(BLANC_STRING),
     hint: StringVO = StringVO.Plain(BLANC_STRING),
     error: Boolean = false,
     enabled: Boolean = true,
