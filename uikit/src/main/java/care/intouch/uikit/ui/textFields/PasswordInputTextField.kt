@@ -144,7 +144,6 @@ fun PasswordTextField(
                 text = titleText.value(),
                 style = titleTextStyle,
                 color = titleTextColor,
-                maxLines = 1,
                 modifier = Modifier
                     .padding(bottom = titleTextPadding)
             )
@@ -225,7 +224,6 @@ fun PasswordTextField(
                 text = errorText.value(),
                 style = errorTextStyle,
                 color = errorTextColor,
-                maxLines = 1,
                 modifier = Modifier
                     .padding(top = errorTextPadding)
             )
@@ -241,7 +239,7 @@ fun PasswordInputPreview() {
         var isPasswordVisible by remember { mutableStateOf(false) }
         PasswordTextField(
             titleText = StringVO.Plain("Current password"),
-            errorText = StringVO.Plain("Passwords must be at least 8 characters long"),
+            errorText = StringVO.Plain("Passwords must be at least 8 characters long characters long characters long"),
             isPasswordVisible = isPasswordVisible,
             onPasswordVisibleIconClick = { isPasswordVisible = !isPasswordVisible },
             value = text,
@@ -249,7 +247,7 @@ fun PasswordInputPreview() {
                 text = it
             },
             hint = StringVO.Plain("Enter password"),
-            error = false,
+            error = true,
             modifier = Modifier.padding(45.dp)
         )
     }
