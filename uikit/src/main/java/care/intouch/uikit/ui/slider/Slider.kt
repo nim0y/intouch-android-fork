@@ -31,17 +31,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
+import kotlin.math.roundToInt
 
 @Composable
-fun SliderWidgetWithDigits(
+fun SliderWidgetWithScaleAndTenSteps(
     modifier: Modifier = Modifier,
-    inactiveTrackColor: Color,
-    activeTrackColor: Color,
-    internalRadiusThumbColor: Color,
-    externalRadiusThumbColor: Color,
+    inactiveTrackColor: Color = InTouchTheme.colors.mainBlue,
+    activeTrackColor: Color = InTouchTheme.colors.mainGreen,
+    internalRadiusThumbColor: Color = InTouchTheme.colors.mainGreen,
+    externalRadiusThumbColor: Color = InTouchTheme.colors.input,
     addTopDigitPanel: Boolean = true,
     addBottomConditionsPanel: Boolean = true,
-    onValueChange: (Float) -> Unit
+    leftEvaluateText: String,
+    rightEvaluateText: String,
+    onValueChange: (Int) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -52,7 +55,7 @@ fun SliderWidgetWithDigits(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end= 4.dp),
+                    .padding(start = 8.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Absolute.SpaceBetween
             ) {
@@ -84,13 +87,13 @@ fun SliderWidgetWithDigits(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Dissatisfied",
+                    text = leftEvaluateText,
                     modifier = Modifier.weight(1f),
                     style = InTouchTheme.typography.bodyRegular,
                     color = InTouchTheme.colors.textBlue
                 )
                 Text(
-                    text = "Satisfied",
+                    text = rightEvaluateText,
                     style = InTouchTheme.typography.bodyRegular,
                     color = InTouchTheme.colors.textBlue
                 )
@@ -102,15 +105,15 @@ fun SliderWidgetWithDigits(
 @Composable
 @Preview(showBackground = true)
 fun SliderWidgetWithDigitsPreview() {
-    SliderWidgetWithDigits(
-        inactiveTrackColor = InTouchTheme.colors.mainBlue,
-        activeTrackColor = InTouchTheme.colors.mainGreen,
-        internalRadiusThumbColor = InTouchTheme.colors.mainGreen,
-        externalRadiusThumbColor = InTouchTheme.colors.input,
-        onValueChange = {},
-        addTopDigitPanel = true,
-        addBottomConditionsPanel = true
-    )
+    InTouchTheme {
+        SliderWidgetWithScaleAndTenSteps(
+            onValueChange = {},
+            addTopDigitPanel = true,
+            addBottomConditionsPanel = true,
+            leftEvaluateText = "Dissatisfied",
+            rightEvaluateText = "Satisfied"
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -169,7 +172,7 @@ fun CustomSliderWithSteps(
     activeTrackColor: Color,
     internalRadiusThumbColor: Color,
     externalRadiusThumbColor: Color,
-    onValueChange: (Float) -> Unit
+    onValueChange: (Int) -> Unit
 ) {
     var sliderPosition by remember { mutableFloatStateOf(1.0f) }
 
@@ -177,7 +180,7 @@ fun CustomSliderWithSteps(
         value = sliderPosition,
         onValueChange = { value ->
             sliderPosition = value
-            onValueChange.invoke(value)
+            onValueChange.invoke(value.roundToInt())
         },
         thumb = {
             CustomThumb(

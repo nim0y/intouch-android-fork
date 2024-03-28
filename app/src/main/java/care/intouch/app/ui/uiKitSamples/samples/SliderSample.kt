@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -17,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.slider.SimpleSlider
-import care.intouch.uikit.ui.slider.SliderWidgetWithDigits
+import care.intouch.uikit.ui.slider.SliderWidgetWithScaleAndTenSteps
 
 @Composable
 fun SliderSample() {
@@ -27,7 +28,7 @@ fun SliderSample() {
     }
 
     var sliderWithStepsValue by remember {
-        mutableFloatStateOf(1.0f)
+        mutableIntStateOf(1)
     }
 
     Box(
@@ -43,19 +44,17 @@ fun SliderSample() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            SliderWidgetWithDigits(
-                inactiveTrackColor = InTouchTheme.colors.mainBlue,
-                activeTrackColor = InTouchTheme.colors.mainGreen,
-                internalRadiusThumbColor = InTouchTheme.colors.mainGreen,
-                externalRadiusThumbColor = InTouchTheme.colors.input,
+            SliderWidgetWithScaleAndTenSteps(
                 addTopDigitPanel = true,
                 addBottomConditionsPanel = true,
+                leftEvaluateText = "Dissatisfied",
+                rightEvaluateText = "Satisfied",
                 onValueChange = { value ->
                     sliderWithStepsValue = value
                 }
             )
 
-            Text(text = "Value: ${sliderWithStepsValue.toInt()}")
+            Text(text = "Value: $sliderWithStepsValue")
 
             SimpleSlider(
                 inactiveTrackColor = InTouchTheme.colors.mainBlue,
@@ -75,5 +74,7 @@ fun SliderSample() {
 @Composable
 @Preview(showBackground = true)
 fun SliderSamplePreview() {
-    SliderSample()
+    InTouchTheme {
+        SliderSample()
+    }
 }
