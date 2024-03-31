@@ -31,21 +31,25 @@ import care.intouch.uikit.theme.InTouchTheme
 @Composable
 fun Toggle(
     modifier: Modifier = Modifier,
-    handleWidth: Dp = 27.dp,
-    handleHeight: Dp = 27.dp,
-    trackWidth: Dp = 51.dp,
-    trackHeight: Dp = 31.dp,
     isChecked: Boolean,
+    backgroundTrackChecked: Color = InTouchTheme.colors.mainGreen,
+    backgroundTrackUnchecked: Color = InTouchTheme.colors.unableElementDark,
+    backgroundHandleChecked: Color = InTouchTheme.colors.mainBlue,
+    backgroundHandleUnchecked: Color = InTouchTheme.colors.unableElementLight,
     onChange: (Boolean) -> Unit,
 ) {
+    val handleWidth = 27.dp
+    val handleHeight = 27.dp
+    val trackWidth = 51.dp
+    val trackHeight = 31.dp
     Row(
         modifier = modifier
             .width(trackWidth)
             .height(trackHeight)
             .clip(CircleShape)
             .background(
-                if (isChecked) InTouchTheme.colors.mainGreen
-                else InTouchTheme.colors.unableElementDark
+                if (isChecked) backgroundTrackChecked
+                else backgroundTrackUnchecked
             ),
         horizontalArrangement = if (isChecked) Arrangement.End else Arrangement.Start
     ) {
@@ -63,8 +67,8 @@ fun Toggle(
                 )
                 .clip(CircleShape)
                 .background(
-                    if (isChecked) InTouchTheme.colors.mainBlue
-                    else InTouchTheme.colors.unableElementLight
+                    if (isChecked) backgroundHandleChecked
+                    else backgroundHandleUnchecked
                 )
                 .align(Alignment.CenterVertically)
                 .clickable {
