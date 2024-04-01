@@ -28,6 +28,8 @@ fun PasswordTextFieldSampleScreen() {
     var isError by rememberSaveable { mutableStateOf(false) }
     var isEnable by rememberSaveable { mutableStateOf(true) }
     var isReadOnly by rememberSaveable { mutableStateOf(false) }
+    var isIconVisible by rememberSaveable { mutableStateOf(true) }
+
 
 
     var text by rememberSaveable { mutableStateOf("") }
@@ -43,19 +45,20 @@ fun PasswordTextFieldSampleScreen() {
             modifier = Modifier.fillMaxSize()
         ) {
             PasswordTextField(
-                titleText = StringVO.Plain("Current Password"),
-                errorText = StringVO.Plain("Passwords must be at least 8 characters long"),
                 value = text,
                 onValueChange = {
                     text = it
                 },
-                error = isError,
-                enabled = isEnable,
-                readOnly = isReadOnly,
                 isPasswordVisible = isPasswordVisible,
+                isPasswordVisibleIconVisible = isIconVisible,
                 onPasswordVisibleIconClick = {
                     isPasswordVisible = !isPasswordVisible
                 },
+                hint = StringVO.Plain("Password"),
+                caption = StringVO.Plain("Passwords must be at least 8 characters long"),
+                error = isError,
+                enabled = isEnable,
+                readOnly = isReadOnly,
                 modifier = Modifier
                     .padding(56.dp)
                     .width(334.dp)
@@ -95,6 +98,15 @@ fun PasswordTextFieldSampleScreen() {
                 modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text("Read only change")
+            }
+
+            Button(
+                onClick = {
+                    isIconVisible = !isIconVisible
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Icon visible change")
             }
         }
     }

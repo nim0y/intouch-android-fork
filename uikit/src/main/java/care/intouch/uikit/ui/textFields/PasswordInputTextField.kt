@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,7 +45,7 @@ import care.intouch.uikit.ui.textFields.PasswordTextFieldDefaults.BLANC_STRING
 import care.intouch.uikit.ui.textFields.PasswordTextFieldDefaults.MinWidth
 
 /**
-One line text field with the title.
+Password text field with the title.
 
  * Width by default is 280dp, but you can override it by applying Modifier.width().
  * Height based on text size and padding 16dp from both sides of the text.
@@ -52,14 +54,16 @@ One line text field with the title.
  * @param onValueChange the callback that is triggered when the input service updates the text. An
  * updated text comes as a parameter of the callback.
  * @param isPasswordVisible applies to the password icon choice and [visualTransformation] applied to the text field
+ * @param isPasswordVisibleIconVisible applies to the password icon visibility
  * @param onPasswordVisibleIconClick the callback that is triggered when the password icon is clicked.
  * @param modifier the [Modifier] to be applied to this text field.
- * @param titleText the title text above text field.
- * @param errorText the error text below text field.
- * @param hint the hint text to be shown in the text field, visible when the text field is empty.
+ * @param caption the error text below text field.
+ * @param hint the hint text to be shown in the text field, visible when the text field is empty and not focused.
+ * @param title the title text above text field, if it's blank, no title will be shown.
  * @param error indicates if the text field's current value is in error. If set to true, the
- * border color will be red, error text appears(if it's not blank).
+ * border color will be red, caption text will be red.
  * If [enabled] set false - [error] is false (whatever it set here).
+ * @param captionLinesAmount The number of lines to show in the caption text.
  * @param enabled controls the enabled state of this text field. When `false`, this component will
  * not respond to user input, and it will appear visually disabled and disabled to accessibility
  * services.
@@ -71,11 +75,12 @@ One line text field with the title.
  * @param inputTextColorEnabled The color of the input text when the field is [enabled].
  * @param inputTextColorDisabled The color of the input text when the field is not [enabled].
  * @param hintTextColor The color of the hint text.
+ * @param captionTextColor The color of the caption text.
  * @param titleTextColor The color of the title text.
- * @param errorTextColor The color of the error text.
  * @param inputTextStyle The style of the input text.
+ * @param hintTextStyle The style of the hint text.
+ * @param captionTextStyle The style of the caption text.
  * @param titleTextStyle The style of the title text.
- * @param errorTextStyle The style of the error text.
  * @param borderStrokeErrorColor The color of the border when an error occurs.
  * @param borderStrokeOutFocusColor The color of the border when the field is out of focus.
  * @param borderStrokeOnFocusColor The color of the border when the field is in focus.
@@ -83,7 +88,7 @@ One line text field with the title.
  * @param passwordNotVisibleIcon The icon to show when the password is not visible.
  * @param passwordIconTint The tint color for the password icons.
  * @param titleTextPadding The padding around the title text.
- * @param errorTextPadding The padding around the error text.
+ * @param captionTextPadding The padding around the caption text.
  * @param visualTransformation transforms the visual representation of the input [value]
  * For example, you can use
  * [PasswordVisualTransformation][androidx.compose.ui.text.input.PasswordVisualTransformation] to
@@ -103,30 +108,33 @@ fun PasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     isPasswordVisible: Boolean,
+    isPasswordVisibleIconVisible: Boolean,
     onPasswordVisibleIconClick: () -> Unit,
     modifier: Modifier = Modifier,
-    titleText: StringVO = StringVO.Plain(BLANC_STRING),
-    errorText: StringVO = StringVO.Plain(BLANC_STRING),
     hint: StringVO = StringVO.Plain(BLANC_STRING),
+    caption: StringVO = StringVO.Plain(BLANC_STRING),
+    title: StringVO = StringVO.Plain(BLANC_STRING),
     error: Boolean = false,
+    captionLinesAmount: Int = 1,
     enabled: Boolean = true,
     readOnly: Boolean = false,
     inputTextColorEnabled: Color = InTouchTheme.colors.textBlue,
     inputTextColorDisabled: Color = InTouchTheme.colors.textBlue50,
-    hintTextColor: Color = InTouchTheme.colors.textBlue50,
+    hintTextColor: Color = InTouchTheme.colors.textGreen40,
+    captionTextColor: Color = InTouchTheme.colors.textBlue,
     titleTextColor: Color = InTouchTheme.colors.textGreen,
-    errorTextColor: Color = InTouchTheme.colors.errorRed,
     inputTextStyle: TextStyle = InTouchTheme.typography.bodyRegular,
+    hintTextStyle: TextStyle = InTouchTheme.typography.caption2Regular,
+    captionTextStyle: TextStyle = InTouchTheme.typography.caption2Regular,
     titleTextStyle: TextStyle = InTouchTheme.typography.bodyRegular,
-    errorTextStyle: TextStyle = InTouchTheme.typography.caption1Regular,
     borderStrokeErrorColor: Color = Color.Red,
     borderStrokeOutFocusColor: Color = InTouchTheme.colors.textGreen40,
     borderStrokeOnFocusColor: Color = InTouchTheme.colors.textGreen,
     passwordVisibleIcon: ImageVO = ImageVO.Resource(R.drawable.icon_view_on),
     passwordNotVisibleIcon: ImageVO = ImageVO.Resource(R.drawable.icon_view_off),
     passwordIconTint: Color = InTouchTheme.colors.mainGreen,
+    captionTextPadding: Dp = 2.dp,
     titleTextPadding: Dp = 6.dp,
-    errorTextPadding: Dp = 4.dp,
     visualTransformation: VisualTransformation = PasswordVisualTransformation(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -138,12 +146,13 @@ fun PasswordTextField(
     Column(
         modifier = modifier.width(MinWidth)
     ) {
-
-        if (titleText.value().isNotBlank()) {
+        if (title.value().isNotBlank()) {
             Text(
-                text = titleText.value(),
+                text = title.value(),
                 style = titleTextStyle,
                 color = titleTextColor,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
                 modifier = Modifier
                     .padding(bottom = titleTextPadding)
             )
@@ -154,7 +163,7 @@ fun PasswordTextField(
                 .border(
                     width = 1.dp,
                     color = when {
-                        error -> borderStrokeErrorColor
+                        error && enabled -> borderStrokeErrorColor
                         isFocused -> borderStrokeOnFocusColor
                         else -> borderStrokeOutFocusColor
                     },
@@ -163,7 +172,7 @@ fun PasswordTextField(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 BasicTextField(
                     value = value,
@@ -178,16 +187,20 @@ fun PasswordTextField(
                     },
                     cursorBrush = SolidColor(inputTextColorEnabled),
                     decorationBox = { innerTextField ->
-                        if (value.isEmpty()) {
-                            Text(
-                                text = hint.value(),
-                                maxLines = 1,
-                                style = inputTextStyle.copy(
-                                    color = hintTextColor
+                        Box(
+                            modifier = Modifier.wrapContentWidth(align = Alignment.Start),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (value.isEmpty() && !isFocused) {
+                                Text(
+                                    text = hint.value(),
+                                    maxLines = 1,
+                                    style = hintTextStyle,
+                                    color = hintTextColor,
                                 )
-                            )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
                     },
                     textStyle = if (enabled) {
                         inputTextStyle.copy(
@@ -203,31 +216,34 @@ fun PasswordTextField(
                     keyboardActions = keyboardActions,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 12.dp, end = 12.dp, top = 14.dp, bottom = 9.dp)
+                        .padding(start = 14.dp, top = 16.dp, bottom = 16.dp)
                 )
-                Icon(
-                    painter = if (isPasswordVisible) passwordVisibleIcon.painter() else passwordNotVisibleIcon.painter(),
-                    contentDescription = if (isPasswordVisible) stringResource(id = R.string.show_password) else stringResource(
-                        id = R.string.hide_password
-                    ),
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .clickable {
-                            onPasswordVisibleIconClick.invoke()
-                        },
-                    tint = passwordIconTint
-                )
+                if (isPasswordVisibleIconVisible) {
+                    Icon(
+                        painter = if (isPasswordVisible) passwordVisibleIcon.painter() else passwordNotVisibleIcon.painter(),
+                        contentDescription = if (isPasswordVisible) stringResource(id = R.string.show_password) else stringResource(
+                            id = R.string.hide_password
+                        ),
+                        modifier = Modifier
+                            .padding(start = 8.dp, end = 14.dp)
+                            .clickable {
+                                onPasswordVisibleIconClick.invoke()
+                            },
+                        tint = passwordIconTint
+                    )
+                }
             }
         }
-        if (errorText.value().isNotBlank() && error) {
-            Text(
-                text = errorText.value(),
-                style = errorTextStyle,
-                color = errorTextColor,
-                modifier = Modifier
-                    .padding(top = errorTextPadding)
-            )
-        }
+        Text(
+            text = caption.value(),
+            style = captionTextStyle,
+            color = if (error && enabled) borderStrokeErrorColor else captionTextColor,
+            minLines = captionLinesAmount,
+            maxLines = captionLinesAmount,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .padding(top = captionTextPadding)
+        )
     }
 }
 
@@ -238,16 +254,17 @@ fun PasswordInputPreview() {
         var text by remember { mutableStateOf("") }
         var isPasswordVisible by remember { mutableStateOf(false) }
         PasswordTextField(
-            titleText = StringVO.Plain("Current password"),
-            errorText = StringVO.Plain("Passwords must be at least 8 characters long characters long characters long"),
-            isPasswordVisible = isPasswordVisible,
-            onPasswordVisibleIconClick = { isPasswordVisible = !isPasswordVisible },
             value = text,
             onValueChange = {
                 text = it
             },
+            isPasswordVisible = isPasswordVisible,
+            isPasswordVisibleIconVisible = true,
+            onPasswordVisibleIconClick = { isPasswordVisible = !isPasswordVisible },
             hint = StringVO.Plain("Enter password"),
-            error = true,
+            caption = StringVO.Plain("Password must contain letters, numbers, and no more than 3 consecutive identical characters"),
+            error = false,
+            captionLinesAmount = 2,
             modifier = Modifier.padding(45.dp)
         )
     }
