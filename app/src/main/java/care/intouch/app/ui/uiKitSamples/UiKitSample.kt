@@ -22,8 +22,8 @@ import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
-import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.navigation.CustomBottomNavBar
 import care.intouch.uikit.ui.navigation.CustomTopBar
@@ -58,13 +58,13 @@ fun UiKitSample() {
                 )
 
                 UikitSampleButton(
-                    text = "Go to password text field sample",
-                    onClick = { screenSample = ScreenSample.PasswordInputSample }
+                    text = "Go to toggle sample",
+                    onClick = { screenSample = ScreenSample.ToggleSample }
                 )
 
                 UikitSampleButton(
-                    text = "Go to toggle sample",
-                    onClick = { screenSample = ScreenSample.ToggleSample }
+                    text = "Go to password text field sample",
+                    onClick = { screenSample = ScreenSample.PasswordInputSample }
                 )
             }
         }
@@ -81,13 +81,13 @@ fun UiKitSample() {
             NavigationSample()
         }
 
-        ScreenSample.PasswordInputSample -> {
-            PasswordTextFieldSampleScreen()
-        }
-
 
         ScreenSample.ToggleSample -> {
             ToggleSampleScreen()
+        }
+
+        ScreenSample.PasswordInputSample -> {
+            PasswordTextFieldSampleScreen()
         }
     }
 }

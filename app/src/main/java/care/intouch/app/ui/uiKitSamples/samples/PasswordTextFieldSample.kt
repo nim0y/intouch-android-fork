@@ -30,8 +30,6 @@ fun PasswordTextFieldSampleScreen() {
     var isReadOnly by rememberSaveable { mutableStateOf(false) }
     var isIconVisible by rememberSaveable { mutableStateOf(true) }
 
-
-
     var text by rememberSaveable { mutableStateOf("") }
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
