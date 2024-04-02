@@ -33,50 +33,66 @@ fun RegularChipsSample() {
 
         Column(modifier = Modifier.padding(20.dp)) {
             Spacer(modifier = Modifier.height(20.dp))
-            RegularChips(text = StringVO.Plain("RegularChips"),
-                selected = isSelectedRegularChips,
-                onClick = { isSelectedRegularChips = !isSelectedRegularChips })
+            RegularChips(
+                text = StringVO.Plain("RegularChips"),
+                selected = isSelectedRegularChips
+            ) {
+                isSelectedRegularChips = !isSelectedRegularChips
+            }
             Spacer(modifier = Modifier.height(8.dp))
             RegularChips(
                 text = StringVO.Plain("RegularChips"),
                 selected = isSelectedRegularChipsSecond,
-                onClick = { isSelectedRegularChipsSecond = !isSelectedRegularChipsSecond },
                 unselectedColor = InTouchTheme.colors.input
-            )
+            ) {
+                isSelectedRegularChipsSecond = !isSelectedRegularChipsSecond
+            }
             Spacer(modifier = Modifier.height(20.dp))
 
-            AccentChips(text = StringVO.Plain("In progress"),
-                selected = isSelectedAccentChips,
-                onClick = { isSelectedAccentChips = !isSelectedAccentChips })
+            AccentChips(
+                text = StringVO.Plain("In progress"),
+                selected = isSelectedAccentChips
+            ) {
+                isSelectedAccentChips = !isSelectedAccentChips
+            }
             Spacer(modifier = Modifier.padding(8.dp))
             AccentChips(
                 text = StringVO.Plain("Done"),
                 selected = isSelectedAccentChipsSecond,
-                onClick = { isSelectedAccentChipsSecond = !isSelectedAccentChipsSecond },
                 unselectedColor = InTouchTheme.colors.mainGreen
-            )
+            ) {
+                isSelectedAccentChipsSecond = !isSelectedAccentChipsSecond
+            }
             Spacer(modifier = Modifier.height(20.dp))
 
-            EmotionalChips(text = StringVO.Plain("Loss"),
-                selected = isSelectedEmotionalChips,
-                onClick = { isSelectedEmotionalChips = !isSelectedEmotionalChips })
+            EmotionalChips(
+                text = StringVO.Plain("Loss"),
+                selected = isSelectedEmotionalChips
+            ) {
+                isSelectedEmotionalChips = !isSelectedEmotionalChips
+            }
             Spacer(modifier = Modifier.padding(8.dp))
             EmotionalChips(
                 text = StringVO.Plain("Guilt"),
-                selected = isSelectedEmotionalChipsSecond,
-                onClick = { isSelectedEmotionalChipsSecond = !isSelectedEmotionalChipsSecond }
-            )
+                selected = isSelectedEmotionalChipsSecond
+            ) {
+                isSelectedEmotionalChipsSecond = !isSelectedEmotionalChipsSecond
+            }
             Spacer(modifier = Modifier.height(20.dp))
 
-            EmotionalChipsSmall(text = StringVO.Plain("Bad"),
-                selected = isSelectedEmotionalChipsSmall,
-                onClick = { isSelectedEmotionalChipsSmall = !isSelectedEmotionalChipsSmall })
+            EmotionalChipsSmall(
+                text = StringVO.Plain("Bad"),
+                selected = isSelectedEmotionalChipsSmall
+            ) {
+                isSelectedEmotionalChipsSmall = !isSelectedEmotionalChipsSmall
+            }
             Spacer(modifier = Modifier.padding(8.dp))
             EmotionalChipsSmall(
                 text = StringVO.Plain("Loneliness"),
-                selected = isSelectedEmotionalChipsSmallSecond,
-                onClick = { isSelectedEmotionalChipsSmallSecond = !isSelectedEmotionalChipsSmallSecond }
-            )
+                selected = isSelectedEmotionalChipsSmallSecond
+            ) {
+                isSelectedEmotionalChipsSmallSecond = !isSelectedEmotionalChipsSmallSecond
+            }
         }
     }
 }

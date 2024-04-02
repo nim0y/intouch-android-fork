@@ -33,12 +33,12 @@ import care.intouch.uikit.theme.InTouchTheme
 fun RegularChips(
     text: StringVO,
     selected: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     unselectedColor: Color = InTouchTheme.colors.mainBlue,
     selectedColor: Color = InTouchTheme.colors.mainGreen40,
     unselectedColorText: Color = InTouchTheme.colors.input,
     selectedColorText: Color = InTouchTheme.colors.textGreen,
+    onClick: () -> Unit
 ) {
 
     Box(contentAlignment = Alignment.Center,
@@ -68,16 +68,20 @@ fun PreviewRegularChips() {
         var isSelected by remember { mutableStateOf(false) }
         var isSelectedSeconds by remember { mutableStateOf(false) }
         Column(modifier = Modifier.padding(20.dp)) {
-            RegularChips(text = StringVO.Plain("RegularChips"),
-                selected = isSelected,
-                onClick = { isSelected = !isSelected })
+            RegularChips(
+                text = StringVO.Plain("RegularChips"),
+                selected = isSelected
+            ) {
+                isSelected = !isSelected
+            }
             Spacer(modifier = Modifier.height(20.dp))
             RegularChips(
                 text = StringVO.Plain("RegularChips"),
                 selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = !isSelectedSeconds },
                 unselectedColor = InTouchTheme.colors.input
-            )
+            ) {
+                isSelectedSeconds = !isSelectedSeconds
+            }
         }
     }
 }
@@ -88,13 +92,13 @@ fun PreviewRegularChips() {
 fun AccentChips(
     text: StringVO,
     selected: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     alpha: Float = 0.85f,
     unselectedColor: Color = InTouchTheme.colors.textBlue,
     selectedColor: Color = InTouchTheme.colors.mainGreen40,
     unselectedColorText: Color = InTouchTheme.colors.input,
     selectedColorText: Color = InTouchTheme.colors.input,
+    onClick: () -> Unit
 ) {
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -125,16 +129,20 @@ fun PreviewAccentChips() {
         var isSelected by remember { mutableStateOf(false) }
         var isSelectedSeconds by remember { mutableStateOf(false) }
         Column(modifier = Modifier.padding(20.dp)) {
-            AccentChips(text = StringVO.Plain("In progress"),
-                selected = isSelected,
-                onClick = { isSelected = !isSelected })
+            AccentChips(
+                text = StringVO.Plain("In progress"),
+                selected = isSelected
+            ) {
+                isSelected = !isSelected
+            }
             Spacer(modifier = Modifier.padding(8.dp))
             AccentChips(
                 text = StringVO.Plain("Done"),
                 selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = !isSelectedSeconds },
                 unselectedColor = InTouchTheme.colors.mainGreen
-            )
+            ) {
+                isSelectedSeconds = !isSelectedSeconds
+            }
         }
     }
 }
@@ -145,13 +153,13 @@ fun PreviewAccentChips() {
 fun EmotionalChips(
     text: StringVO,
     selected: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     unselectedColor: Color = InTouchTheme.colors.input,
     selectedColor: Color = InTouchTheme.colors.accentBeige,
     unselectedColorText: Color = InTouchTheme.colors.textBlue,
     selectedColorText: Color = InTouchTheme.colors.textBlue,
     borderStroke: BorderStroke = BorderStroke(1.dp, InTouchTheme.colors.unableElementDark),
+    onClick: () -> Unit
 ) {
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -181,15 +189,19 @@ fun PreviewEmotionalChips() {
         var isSelected by remember { mutableStateOf(false) }
         var isSelectedSeconds by remember { mutableStateOf(true) }
         Column(modifier = Modifier.padding(20.dp)) {
-            EmotionalChips(text = StringVO.Plain("Loss"),
-                selected = isSelected,
-                onClick = { isSelected = !isSelected })
+            EmotionalChips(
+                text = StringVO.Plain("Loss"),
+                selected = isSelected
+            ) {
+                isSelected = !isSelected
+            }
             Spacer(modifier = Modifier.padding(8.dp))
             EmotionalChips(
                 text = StringVO.Plain("Guilt"),
-                selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = !isSelectedSeconds }
-            )
+                selected = isSelectedSeconds
+            ) {
+                isSelectedSeconds = !isSelectedSeconds
+            }
         }
     }
 }
@@ -200,12 +212,12 @@ fun PreviewEmotionalChips() {
 fun EmotionalChipsSmall(
     text: StringVO,
     selected: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     unselectedColor: Color = InTouchTheme.colors.input,
     selectedColor: Color = InTouchTheme.colors.accentBeige,
     unselectedColorText: Color = InTouchTheme.colors.textBlue,
-    selectedColorText: Color = InTouchTheme.colors.textBlue
+    selectedColorText: Color = InTouchTheme.colors.textBlue,
+    onClick: () -> Unit
 ) {
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -234,15 +246,15 @@ fun PreviewEmotionalChipsSmall() {
         var isSelected by remember { mutableStateOf(true) }
         var isSelectedSeconds by remember { mutableStateOf(true) }
         Column(modifier = Modifier.padding(20.dp)) {
-            EmotionalChipsSmall(text = StringVO.Plain("Bad"),
-                selected = isSelected,
-                onClick = { isSelected = !isSelected })
+            EmotionalChipsSmall(
+                text = StringVO.Plain("Bad"),
+                selected = isSelected
+            ) { isSelected = !isSelected }
             Spacer(modifier = Modifier.padding(8.dp))
             EmotionalChipsSmall(
                 text = StringVO.Plain("Loneliness"),
-                selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = !isSelectedSeconds }
-            )
+                selected = isSelectedSeconds
+            ) { isSelectedSeconds = !isSelectedSeconds }
         }
     }
 }
