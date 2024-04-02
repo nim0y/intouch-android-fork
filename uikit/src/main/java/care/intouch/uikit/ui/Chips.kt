@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 
+//region RegularChips
 @Composable
 fun RegularChips(
     text: StringVO,
@@ -80,7 +81,9 @@ fun PreviewRegularChips() {
         }
     }
 }
+//endregion
 
+//region AccentChips
 @Composable
 fun AccentChips(
     text: StringVO,
@@ -135,7 +138,9 @@ fun PreviewAccentChips() {
         }
     }
 }
+//endregion
 
+//region EmotionalChips
 @Composable
 fun EmotionalChips(
     text: StringVO,
@@ -143,7 +148,7 @@ fun EmotionalChips(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     unselectedColor: Color = InTouchTheme.colors.input,
-    selectedColor: Color = InTouchTheme.colors.accentYellow,
+    selectedColor: Color = InTouchTheme.colors.accentBeige,
     unselectedColorText: Color = InTouchTheme.colors.textBlue,
     selectedColorText: Color = InTouchTheme.colors.textBlue,
     borderStroke: BorderStroke = BorderStroke(1.dp, InTouchTheme.colors.unableElementDark),
@@ -174,7 +179,7 @@ fun EmotionalChips(
 fun PreviewEmotionalChips() {
     InTouchTheme {
         var isSelected by remember { mutableStateOf(false) }
-        var isSelectedSeconds by remember { mutableStateOf(false) }
+        var isSelectedSeconds by remember { mutableStateOf(true) }
         Column(modifier = Modifier.padding(20.dp)) {
             EmotionalChips(text = StringVO.Plain("Loss"),
                 selected = isSelected,
@@ -183,9 +188,62 @@ fun PreviewEmotionalChips() {
             EmotionalChips(
                 text = StringVO.Plain("Guilt"),
                 selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = !isSelectedSeconds },
-                unselectedColor = InTouchTheme.colors.textGreen40
+                onClick = { isSelectedSeconds = !isSelectedSeconds }
             )
         }
     }
 }
+//endregion
+
+//region EmotionalChipsSmall
+@Composable
+fun EmotionalChipsSmall(
+    text: StringVO,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    unselectedColor: Color = InTouchTheme.colors.input,
+    selectedColor: Color = InTouchTheme.colors.accentBeige,
+    unselectedColorText: Color = InTouchTheme.colors.textBlue,
+    selectedColorText: Color = InTouchTheme.colors.textBlue
+) {
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(if (selected) selectedColor else unselectedColor)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }) {
+                onClick()
+            }) {
+        Text(
+            text = text.value(),
+            style = InTouchTheme.typography.caption2Regular,
+            color = if (selected) unselectedColorText else selectedColorText,
+            modifier = modifier.padding(horizontal = 14.dp, vertical = 2.dp),
+            textAlign = TextAlign.Center,
+            maxLines = 1
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEmotionalChipsSmall() {
+    InTouchTheme {
+        var isSelected by remember { mutableStateOf(true) }
+        var isSelectedSeconds by remember { mutableStateOf(true) }
+        Column(modifier = Modifier.padding(20.dp)) {
+            EmotionalChipsSmall(text = StringVO.Plain("Bad"),
+                selected = isSelected,
+                onClick = { isSelected = !isSelected })
+            Spacer(modifier = Modifier.padding(8.dp))
+            EmotionalChipsSmall(
+                text = StringVO.Plain("Loneliness"),
+                selected = isSelectedSeconds,
+                onClick = { isSelectedSeconds = !isSelectedSeconds }
+            )
+        }
+    }
+}
+//endregion

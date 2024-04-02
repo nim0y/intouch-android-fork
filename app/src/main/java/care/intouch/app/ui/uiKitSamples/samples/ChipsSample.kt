@@ -15,6 +15,7 @@ import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.AccentChips
 import care.intouch.uikit.ui.EmotionalChips
+import care.intouch.uikit.ui.EmotionalChipsSmall
 import care.intouch.uikit.ui.RegularChips
 
 @Composable
@@ -25,7 +26,9 @@ fun RegularChipsSample() {
         var isSelectedAccentChips by remember { mutableStateOf(false) }
         var isSelectedAccentChipsSecond by remember { mutableStateOf(false) }
         var isSelectedEmotionalChips by remember { mutableStateOf(false) }
-        var isSelectedEmotionalChipsSecond by remember { mutableStateOf(false) }
+        var isSelectedEmotionalChipsSecond by remember { mutableStateOf(true) }
+        var isSelectedEmotionalChipsSmall by remember { mutableStateOf(true) }
+        var isSelectedEmotionalChipsSmallSecond by remember { mutableStateOf(true) }
 
 
         Column(modifier = Modifier.padding(20.dp)) {
@@ -41,6 +44,7 @@ fun RegularChipsSample() {
                 unselectedColor = InTouchTheme.colors.input
             )
             Spacer(modifier = Modifier.height(20.dp))
+
             AccentChips(text = StringVO.Plain("In progress"),
                 selected = isSelectedAccentChips,
                 onClick = { isSelectedAccentChips = !isSelectedAccentChips })
@@ -52,6 +56,7 @@ fun RegularChipsSample() {
                 unselectedColor = InTouchTheme.colors.mainGreen
             )
             Spacer(modifier = Modifier.height(20.dp))
+
             EmotionalChips(text = StringVO.Plain("Loss"),
                 selected = isSelectedEmotionalChips,
                 onClick = { isSelectedEmotionalChips = !isSelectedEmotionalChips })
@@ -59,8 +64,18 @@ fun RegularChipsSample() {
             EmotionalChips(
                 text = StringVO.Plain("Guilt"),
                 selected = isSelectedEmotionalChipsSecond,
-                onClick = { isSelectedEmotionalChipsSecond = !isSelectedEmotionalChipsSecond },
-                unselectedColor = InTouchTheme.colors.textGreen40
+                onClick = { isSelectedEmotionalChipsSecond = !isSelectedEmotionalChipsSecond }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            EmotionalChipsSmall(text = StringVO.Plain("Bad"),
+                selected = isSelectedEmotionalChipsSmall,
+                onClick = { isSelectedEmotionalChipsSmall = !isSelectedEmotionalChipsSmall })
+            Spacer(modifier = Modifier.padding(8.dp))
+            EmotionalChipsSmall(
+                text = StringVO.Plain("Loneliness"),
+                selected = isSelectedEmotionalChipsSmallSecond,
+                onClick = { isSelectedEmotionalChipsSmallSecond = !isSelectedEmotionalChipsSmallSecond }
             )
         }
     }
