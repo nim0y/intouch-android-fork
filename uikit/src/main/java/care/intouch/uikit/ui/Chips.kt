@@ -32,13 +32,14 @@ import care.intouch.uikit.theme.InTouchTheme
 fun RegularChips(
     text: StringVO,
     selected: Boolean,
-    onClick: (Boolean) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     unselectedColor: Color = InTouchTheme.colors.mainBlue,
     selectedColor: Color = InTouchTheme.colors.mainGreen40,
     unselectedColorText: Color = InTouchTheme.colors.input,
     selectedColorText: Color = InTouchTheme.colors.textGreen,
 ) {
+
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
             .clip(RoundedCornerShape(100.dp))
@@ -46,7 +47,7 @@ fun RegularChips(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }) {
-                onClick(!selected)
+                onClick()
             }) {
         Text(
             text = text.value(),
@@ -68,12 +69,12 @@ fun PreviewRegularChips() {
         Column(modifier = Modifier.padding(20.dp)) {
             RegularChips(text = StringVO.Plain("RegularChips"),
                 selected = isSelected,
-                onClick = { isSelected = it })
+                onClick = { isSelected = !isSelected })
             Spacer(modifier = Modifier.height(20.dp))
             RegularChips(
                 text = StringVO.Plain("RegularChips"),
                 selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = it },
+                onClick = { isSelectedSeconds = !isSelectedSeconds },
                 unselectedColor = InTouchTheme.colors.input
             )
         }
@@ -84,7 +85,7 @@ fun PreviewRegularChips() {
 fun AccentChips(
     text: StringVO,
     selected: Boolean,
-    onClick: (Boolean) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     alpha: Float = 0.85f,
     unselectedColor: Color = InTouchTheme.colors.textBlue,
@@ -99,7 +100,7 @@ fun AccentChips(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }) {
-                onClick(!selected)
+                onClick()
             }) {
         Text(
             text = text.value(),
@@ -123,12 +124,12 @@ fun PreviewAccentChips() {
         Column(modifier = Modifier.padding(20.dp)) {
             AccentChips(text = StringVO.Plain("In progress"),
                 selected = isSelected,
-                onClick = { isSelected = it })
+                onClick = { isSelected = !isSelected })
             Spacer(modifier = Modifier.padding(8.dp))
             AccentChips(
                 text = StringVO.Plain("Done"),
                 selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = it },
+                onClick = { isSelectedSeconds = !isSelectedSeconds },
                 unselectedColor = InTouchTheme.colors.mainGreen
             )
         }
@@ -139,7 +140,7 @@ fun PreviewAccentChips() {
 fun EmotionalChips(
     text: StringVO,
     selected: Boolean,
-    onClick: (Boolean) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     unselectedColor: Color = InTouchTheme.colors.input,
     selectedColor: Color = InTouchTheme.colors.accentYellow,
@@ -155,7 +156,7 @@ fun EmotionalChips(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }) {
-                onClick(!selected)
+                onClick()
             }) {
         Text(
             text = text.value(),
@@ -177,12 +178,12 @@ fun PreviewEmotionalChips() {
         Column(modifier = Modifier.padding(20.dp)) {
             EmotionalChips(text = StringVO.Plain("Loss"),
                 selected = isSelected,
-                onClick = { isSelected = it })
+                onClick = { isSelected = !isSelected })
             Spacer(modifier = Modifier.padding(8.dp))
             EmotionalChips(
                 text = StringVO.Plain("Guilt"),
                 selected = isSelectedSeconds,
-                onClick = { isSelectedSeconds = it },
+                onClick = { isSelectedSeconds = !isSelectedSeconds },
                 unselectedColor = InTouchTheme.colors.textGreen40
             )
         }

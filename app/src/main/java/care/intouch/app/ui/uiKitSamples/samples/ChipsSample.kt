@@ -32,34 +32,34 @@ fun RegularChipsSample() {
             Spacer(modifier = Modifier.height(20.dp))
             RegularChips(text = StringVO.Plain("RegularChips"),
                 selected = isSelectedRegularChips,
-                onClick = { isSelectedRegularChips = it })
+                onClick = { isSelectedRegularChips = !isSelectedRegularChips })
             Spacer(modifier = Modifier.height(8.dp))
             RegularChips(
                 text = StringVO.Plain("RegularChips"),
                 selected = isSelectedRegularChipsSecond,
-                onClick = { isSelectedRegularChipsSecond = it },
+                onClick = { isSelectedRegularChipsSecond = !isSelectedRegularChipsSecond },
                 unselectedColor = InTouchTheme.colors.input
             )
             Spacer(modifier = Modifier.height(20.dp))
             AccentChips(text = StringVO.Plain("In progress"),
                 selected = isSelectedAccentChips,
-                onClick = { isSelectedAccentChips = it })
+                onClick = { isSelectedAccentChips = !isSelectedAccentChips })
             Spacer(modifier = Modifier.padding(8.dp))
             AccentChips(
                 text = StringVO.Plain("Done"),
                 selected = isSelectedAccentChipsSecond,
-                onClick = { isSelectedAccentChipsSecond = it },
+                onClick = { isSelectedAccentChipsSecond = !isSelectedAccentChipsSecond },
                 unselectedColor = InTouchTheme.colors.mainGreen
             )
             Spacer(modifier = Modifier.height(20.dp))
             EmotionalChips(text = StringVO.Plain("Loss"),
                 selected = isSelectedEmotionalChips,
-                onClick = { isSelectedEmotionalChips = it })
+                onClick = { isSelectedEmotionalChips = !isSelectedEmotionalChips })
             Spacer(modifier = Modifier.padding(8.dp))
             EmotionalChips(
                 text = StringVO.Plain("Guilt"),
                 selected = isSelectedEmotionalChipsSecond,
-                onClick = { isSelectedEmotionalChipsSecond = it },
+                onClick = { isSelectedEmotionalChipsSecond = !isSelectedEmotionalChipsSecond },
                 unselectedColor = InTouchTheme.colors.textGreen40
             )
         }
