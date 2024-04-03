@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.app.R
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
+import care.intouch.app.ui.uiKitSamples.samples.CheckboxSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
@@ -60,6 +61,11 @@ fun UiKitSample() {
                     text = "Go to toggle sample",
                     onClick = { screenSample = ScreenSample.ToggleSample }
                 )
+
+                UikitSampleButton(
+                    text = "Go to checkbox sample",
+                    onClick = { screenSample = ScreenSample.CheckboxSample }
+                )
             }
         }
 
@@ -77,6 +83,10 @@ fun UiKitSample() {
 
         ScreenSample.ToggleSample -> {
             ToggleSampleScreen()
+        }
+
+        ScreenSample.CheckboxSample -> {
+            CheckboxSampleScreen()
         }
     }
 }

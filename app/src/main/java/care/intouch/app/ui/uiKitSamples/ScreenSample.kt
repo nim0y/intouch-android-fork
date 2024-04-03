@@ -8,4 +8,5 @@ sealed class ScreenSample {
 
     data object NavigationSample : ScreenSample()
     data object ToggleSample : ScreenSample()
+    data object CheckboxSample : ScreenSample()
 }
