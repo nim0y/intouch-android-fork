@@ -9,3 +9,4 @@ sealed class ScreenSample {
     data object ButtonsSample : ScreenSample()
     data object PasswordInputSample : ScreenSample()
     data object ToggleSample : ScreenSample()
+}
