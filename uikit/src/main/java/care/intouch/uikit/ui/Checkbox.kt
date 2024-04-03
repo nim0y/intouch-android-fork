@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -21,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
@@ -32,19 +32,17 @@ fun Checkbox(
     text: String,
     colorIcon: Color = InTouchTheme.colors.textGreen,
     colorText: Color = InTouchTheme.colors.textBlue,
+    textStyle: TextStyle = InTouchTheme.typography.bodyRegular,
     onClick: () -> Unit
 ) {
     Row(
-        modifier = modifier
-            .padding(
-                horizontal = 2.dp,
-                vertical = 10.dp
-            ),
+        modifier = modifier,
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
+                .padding(horizontal = 2.dp, vertical = 10.dp)
                 .size(24.dp)
                 .clip(CircleShape)
                 .border(
@@ -57,19 +55,18 @@ fun Checkbox(
         ) {
             if(isChecked) {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .size(13.dp)
                         .clip(CircleShape)
                         .background(colorIcon)
-
                 )
             }
         }
         Text(
-            modifier = modifier
-                .padding(horizontal = 12.dp),
+            modifier = Modifier
+                .padding(start = 10.dp, end = 2.dp),
             text = text,
-            style = InTouchTheme.typography.bodyBold,
+            style = textStyle,
             color = colorText
         )
     }
@@ -83,7 +80,6 @@ fun CheckboxPreview() {
 
     InTouchTheme {
         Column(
-            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
