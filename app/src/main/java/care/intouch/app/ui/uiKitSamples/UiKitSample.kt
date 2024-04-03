@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.CheckmarkSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
@@ -18,6 +19,7 @@ import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.SliderSample
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
+import care.intouch.uikit.ui.checkmark.SimpleCheckmark
 
 @Composable
 fun UiKitSample() {
@@ -68,6 +70,11 @@ fun UiKitSample() {
                     text = "Go to slider sample",
                     onClick = { screenSample = ScreenSample.SliderSample }
                 )
+
+                UikitSampleButton(
+                    text = "Go to checkmark sample",
+                    onClick = { screenSample = ScreenSample.CheckmarkSample }
+                )
             }
         }
 
@@ -96,6 +103,10 @@ fun UiKitSample() {
 
         ScreenSample.SliderSample -> {
             SliderSample()
+        }
+
+        ScreenSample.CheckmarkSample -> {
+            CheckmarkSample()
         }
     }
 }
