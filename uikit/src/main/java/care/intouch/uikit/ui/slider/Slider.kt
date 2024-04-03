@@ -83,7 +83,7 @@ fun SliderWidgetWithScaleAndTenSteps(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -103,7 +103,7 @@ fun SliderWidgetWithScaleAndTenSteps(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFFFF5DE)
 fun SliderWidgetWithDigitsPreview() {
     InTouchTheme {
         SliderWidgetWithScaleAndTenSteps(
@@ -152,7 +152,7 @@ fun SimpleSlider(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFFFF5DE)
 fun SimpleSliderPreview() {
     InTouchTheme {
         SimpleSlider(
@@ -203,7 +203,7 @@ fun CustomSliderWithSteps(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFFFF5DE)
 fun CustomSliderWithStepsPreview() {
     InTouchTheme {
         CustomSliderWithSteps(
