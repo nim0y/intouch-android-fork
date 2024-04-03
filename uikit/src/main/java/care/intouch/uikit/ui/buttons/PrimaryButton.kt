@@ -1,4 +1,4 @@
-package care.intouch.app.ui.buttons
+package care.intouch.uikit.ui.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues

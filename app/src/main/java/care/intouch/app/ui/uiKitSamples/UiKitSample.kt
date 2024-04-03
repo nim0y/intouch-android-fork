@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import care.intouch.app.R
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
+import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
@@ -53,14 +54,9 @@ fun UiKitSample() {
                     style = InTouchTheme.typography.bodyRegular,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .clickable { /*TODO moved to Custom Button*/ },
-                    text = "Custom Button",
-                    style = InTouchTheme.typography.bodyRegular,
-                    textAlign = TextAlign.Center
+                UikitSampleButton(
+                    text = "Go to custom buttons sample",
+                    onClick = { screenSample = ScreenSample.ButtonsSample }
                 )
                 UikitSampleButton(
                     text = "Go to one line text field sample",
@@ -79,6 +75,9 @@ fun UiKitSample() {
             }
         }
 
+        ScreenSample.ButtonsSample -> {
+            ButtonSampleScreen()
+        }
         ScreenSample.OneLineTexFieldSample -> {
             OneLineTextFieldSampleScreen()
         }
