@@ -14,6 +14,7 @@ import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.RegularChipsSample
 import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.SliderSample
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
@@ -55,6 +56,11 @@ fun UiKitSample() {
                 )
 
                 UikitSampleButton(
+                    text = "Go to chips sample",
+                    onClick = { screenSample = ScreenSample.ChipsSample }
+                    )
+                
+                UikitSampleButton(
                     text = "Go to toggle sample",
                     onClick = { screenSample = ScreenSample.ToggleSample }
                 )
@@ -84,6 +90,10 @@ fun UiKitSample() {
 
         ScreenSample.NavigationSample -> {
             NavigationSample()
+        }
+
+        ScreenSample.ChipsSample -> {
+            RegularChipsSample()
         }
 
         ScreenSample.ToggleSample -> {
