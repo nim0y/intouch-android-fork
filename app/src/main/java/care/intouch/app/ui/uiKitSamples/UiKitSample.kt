@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.app.R
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
+import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
@@ -42,6 +43,12 @@ fun UiKitSample() {
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
+              
+               UikitSampleButton(
+                    text = "Go to custom buttons sample",
+                    onClick = { screenSample = ScreenSample.ButtonsSample }
+                )
+               
                 UikitSampleButton(
                     text = "Go to one line text field sample",
                     onClick = { screenSample = ScreenSample.OneLineTexFieldSample }
@@ -69,6 +76,9 @@ fun UiKitSample() {
             }
         }
 
+        ScreenSample.ButtonsSample -> {
+            ButtonSampleScreen()
+        }
         ScreenSample.OneLineTexFieldSample -> {
             OneLineTextFieldSampleScreen()
         }
