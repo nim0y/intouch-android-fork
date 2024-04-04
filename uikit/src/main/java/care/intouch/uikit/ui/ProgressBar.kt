@@ -2,7 +2,9 @@ package care.intouch.uikit.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -10,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
@@ -33,6 +36,7 @@ fun ProgressBar(
     modifier, color, trackColor, strokeCap
 )
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewProgressBar() {
@@ -43,6 +47,8 @@ fun PreviewProgressBar() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProgressBar()
+            Spacer(modifier = Modifier.height(20.dp))
+            ProgressBar(progress = { 0.4f })
         }
     }
 }
