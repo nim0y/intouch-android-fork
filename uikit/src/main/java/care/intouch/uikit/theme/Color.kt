@@ -46,6 +46,7 @@ data class InTouchColors(
     val input: Color = inputColor,
     val input40: Color = inputColor40,
     val input85: Color = inputColor85,
+    val transparent: Color = Color.Transparent,
     val accentBeige: Color = accentColorBeige,
     val errorRed: Color = errorRedColor,
 )

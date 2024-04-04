@@ -1,61 +1,10 @@
 package care.intouch.uikit.ui.buttons
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
-
-@Composable
-fun IntouchButton(
-    onClick: () -> Unit,
-    modifier: Modifier,
-    text: String,
-    textStyle: TextStyle = InTouchTheme.typography.subTitle,
-    isEnabled: Boolean = true,
-    isHasStroke: Boolean = false,
-    enableBackgroundColor: Color = InTouchTheme.colors.mainGreen,
-    disableBackgroundColor: Color = InTouchTheme.colors.unableElementLight,
-    enableTextColor: Color = InTouchTheme.colors.input,
-    disableTextColor: Color = InTouchTheme.colors.mainGreen40,
-    borderStrokeColor: Color = InTouchTheme.colors.mainGreen,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 64.dp, vertical = 24.dp),
-    shape: Shape = RoundedCornerShape(20.dp),
-) {
-    Button(
-        shape = shape,
-        modifier = modifier,
-        contentPadding = contentPadding,
-        border = if (isHasStroke) {
-            BorderStroke(1.dp, borderStrokeColor)
-        } else {
-            BorderStroke(
-                0.dp,
-                if (isEnabled) enableBackgroundColor else disableBackgroundColor
-            )
-        },
-        enabled = isEnabled,
-        colors = ButtonColors(
-            containerColor = enableBackgroundColor,
-            contentColor = enableTextColor,
-            disabledContainerColor = disableBackgroundColor,
-            disabledContentColor = disableTextColor,
-        ),
-        onClick = { onClick.invoke() }
-    )
-    {
-        Text(text = text, style = textStyle)
-    }
-}
 
 @Composable
 fun SecondaryButtonDark(
@@ -71,8 +20,8 @@ fun SecondaryButtonDark(
         text = text,
         textStyle = textStyle,
         isEnabled = isEnabled,
-        enableBackgroundColor = InTouchTheme.colors.input,
-        disableBackgroundColor = InTouchTheme.colors.input,
+        enableBackgroundColor = InTouchTheme.colors.transparent,
+        disableBackgroundColor = InTouchTheme.colors.transparent,
         enableTextColor = InTouchTheme.colors.textGreen,
         disableTextColor = InTouchTheme.colors.unableElementDark,
     )
@@ -92,8 +41,8 @@ fun SecondaryButtonWhite(
         text = text,
         textStyle = textStyle,
         isEnabled = isEnabled,
-        enableBackgroundColor = InTouchTheme.colors.input,
-        disableBackgroundColor = InTouchTheme.colors.input,
+        enableBackgroundColor = InTouchTheme.colors.transparent,
+        disableBackgroundColor = InTouchTheme.colors.transparent,
         enableTextColor = InTouchTheme.colors.input,
         disableTextColor = InTouchTheme.colors.unableElementDark,
     )
@@ -101,7 +50,7 @@ fun SecondaryButtonWhite(
 
 @Preview(showBackground = true)
 @Composable
-fun PrimaryButtonDarkPreview() {
+fun SecondaryButtonDarkPreview() {
     InTouchTheme {
         SecondaryButtonDark(
             onClick = {},
@@ -114,7 +63,7 @@ fun PrimaryButtonDarkPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun PrimaryButtonWhitePreview() {
+fun SecondaryButtonWhitePreview() {
     InTouchTheme {
         SecondaryButtonWhite(
             onClick = {},
