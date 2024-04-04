@@ -19,7 +19,6 @@ import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.SliderSample
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.checkmark.SimpleCheckmark
 
 @Composable
 fun UiKitSample() {

@@ -3,8 +3,10 @@ package care.intouch.app.ui.uiKitSamples.samples
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.checkmark.SimpleCheckmark
+import care.intouch.uikit.ui.checkmark.Checkmark
+import care.intouch.uikit.ui.checkmark.CheckmarkWithText
 
 @Composable
 fun CheckmarkSample() {
@@ -39,10 +42,16 @@ fun CheckmarkSample() {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Text(
+                text = "Simple checkmarks with callback",
+                style = InTouchTheme.typography.titleMedium
+            )
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SimpleCheckmark(
+                Checkmark(
                     isChecked = firstCheckmarkState,
                     onChangeState = {
                         firstCheckmarkState = it
@@ -58,7 +67,7 @@ fun CheckmarkSample() {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                SimpleCheckmark(
+                Checkmark(
                     isChecked = secondCheckmarkState,
                     onChangeState = {
                         secondCheckmarkState = it
@@ -70,6 +79,23 @@ fun CheckmarkSample() {
                     text = "Turned to $secondCheckmarkState"
                 )
             }
+
+            Spacer(modifier = Modifier.padding(top = 24.dp))
+
+            Text(
+                text = "Checkmarks with callback and label",
+                style = InTouchTheme.typography.titleMedium
+            )
+
+            CheckmarkWithText(
+                text = "Pursuing further education or certifications",
+                onChangeState = {}
+            )
+
+            CheckmarkWithText(
+                text = "Attending workshops and conferences",
+                onChangeState = {}
+            )
         }
     }
 }
