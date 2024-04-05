@@ -48,6 +48,8 @@ fun CheckmarkSample() {
                 style = InTouchTheme.typography.titleMedium
             )
 
+            Spacer(modifier = Modifier.padding(8.dp))
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -59,10 +61,14 @@ fun CheckmarkSample() {
                 )
 
                 Text(
-                    modifier = Modifier.width(92.dp),
+                    modifier = Modifier
+                        .padding(start = 12.dp)
+                        .width(92.dp),
                     text = "Turned to $firstCheckmarkState"
                 )
             }
+
+            Spacer(modifier = Modifier.padding(10.dp))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -75,7 +81,9 @@ fun CheckmarkSample() {
                 )
 
                 Text(
-                    modifier = Modifier.width(92.dp),
+                    modifier = Modifier
+                        .padding(start = 12.dp)
+                        .width(92.dp),
                     text = "Turned to $secondCheckmarkState"
                 )
             }
