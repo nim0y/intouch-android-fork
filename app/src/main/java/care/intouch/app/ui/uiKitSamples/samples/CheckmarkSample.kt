@@ -97,11 +97,25 @@ fun CheckmarkSample() {
 
             CheckmarkWithText(
                 text = "Pursuing further education or certifications",
+                isChecked = true,
+                isError = false,
+                isEnabled = true,
                 onChangeState = {}
             )
 
             CheckmarkWithText(
                 text = "Attending workshops and conferences",
+                isChecked = false,
+                isError = true,
+                isEnabled = true,
+                onChangeState = {}
+            )
+
+            CheckmarkWithText(
+                text = "Attending workshops and conferences",
+                isChecked = false,
+                isError = false,
+                isEnabled = false,
                 onChangeState = {}
             )
         }

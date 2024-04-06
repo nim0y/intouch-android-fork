@@ -33,20 +33,31 @@ import care.intouch.uikit.theme.InTouchTheme
 @Composable
 fun Checkmark(
     isChecked: Boolean = true,
+    isError: Boolean = false,
+    isEnabled: Boolean = true,
     size: Dp = 24.dp,
+    errorColor: Color = Color.Red,
     uncheckedColor: Color = InTouchTheme.colors.mainGreen40,
     checkDrawableResource: Painter = painterResource(id = R.drawable.icon_checkmark_is_checked),
     onChangeState: (Boolean) -> Unit
 ) {
+
+    val primaryCheckedValue = when {
+        !isError && isChecked -> true
+        else -> false
+    }
+
     var checkState by remember {
-        mutableStateOf(isChecked)
+        mutableStateOf(primaryCheckedValue)
     }
 
     Box(
         modifier = Modifier
             .clickable {
-                checkState = !checkState
-                onChangeState.invoke(checkState)
+                if (!isError && isEnabled) {
+                    checkState = !checkState
+                    onChangeState.invoke(checkState)
+                }
             }
     ) {
         Box(
@@ -54,7 +65,10 @@ fun Checkmark(
                 .size(size)
                 .background(color = Color.Transparent, shape = RoundedCornerShape(5.dp))
                 .border(
-                    border = BorderStroke(width = 1.dp, color = uncheckedColor),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = if (isError) errorColor else uncheckedColor
+                    ),
                     shape = RoundedCornerShape(5.dp)
                 )
         )
@@ -78,6 +92,8 @@ fun CheckmarkPreview() {
     InTouchTheme {
         Checkmark(
             isChecked = true,
+            isError = false,
+            isEnabled = true
         ) {}
     }
 }
@@ -86,14 +102,23 @@ fun CheckmarkPreview() {
 fun CheckmarkWithText(
     modifier: Modifier = Modifier,
     isChecked: Boolean = true,
+    isError: Boolean = false,
+    isEnabled: Boolean = true,
     text: String,
     checkmarkSize: Dp = 24.dp,
-    uncheckedColor: Color = InTouchTheme.colors.mainGreen40,
+    uncheckedDisabledColor: Color = InTouchTheme.colors.mainGreen40,
     checkDrawableResource: Painter = painterResource(id = R.drawable.icon_checkmark_is_checked),
-    colorText: Color = InTouchTheme.colors.textBlue,
+    enabledColorText: Color = InTouchTheme.colors.textBlue,
+    errorColorText: Color = Color.Red,
     textStyle: TextStyle = InTouchTheme.typography.bodyRegular,
     onChangeState: (Boolean) -> Unit
 ) {
+
+    val colorText = when {
+        isError -> errorColorText
+        !isEnabled ->  uncheckedDisabledColor
+        else -> enabledColorText
+    }
 
     Row(
         modifier = modifier
@@ -103,8 +128,10 @@ fun CheckmarkWithText(
     ) {
         Checkmark(
             isChecked = isChecked,
+            isError = isError,
+            isEnabled = isEnabled,
             size = checkmarkSize,
-            uncheckedColor = uncheckedColor,
+            uncheckedColor = uncheckedDisabledColor,
             checkDrawableResource = checkDrawableResource,
             onChangeState = onChangeState
         )
@@ -125,6 +152,9 @@ fun CheckmarkWithTextPreview() {
         CheckmarkWithText(
             modifier = Modifier.width(260.dp),
             text = "Pursuing further education or certifications",
+            isChecked = false,
+            isError = false,
+            isEnabled = false,
             onChangeState = {}
         )
     }
