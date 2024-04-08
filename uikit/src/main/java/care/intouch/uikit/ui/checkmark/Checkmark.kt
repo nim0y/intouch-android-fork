@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +31,63 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.R
 import care.intouch.uikit.theme.InTouchTheme
+import kotlinx.coroutines.delay
+
+@Composable
+fun CheckWid(
+    isChecked: Boolean,
+    onCheckChanged: (Boolean) -> Unit
+) {
+    Text(
+        text = "Text is $isChecked",
+        modifier = Modifier.clickable {
+            onCheckChanged(!isChecked)
+        }
+    )
+}
+
+@Composable
+fun ExtCheckWid(
+    isChecked: Boolean,
+    onCheckChanged: (Boolean) -> Unit
+) {
+    CheckWid(
+        isChecked = isChecked,
+        onCheckChanged = onCheckChanged
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+fun ExtCheckWidPreview() {
+
+    var checkedState by remember {
+        mutableStateOf(true)
+    }
+
+    ExtCheckWid(
+        isChecked = checkedState,
+        onCheckChanged = {
+            checkedState = it
+        }
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+fun CheckWidPreview() {
+
+    var checkedState by remember {
+        mutableStateOf(true)
+    }
+
+    CheckWid(
+        isChecked = checkedState,
+        onCheckChanged = {
+            checkedState = it
+        }
+    )
+}
 
 @Composable
 fun Checkmark(
@@ -39,25 +98,18 @@ fun Checkmark(
     errorColor: Color = Color.Red,
     uncheckedColor: Color = InTouchTheme.colors.mainGreen40,
     checkDrawableResource: Painter = painterResource(id = R.drawable.icon_checkmark_is_checked),
+    callbackState: (Boolean) -> Unit,
     onChangeState: (Boolean) -> Unit
 ) {
-
-    val primaryCheckedValue = when {
-        !isError && isChecked -> true
-        else -> false
-    }
-
-    var checkState by remember {
-        mutableStateOf(primaryCheckedValue)
-    }
 
     Box(
         modifier = Modifier
             .clickable {
-                if (!isError && isEnabled) {
-                    checkState = !checkState
-                    onChangeState.invoke(checkState)
+                if (isEnabled) {
+                    callbackState.invoke(!isChecked)
+                    onChangeState.invoke(isChecked)
                 }
+
             }
     ) {
         Box(
@@ -73,7 +125,7 @@ fun Checkmark(
                 )
         )
 
-        if (checkState) {
+        if (isChecked) {
             Box(
             ) {
                 Image(
@@ -89,13 +141,17 @@ fun Checkmark(
 @Composable
 @Preview(showBackground = true)
 fun CheckmarkPreview() {
-    InTouchTheme {
-        Checkmark(
-            isChecked = true,
-            isError = false,
-            isEnabled = true
-        ) {}
+    var checkedState by remember {
+        mutableStateOf(true)
     }
+
+    Checkmark(
+        isChecked = checkedState,
+        callbackState = {
+            checkedState = it
+        },
+        onChangeState = {}
+    )
 }
 
 @Composable
@@ -111,12 +167,16 @@ fun CheckmarkWithText(
     enabledColorText: Color = InTouchTheme.colors.textBlue,
     errorColorText: Color = Color.Red,
     textStyle: TextStyle = InTouchTheme.typography.bodyRegular,
+    callbackState: (Boolean) -> Unit = {},
     onChangeState: (Boolean) -> Unit
 ) {
 
-    val colorText = when {
-        isError -> errorColorText
-        !isEnabled ->  uncheckedDisabledColor
+    var isErrorText by remember {
+        mutableStateOf(isError && !isChecked)
+    }
+
+    val defaultColorText = when {
+        !isEnabled -> uncheckedDisabledColor
         else -> enabledColorText
     }
 
@@ -133,13 +193,21 @@ fun CheckmarkWithText(
             size = checkmarkSize,
             uncheckedColor = uncheckedDisabledColor,
             checkDrawableResource = checkDrawableResource,
-            onChangeState = onChangeState
+            callbackState = callbackState,
+            onChangeState = {
+                if (isEnabled && isError) {
+                    isErrorText = !isErrorText
+                    onChangeState.invoke(it)
+                } else if (isEnabled) {
+                    onChangeState.invoke(it)
+                }
+            }
         )
 
         Text(
             modifier = Modifier.padding(start = 12.dp),
             text = text,
-            color = colorText,
+            color = if (isErrorText) errorColorText else defaultColorText,
             style = textStyle
         )
     }
@@ -148,13 +216,21 @@ fun CheckmarkWithText(
 @Composable
 @Preview(showBackground = true)
 fun CheckmarkWithTextPreview() {
+
+    var checkedState by remember {
+        mutableStateOf(false)
+    }
+
     InTouchTheme {
         CheckmarkWithText(
             modifier = Modifier.width(260.dp),
             text = "Pursuing further education or certifications",
-            isChecked = false,
+            isChecked = checkedState,
             isError = false,
-            isEnabled = false,
+            isEnabled = true,
+            callbackState = {
+                checkedState = it
+            },
             onChangeState = {}
         )
     }
