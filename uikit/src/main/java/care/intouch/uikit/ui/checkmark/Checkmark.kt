@@ -34,62 +34,6 @@ import care.intouch.uikit.theme.InTouchTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun CheckWid(
-    isChecked: Boolean,
-    onCheckChanged: (Boolean) -> Unit
-) {
-    Text(
-        text = "Text is $isChecked",
-        modifier = Modifier.clickable {
-            onCheckChanged(!isChecked)
-        }
-    )
-}
-
-@Composable
-fun ExtCheckWid(
-    isChecked: Boolean,
-    onCheckChanged: (Boolean) -> Unit
-) {
-    CheckWid(
-        isChecked = isChecked,
-        onCheckChanged = onCheckChanged
-    )
-}
-
-@Composable
-@Preview(showBackground = true)
-fun ExtCheckWidPreview() {
-
-    var checkedState by remember {
-        mutableStateOf(true)
-    }
-
-    ExtCheckWid(
-        isChecked = checkedState,
-        onCheckChanged = {
-            checkedState = it
-        }
-    )
-}
-
-@Composable
-@Preview(showBackground = true)
-fun CheckWidPreview() {
-
-    var checkedState by remember {
-        mutableStateOf(true)
-    }
-
-    CheckWid(
-        isChecked = checkedState,
-        onCheckChanged = {
-            checkedState = it
-        }
-    )
-}
-
-@Composable
 fun Checkmark(
     isChecked: Boolean = true,
     isError: Boolean = false,
@@ -126,14 +70,11 @@ fun Checkmark(
         )
 
         if (isChecked) {
-            Box(
-            ) {
-                Image(
-                    modifier = Modifier.size(size),
-                    painter = checkDrawableResource,
-                    contentDescription = null
-                )
-            }
+            Image(
+                modifier = Modifier.size(size),
+                painter = checkDrawableResource,
+                contentDescription = null
+            )
         }
     }
 }
@@ -171,10 +112,6 @@ fun CheckmarkWithText(
     onChangeState: (Boolean) -> Unit
 ) {
 
-    var isErrorText by remember {
-        mutableStateOf(isError && !isChecked)
-    }
-
     val defaultColorText = when {
         !isEnabled -> uncheckedDisabledColor
         else -> enabledColorText
@@ -195,10 +132,7 @@ fun CheckmarkWithText(
             checkDrawableResource = checkDrawableResource,
             callbackState = callbackState,
             onChangeState = {
-                if (isEnabled && isError) {
-                    isErrorText = !isErrorText
-                    onChangeState.invoke(it)
-                } else if (isEnabled) {
+                if (isEnabled) {
                     onChangeState.invoke(it)
                 }
             }
@@ -207,7 +141,7 @@ fun CheckmarkWithText(
         Text(
             modifier = Modifier.padding(start = 12.dp),
             text = text,
-            color = if (isErrorText) errorColorText else defaultColorText,
+            color = if (isError && !isChecked) errorColorText else defaultColorText,
             style = textStyle
         )
     }
@@ -221,13 +155,21 @@ fun CheckmarkWithTextPreview() {
         mutableStateOf(false)
     }
 
+    var errorState by remember {
+        mutableStateOf(false)
+    }
+
+    var enabledState by remember {
+        mutableStateOf(false)
+    }
+
     InTouchTheme {
         CheckmarkWithText(
             modifier = Modifier.width(260.dp),
             text = "Pursuing further education or certifications",
             isChecked = checkedState,
-            isError = false,
-            isEnabled = true,
+            isError = errorState,
+            isEnabled = enabledState,
             callbackState = {
                 checkedState = it
             },
