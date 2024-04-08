@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +29,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.R
 import care.intouch.uikit.theme.InTouchTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun Checkmark(
@@ -39,7 +36,7 @@ fun Checkmark(
     isError: Boolean = false,
     isEnabled: Boolean = true,
     size: Dp = 24.dp,
-    errorColor: Color = Color.Red,
+    errorColor: Color = InTouchTheme.colors.errorRed,
     uncheckedColor: Color = InTouchTheme.colors.mainGreen40,
     checkDrawableResource: Painter = painterResource(id = R.drawable.icon_checkmark_is_checked),
     callbackState: (Boolean) -> Unit,
@@ -86,13 +83,16 @@ fun CheckmarkPreview() {
         mutableStateOf(true)
     }
 
-    Checkmark(
-        isChecked = checkedState,
-        callbackState = {
-            checkedState = it
-        },
-        onChangeState = {}
-    )
+    InTouchTheme {
+        Checkmark(
+            isChecked = checkedState,
+            callbackState = {
+                checkedState = it
+            },
+            onChangeState = {}
+        )
+    }
+
 }
 
 @Composable
@@ -123,6 +123,7 @@ fun CheckmarkWithText(
             .padding(start = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         Checkmark(
             isChecked = isChecked,
             isError = isError,
@@ -155,11 +156,11 @@ fun CheckmarkWithTextPreview() {
         mutableStateOf(false)
     }
 
-    var errorState by remember {
+    val errorState by remember {
         mutableStateOf(false)
     }
 
-    var enabledState by remember {
+    val enabledState by remember {
         mutableStateOf(false)
     }
 
