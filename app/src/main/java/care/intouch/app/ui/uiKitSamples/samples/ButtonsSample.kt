@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.buttons.IconicButtonCircle
 import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
 import care.intouch.uikit.ui.buttons.PrimaryButtonStroke
 import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
@@ -65,10 +64,6 @@ fun ButtonSampleScreen() {
                 modifier = Modifier.padding(top = 5.dp),
                 text = "Call to action",
                 isEnabled = false
-            )
-            IconicButtonCircle(
-                onClick = {},
-                modifier = Modifier
             )
         }
     }
