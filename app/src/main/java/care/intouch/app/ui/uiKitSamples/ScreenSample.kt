@@ -11,4 +11,5 @@ sealed class ScreenSample {
     data object PasswordInputSample : ScreenSample()
     data object ToggleSample : ScreenSample()
     data object SliderSample: ScreenSample()
+    data object ProgressBarSample: ScreenSample()
 }
