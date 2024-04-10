@@ -1,6 +1,8 @@
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +17,9 @@ import care.intouch.app.ui.uiKitSamples.samples.CheckmarkSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.RegularChipsSample
 import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.ProgressBarSample
 import care.intouch.app.ui.uiKitSamples.samples.SliderSample
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
@@ -31,7 +35,8 @@ fun UiKitSample() {
         ScreenSample.MainSampleMenu -> {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
@@ -56,6 +61,11 @@ fun UiKitSample() {
                 )
 
                 UikitSampleButton(
+                    text = "Go to chips sample",
+                    onClick = { screenSample = ScreenSample.ChipsSample }
+                    )
+
+                UikitSampleButton(
                     text = "Go to toggle sample",
                     onClick = { screenSample = ScreenSample.ToggleSample }
                 )
@@ -69,6 +79,12 @@ fun UiKitSample() {
                     text = "Go to slider sample",
                     onClick = { screenSample = ScreenSample.SliderSample }
                 )
+
+                UikitSampleButton(
+                    text = "Go to progress bar sample",
+                    onClick = { screenSample = ScreenSample.ProgressBarSample }
+                )
+
 
                 UikitSampleButton(
                     text = "Go to checkmark sample",
@@ -92,6 +108,10 @@ fun UiKitSample() {
             NavigationSample()
         }
 
+        ScreenSample.ChipsSample -> {
+            RegularChipsSample()
+        }
+
         ScreenSample.ToggleSample -> {
             ToggleSampleScreen()
         }
@@ -102,6 +122,10 @@ fun UiKitSample() {
 
         ScreenSample.SliderSample -> {
             SliderSample()
+        }
+
+        ScreenSample.ProgressBarSample ->{
+            ProgressBarSample()
         }
 
         ScreenSample.CheckmarkSample -> {
