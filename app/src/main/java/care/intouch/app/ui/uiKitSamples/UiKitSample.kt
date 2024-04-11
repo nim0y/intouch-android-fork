@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.CheckboxSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.CheckmarkSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
@@ -81,10 +82,14 @@ fun UiKitSample() {
                 )
 
                 UikitSampleButton(
+                    text = "Go to checkbox sample",
+                    onClick = { screenSample = ScreenSample.CheckboxSample }
+                )
+
+                UikitSampleButton(
                     text = "Go to progress bar sample",
                     onClick = { screenSample = ScreenSample.ProgressBarSample }
                 )
-
 
                 UikitSampleButton(
                     text = "Go to checkmark sample",
@@ -122,6 +127,10 @@ fun UiKitSample() {
 
         ScreenSample.SliderSample -> {
             SliderSample()
+        }
+
+        ScreenSample.CheckboxSample -> {
+            CheckboxSampleScreen()
         }
 
         ScreenSample.ProgressBarSample ->{
