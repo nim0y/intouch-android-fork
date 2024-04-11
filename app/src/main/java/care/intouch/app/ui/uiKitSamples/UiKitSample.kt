@@ -14,6 +14,7 @@ import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.CheckboxSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.CheckmarkSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
@@ -64,7 +65,7 @@ fun UiKitSample() {
                     text = "Go to chips sample",
                     onClick = { screenSample = ScreenSample.ChipsSample }
                     )
-                
+
                 UikitSampleButton(
                     text = "Go to toggle sample",
                     onClick = { screenSample = ScreenSample.ToggleSample }
@@ -90,6 +91,10 @@ fun UiKitSample() {
                     onClick = { screenSample = ScreenSample.ProgressBarSample }
                 )
 
+                UikitSampleButton(
+                    text = "Go to checkmark sample",
+                    onClick = { screenSample = ScreenSample.CheckmarkSample }
+                )
             }
         }
 
@@ -130,6 +135,10 @@ fun UiKitSample() {
 
         ScreenSample.ProgressBarSample ->{
             ProgressBarSample()
+        }
+
+        ScreenSample.CheckmarkSample -> {
+            CheckmarkSample()
         }
     }
 }

@@ -13,4 +13,5 @@ sealed class ScreenSample {
     data object SliderSample: ScreenSample()
     data object CheckboxSample : ScreenSample()
     data object ProgressBarSample: ScreenSample()
+    data object CheckmarkSample: ScreenSample()
 }
