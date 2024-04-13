@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.CardsSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
@@ -83,7 +84,11 @@ fun UiKitSample() {
                     text = "Go to progress bar sample",
                     onClick = { screenSample = ScreenSample.ProgressBarSample }
                 )
-                
+
+                UikitSampleButton(
+                    text = "Go to cards sample",
+                    onClick = { screenSample = ScreenSample.CardsSample }
+                )
             }
         }
 
@@ -120,6 +125,10 @@ fun UiKitSample() {
         
         ScreenSample.ProgressBarSample ->{
             ProgressBarSample()
+        }
+
+        ScreenSample.CardsSample ->{
+            CardsSample()
         }
     }
 }

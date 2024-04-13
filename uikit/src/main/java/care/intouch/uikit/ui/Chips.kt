@@ -220,7 +220,7 @@ fun EmotionalChipsSmall(
     onClick: () -> Unit
 ) {
     Box(contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(if (selected) selectedColor else unselectedColor)
             .clickable(
