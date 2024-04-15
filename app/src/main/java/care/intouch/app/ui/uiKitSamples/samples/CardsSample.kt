@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.CardLine
-import care.intouch.uikit.ui.NoteCards
-import care.intouch.uikit.ui.PlanCard
+import care.intouch.uikit.ui.cards.CardLine
+import care.intouch.uikit.ui.cards.NoteCards
+import care.intouch.uikit.ui.cards.PlanCard
 
 @Composable
 fun CardsSample() {
