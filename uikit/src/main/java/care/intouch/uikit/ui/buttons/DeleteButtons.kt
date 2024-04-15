@@ -14,7 +14,8 @@ fun DeleteButtonDefault(
     modifier: Modifier,
     text: String,
     textStyle: TextStyle = InTouchTheme.typography.bodyBold,
-    isEnabled: Boolean = false,
+    isEnabled: Boolean = true,
+    isActive: Boolean = false,
 ) {
     IntouchButton(
         onClick = onClick,
@@ -22,6 +23,7 @@ fun DeleteButtonDefault(
         text = text,
         textStyle = textStyle,
         isEnabled = isEnabled,
+        isActive = isActive,
         contentPadding = PaddingValues(horizontal = 51.5.dp, vertical = 11.5.dp),
         enableBackgroundColor = InTouchTheme.colors.errorMaroonColor,
         disableBackgroundColor = InTouchTheme.colors.errorRed,
@@ -38,7 +40,7 @@ fun DeleteButtonDefaultPreview() {
             onClick = {},
             modifier = Modifier,
             text = "Delete Profile Forever",
-            isEnabled = false
+            isActive = false
         )
     }
 }
@@ -51,7 +53,7 @@ fun DeleteButtonActivePreview() {
             onClick = {},
             modifier = Modifier,
             text = "Delete Profile Forever",
-            isEnabled = true
+            isActive = true
         )
     }
 }

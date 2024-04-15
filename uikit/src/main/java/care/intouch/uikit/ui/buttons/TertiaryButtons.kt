@@ -24,6 +24,7 @@ fun TertiaryButton(
     modifier: Modifier,
     icon: Int = R.drawable.icon_arrow_small_right,
     isEnabled: Boolean = false,
+    isActive: Boolean = false,
     enableBackgroundColor: Color = InTouchTheme.colors.mainGreen,
     disableBackgroundColor: Color = InTouchTheme.colors.unableElementLight,
     enableTextColor: Color = InTouchTheme.colors.input,
@@ -43,12 +44,21 @@ fun TertiaryButton(
         modifier = modifier,
         contentPadding = contentPadding,
         enabled = isEnabled,
-        colors = ButtonColors(
-            containerColor = enableBackgroundColor,
-            contentColor = enableTextColor,
-            disabledContainerColor = disableBackgroundColor,
-            disabledContentColor = disableTextColor,
-        ),
+        colors = if (isActive) {
+            ButtonColors(
+                containerColor = disableBackgroundColor,
+                contentColor = disableTextColor,
+                disabledContainerColor = enableBackgroundColor,
+                disabledContentColor = enableTextColor,
+            )
+        } else {
+            ButtonColors(
+                containerColor = enableBackgroundColor,
+                contentColor = enableTextColor,
+                disabledContainerColor = disableBackgroundColor,
+                disabledContentColor = disableTextColor,
+            )
+        },
         onClick = { onClick.invoke() }
     )
     {
@@ -68,12 +78,14 @@ fun TertiaryButtonDefault(
     modifier: Modifier,
     text: String,
     isEnabled: Boolean = true,
+    isActive: Boolean = false,
 ) {
     TertiaryButton(
         onClick = onClick,
         modifier = modifier,
         text = text,
         isEnabled = isEnabled,
+        isActive = isActive,
         enableBackgroundColor = InTouchTheme.colors.darkGreen,
         disableBackgroundColor = InTouchTheme.colors.mainGreen,
         enableTextColor = InTouchTheme.colors.input,
@@ -89,7 +101,7 @@ fun TertiaryButtonDefaultPreview() {
             onClick = {},
             modifier = Modifier,
             text = "Security",
-            isEnabled = false
+            isActive = false
         )
     }
 }
@@ -102,7 +114,7 @@ fun TertiaryButtonActivePreview() {
             onClick = {},
             modifier = Modifier,
             text = "Security",
-            isEnabled = true
+            isActive = true
         )
     }
 }
