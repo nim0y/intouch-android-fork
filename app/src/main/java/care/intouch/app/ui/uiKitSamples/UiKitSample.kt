@@ -13,14 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.app.UikitSampleButton
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
+import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen2
 import care.intouch.app.ui.uiKitSamples.samples.CheckboxSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.CheckmarkSample
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
-import care.intouch.app.ui.uiKitSamples.samples.RegularChipsSample
 import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.ProgressBarSample
+import care.intouch.app.ui.uiKitSamples.samples.RegularChipsSample
 import care.intouch.app.ui.uiKitSamples.samples.SliderSample
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
@@ -44,6 +45,11 @@ fun UiKitSample() {
                UikitSampleButton(
                     text = "Go to custom buttons sample",
                     onClick = { screenSample = ScreenSample.ButtonsSample }
+                )
+
+                UikitSampleButton(
+                    text = "Go to custom buttons sample 2 ",
+                    onClick = { screenSample = ScreenSample.ButtonsSample2 }
                 )
 
                 UikitSampleButton(
@@ -100,6 +106,10 @@ fun UiKitSample() {
 
         ScreenSample.ButtonsSample -> {
             ButtonSampleScreen()
+        }
+
+        ScreenSample.ButtonsSample2 -> {
+            ButtonSampleScreen2()
         }
         ScreenSample.OneLineTexFieldSample -> {
             OneLineTextFieldSampleScreen()
