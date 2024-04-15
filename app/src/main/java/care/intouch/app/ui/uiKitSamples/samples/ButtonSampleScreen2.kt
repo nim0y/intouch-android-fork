@@ -12,11 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.buttons.DeleteButtonActive
 import care.intouch.uikit.ui.buttons.DeleteButtonDefault
 import care.intouch.uikit.ui.buttons.IconicButtonCircle
 import care.intouch.uikit.ui.buttons.IconicTabBarPlus
-import care.intouch.uikit.ui.buttons.TertiaryButtonActive
 import care.intouch.uikit.ui.buttons.TertiaryButtonDefault
 import care.intouch.uikit.ui.navigation.TopBarArcButton
 
@@ -49,13 +47,14 @@ fun ButtonSampleScreen2() {
                 enabled = true,
                 modifier = Modifier.padding(top = 5.dp),
             )
-            TertiaryButtonActive(
+            TertiaryButtonDefault(
                 onClick = {},
                 modifier = Modifier
                     .padding(top = 5.dp)
                     .width(334.dp)
                     .height(42.dp),
-                text = "Security"
+                text = "Security",
+                isEnabled = false
             )
             TertiaryButtonDefault(
                 onClick = {},
@@ -63,12 +62,14 @@ fun ButtonSampleScreen2() {
                     .padding(top = 5.dp)
                     .width(334.dp)
                     .height(42.dp),
-                text = "Security"
+                text = "Security",
+                isEnabled = false
             )
-            DeleteButtonActive(
+            DeleteButtonDefault(
                 onClick = {},
                 modifier = Modifier.padding(top = 5.dp),
-                text = "Delete Profile"
+                text = "Delete Profile",
+                isEnabled = true
             )
             DeleteButtonDefault(
                 onClick = {},

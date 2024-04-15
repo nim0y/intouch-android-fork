@@ -23,12 +23,17 @@ fun TertiaryButton(
     onClick: () -> Unit,
     modifier: Modifier,
     icon: Int = R.drawable.icon_arrow_small_right,
-    isEnabled: Boolean = true,
+    isEnabled: Boolean = false,
     enableBackgroundColor: Color = InTouchTheme.colors.mainGreen,
     disableBackgroundColor: Color = InTouchTheme.colors.unableElementLight,
     enableTextColor: Color = InTouchTheme.colors.input,
     disableTextColor: Color = InTouchTheme.colors.input,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 10.dp, vertical = 10.dp),
+    contentPadding: PaddingValues = PaddingValues(
+        start = 12.dp,
+        top = 9.dp,
+        bottom = 12.dp,
+        end = 12.dp
+    ),
     shape: Shape = RoundedCornerShape(12.dp),
     text: String,
     textStyle: TextStyle = InTouchTheme.typography.bodySemibold,
@@ -58,25 +63,6 @@ fun TertiaryButton(
 }
 
 @Composable
-fun TertiaryButtonActive(
-    onClick: () -> Unit,
-    modifier: Modifier,
-    text: String,
-    isEnabled: Boolean = true,
-) {
-    TertiaryButton(
-        onClick = onClick,
-        modifier = modifier,
-        text = text,
-        isEnabled = isEnabled,
-        enableBackgroundColor = InTouchTheme.colors.darkGreen,
-        disableBackgroundColor = InTouchTheme.colors.darkGreen,
-        enableTextColor = InTouchTheme.colors.input,
-        disableTextColor = InTouchTheme.colors.input,
-    )
-}
-
-@Composable
 fun TertiaryButtonDefault(
     onClick: () -> Unit,
     modifier: Modifier,
@@ -88,7 +74,7 @@ fun TertiaryButtonDefault(
         modifier = modifier,
         text = text,
         isEnabled = isEnabled,
-        enableBackgroundColor = InTouchTheme.colors.mainGreen,
+        enableBackgroundColor = InTouchTheme.colors.darkGreen,
         disableBackgroundColor = InTouchTheme.colors.mainGreen,
         enableTextColor = InTouchTheme.colors.input,
         disableTextColor = InTouchTheme.colors.input,
@@ -97,24 +83,26 @@ fun TertiaryButtonDefault(
 
 @Preview(showBackground = true)
 @Composable
-fun TertiaryButtonDefault() {
+fun TertiaryButtonDefaultPreview() {
     InTouchTheme {
         TertiaryButtonDefault(
             onClick = {},
             modifier = Modifier,
-            text = "Security"
+            text = "Security",
+            isEnabled = false
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun TertiaryButtonActive() {
+fun TertiaryButtonActivePreview() {
     InTouchTheme {
-        TertiaryButtonActive(
+        TertiaryButtonDefault(
             onClick = {},
             modifier = Modifier,
-            text = "Security"
+            text = "Security",
+            isEnabled = true
         )
     }
 }
