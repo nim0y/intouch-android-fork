@@ -54,7 +54,7 @@ fun ButtonSampleScreen2() {
                     .width(334.dp)
                     .height(42.dp),
                 text = "Security",
-                isEnabled = false
+                isActive = false
             )
             TertiaryButtonDefault(
                 onClick = {},
@@ -63,18 +63,19 @@ fun ButtonSampleScreen2() {
                     .width(334.dp)
                     .height(42.dp),
                 text = "Security",
-                isEnabled = false
+                isActive = true,
             )
             DeleteButtonDefault(
                 onClick = {},
                 modifier = Modifier.padding(top = 5.dp),
                 text = "Delete Profile",
-                isEnabled = true
+                isActive = false
             )
             DeleteButtonDefault(
                 onClick = {},
                 modifier = Modifier.padding(top = 5.dp),
-                text = "Delete Profile"
+                text = "Delete Profile",
+                isActive = true,
             )
         }
     }
