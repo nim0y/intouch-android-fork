@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.buttons.DeleteButtonDefault
+import care.intouch.uikit.ui.buttons.DeleteButton
 import care.intouch.uikit.ui.buttons.IconicButtonCircle
 import care.intouch.uikit.ui.buttons.IconicTabBarPlus
 import care.intouch.uikit.ui.buttons.TertiaryButtonDefault
@@ -65,13 +65,13 @@ fun ButtonSampleScreen2() {
                 text = "Security",
                 isActive = true,
             )
-            DeleteButtonDefault(
+            DeleteButton(
                 onClick = {},
                 modifier = Modifier.padding(top = 5.dp),
                 text = "Delete Profile",
                 isActive = false
             )
-            DeleteButtonDefault(
+            DeleteButton(
                 onClick = {},
                 modifier = Modifier.padding(top = 5.dp),
                 text = "Delete Profile",

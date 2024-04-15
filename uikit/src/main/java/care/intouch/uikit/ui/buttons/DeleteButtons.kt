@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun DeleteButtonDefault(
+fun DeleteButton(
     onClick: () -> Unit,
     modifier: Modifier,
     text: String,
@@ -23,9 +23,12 @@ fun DeleteButtonDefault(
         text = text,
         textStyle = textStyle,
         isEnabled = isEnabled,
-        isActive = isActive,
         contentPadding = PaddingValues(horizontal = 51.5.dp, vertical = 11.5.dp),
-        enableBackgroundColor = InTouchTheme.colors.errorMaroonColor,
+        enableBackgroundColor = if (isActive) {
+            InTouchTheme.colors.errorMaroonColor
+        } else {
+            InTouchTheme.colors.errorRed
+        },
         disableBackgroundColor = InTouchTheme.colors.errorRed,
         enableTextColor = InTouchTheme.colors.input,
         disableTextColor = InTouchTheme.colors.input
@@ -36,7 +39,7 @@ fun DeleteButtonDefault(
 @Composable
 fun DeleteButtonDefaultPreview() {
     InTouchTheme {
-        DeleteButtonDefault(
+        DeleteButton(
             onClick = {},
             modifier = Modifier,
             text = "Delete Profile Forever",
@@ -49,7 +52,7 @@ fun DeleteButtonDefaultPreview() {
 @Composable
 fun DeleteButtonActivePreview() {
     InTouchTheme {
-        DeleteButtonDefault(
+        DeleteButton(
             onClick = {},
             modifier = Modifier,
             text = "Delete Profile Forever",

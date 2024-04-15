@@ -23,7 +23,6 @@ fun IntouchButton(
     textStyle: TextStyle = InTouchTheme.typography.titleMedium,
     isEnabled: Boolean = true,
     isHasStroke: Boolean = false,
-    isActive: Boolean = false,
     enableBackgroundColor: Color = InTouchTheme.colors.mainGreen,
     disableBackgroundColor: Color = InTouchTheme.colors.unableElementLight,
     enableTextColor: Color = InTouchTheme.colors.input,
@@ -45,21 +44,12 @@ fun IntouchButton(
             )
         },
         enabled = isEnabled,
-        colors = if (isActive) {
-            ButtonColors(
-                containerColor = disableBackgroundColor,
-                contentColor = disableTextColor,
-                disabledContainerColor = enableBackgroundColor,
-                disabledContentColor = enableTextColor,
-            )
-        } else {
-            ButtonColors(
+        colors = ButtonColors(
             containerColor = enableBackgroundColor,
             contentColor = enableTextColor,
             disabledContainerColor = disableBackgroundColor,
             disabledContentColor = disableTextColor,
-            )
-        },
+        ),
         onClick = { onClick.invoke() }
     )
     {
