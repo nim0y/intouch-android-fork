@@ -79,7 +79,7 @@ fun NoteCards(
                 Text(
                     modifier = Modifier.padding(end = 18.dp, top = 10.5.dp),
                     text = stringResource(R.string.note),
-                    style = InTouchTheme.typography.bodyBold,
+                    style = InTouchTheme.typography.subTitle,
                     color = InTouchTheme.colors.textGreen
                 )
                 Text(
@@ -100,7 +100,7 @@ fun NoteCards(
                     modifier = Modifier.padding(end = 9.dp),
                     text = stringResource(R.string.mood),
                     color = InTouchTheme.colors.textGreen,
-                    style = InTouchTheme.typography.bodyBold,
+                    style = InTouchTheme.typography.subTitle,
                 )
                 for (mood in moodChipsList.take(2)) {
                     EmotionalChipsSmall(
@@ -133,7 +133,7 @@ fun NoteCards(
                 modifier = Modifier
                     .padding(end = 6.dp)
                     .clickable { onClickTrash() },
-                painter = painterResource(id = R.drawable.icon_trash),
+                painter = painterResource(id = R.drawable.icon_trash_card),
                 contentDescription = "delete"
             )
             Toggle(isChecked = toggleIsChecked) {
