@@ -56,7 +56,7 @@ fun PlanCard(
 
     ) {
         Column(
-            modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 modifier = modifier
@@ -66,14 +66,14 @@ fun PlanCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AccentChips(
-                    modifier = modifier.padding(),
+                    modifier = Modifier.padding(),
                     text = chipText,
                     selected = true,
                     selectedColor = chipColors,
                     unselectedColorText = chipTextColor
                 ) {}
                 Text(
-                    modifier = modifier
+                    modifier = Modifier
                         .weight(1f)
                         .padding(start = 14.dp),
                     text = dateText,
@@ -81,20 +81,20 @@ fun PlanCard(
                     style = dateTextStyle
                 )
                 Image(
-                    modifier = modifier.clickable { onClickSetting() },
+                    modifier = Modifier.clickable { onClickSetting() },
                     painter = painterResource(id = R.drawable.icon_elipsis_vertical),
                     contentDescription = "",
                 )
             }
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = modifier
+                    modifier = Modifier
                         .weight(1f)
                         .padding(end = 15.dp),
                     text = text,
@@ -108,9 +108,9 @@ fun PlanCard(
             }
         }
 
-        Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Image(
-                modifier = modifier.padding(bottom = 55.dp, top = 20.dp),
+                modifier = Modifier.padding(bottom = 55.dp, top = 20.dp),
                 painter = painterResource(R.drawable.illustration_plan_card),
                 contentDescription = "",
                 contentScale = ContentScale.Crop
@@ -123,7 +123,7 @@ fun PlanCard(
 @Composable
 fun PreviewPlanCards() {
     InTouchTheme {
-        PlanCard(chipText = StringVO.Plain("To do"),
+        PlanCard(chipText = StringVO.Plain("Done"),
             dateText = "May, 15  2023",
             text = "Socratic dialogue Learning...\n" + "Lorem ipsum dolor sit amet ",
             toggleIsChecked = false,

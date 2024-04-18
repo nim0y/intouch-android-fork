@@ -58,14 +58,14 @@ fun NoteCards(
         horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
         Text(
-            modifier = modifier.padding(start = 14.dp),
+            modifier = Modifier.padding(start = 14.dp),
             text = dateText.replace(dateTextDivider, "\n"),
             color = dateColor,
             style = dateTextStyle,
             lineHeight = 30.sp
         )
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(start = 18.dp)
                 .fillMaxHeight()
                 .weight(1f),
@@ -73,11 +73,11 @@ fun NoteCards(
             horizontalAlignment = Alignment.Start
         ) {
             Row(
-                modifier = modifier.padding(top = 14.dp),
+                modifier = Modifier.padding(top = 14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = modifier.padding(end = 18.dp, top = 10.5.dp),
+                    modifier = Modifier.padding(end = 18.dp, top = 10.5.dp),
                     text = stringResource(R.string.note),
                     style = InTouchTheme.typography.bodyBold,
                     color = InTouchTheme.colors.textGreen
@@ -92,19 +92,19 @@ fun NoteCards(
             }
 
             Row(
-                modifier = modifier.padding(bottom = 17.dp),
+                modifier = Modifier.padding(bottom = 17.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    modifier = modifier.padding(end = 9.dp),
+                    modifier = Modifier.padding(end = 9.dp),
                     text = stringResource(R.string.mood),
                     color = InTouchTheme.colors.textGreen,
                     style = InTouchTheme.typography.bodyBold,
                 )
                 for (mood in moodChipsList.take(2)) {
                     EmotionalChipsSmall(
-                        modifier = modifier.padding(start = 3.dp),
+                        modifier = Modifier.padding(start = 3.dp),
                         text = mood,
                         selected = true,
                         selectedColorText = moodChipsTextColor,
@@ -115,7 +115,7 @@ fun NoteCards(
                 }
                 if (moodChipsList.size > 2) {
                     Image(
-                        modifier = modifier.padding(start = 1.dp),
+                        modifier = Modifier.padding(start = 1.dp),
                         painter = painterResource(id = R.drawable.icon_elipsis_horizontal),
                         contentDescription = "Ellipsis"
                     )
@@ -123,14 +123,14 @@ fun NoteCards(
             }
         }
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxHeight()
                 .padding(end = 14.dp, bottom = 13.dp, top = 14.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.End
         ) {
             Image(
-                modifier = modifier
+                modifier = Modifier
                     .padding(end = 6.dp)
                     .clickable { onClickTrash() },
                 painter = painterResource(id = R.drawable.icon_trash),
