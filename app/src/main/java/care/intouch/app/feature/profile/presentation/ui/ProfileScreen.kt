@@ -1,5 +1,6 @@
 package care.intouch.app.feature.profile.presentation.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +20,9 @@ fun ProfileScreen(
     goToPinCodeChangeScreen: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(InTouchTheme.colors.accentYellow),
         contentAlignment = Alignment.Center
     ) {
 

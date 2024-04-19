@@ -53,6 +53,7 @@ dependencies {
     //Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.navigation.runtime.ktx)
 
     //Testing
     debugImplementation(libs.androidx.ui.tooling)

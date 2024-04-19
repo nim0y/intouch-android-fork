@@ -14,16 +14,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import care.intouch.app.core.navigation.EntryPoint
+import care.intouch.app.core.navigation.RootNavGraph
+import care.intouch.app.core.navigation.Route
 import care.intouch.uikit.theme.InTouchTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,17 +46,73 @@ class MainActivity : ComponentActivity() {
                     var movedUiKitSample by remember {
                         mutableStateOf(false)
                     }
+
+                    var navIsShowed by remember {
+                        mutableStateOf(false)
+                    }
+
+                    var entryPoint: EntryPoint by remember {
+                        mutableStateOf(EntryPoint.Authentication())
+                    }
+
+                    val navController = rememberNavController()
+
                     Column(
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = Arrangement.SpaceEvenly,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        if (BuildConfig.DEBUG) {
-                            MainScreenWithDebug(
-                                movedUiKitSample = movedUiKitSample,
-                                onChangeState = { movedUiKitSample = !movedUiKitSample }
-                            )
+                        if (!navIsShowed) {
+                            if (BuildConfig.DEBUG) {
+                                MainScreenWithDebug(
+                                    movedUiKitSample = movedUiKitSample,
+                                    onChangeState = { movedUiKitSample = !movedUiKitSample }
+                                )
+                            } else {
+                                Greeting("Android")
+                            }
+
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(text = entryPoint.stringValue)
+                                Switch(
+                                    checked = entryPoint.boolValue,
+                                    onCheckedChange = {
+                                        entryPoint = if (it) EntryPoint.Authentication() else EntryPoint.Registration()
+                                    }
+                                )
+                            }
+
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp),
+                                onClick = {
+                                    navIsShowed = !navIsShowed
+                                }
+                            ) {
+                                Text("Go to navigation")
+                            }
                         } else {
-                            Greeting("Android")
+
+                            when (entryPoint) {
+                                is EntryPoint.Authentication -> {
+                                    RootNavGraph(
+                                        navController = navController,
+                                        startDestination = Route.AUTHENTICATION
+                                    )
+                                }
+
+                                is EntryPoint.Registration -> {
+                                    RootNavGraph(
+                                        navController = navController,
+                                        startDestination = Route.REGISTRATION
+                                    )
+                                }
+                            }
+
                         }
+
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package care.intouch.app.feature.home.presentation.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,9 @@ import care.intouch.uikit.theme.InTouchTheme
 @Composable
 fun HomeScreen() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(InTouchTheme.colors.accentYellow),
         contentAlignment = Alignment.Center
     ) {
 
