@@ -14,13 +14,21 @@ import care.intouch.uikit.ui.navigation.CustomBottomNavBar
 @Composable
 fun BottomNav() {
 
+    val screensWithBottomBar = listOf(
+        Route.HOME, Route.PLAN, Route.DIARY, Route.PROFILE
+    )
+
     val navController = rememberNavController()
 
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = {
+            if (screensWithBottomBar.contains(currentRoute(navController = navController))) {
+                BottomBar(navController = navController)
+            }
+        }
     ) {
         Modifier.padding(it)
-        RootNavGraph(
+        BottomNavGraph(
             navController = navController,
             startDestination = Route.HOME
         )
@@ -40,4 +48,10 @@ fun BottomBar(
         screenRoute4 = Route.DIARY,
         screenRoute5 = Route.PROFILE
     )
+}
+
+@Composable
+fun currentRoute(navController: NavHostController): String? {
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    return navBackStackEntry?.destination?.route
 }

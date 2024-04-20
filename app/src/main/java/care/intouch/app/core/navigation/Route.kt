@@ -19,6 +19,7 @@ object Route {
     const val PROFILE = "PROFILE"
 
     // Plan
+    const val TASK_ROUTE = "TASK_ROUTE"
     const val TASK = "TASK"
     const val TASK_INTRODUCTION = "TASK_INTRODUCTION"
     const val TASK_ESTIMATE = "TASK_ESTIMATE"
