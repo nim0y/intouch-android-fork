@@ -75,7 +75,7 @@ fun PinCodeInputField(
     pinCodeLength: Int = DEFAULT_PIN_CODE_LENGTH,
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         keyboardType = KeyboardType.NumberPassword,
-        imeAction = ImeAction.None
+        imeAction = ImeAction.Done
     ),
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     spacingBetweenCells: Dp = DEFAULT_SPACE_BETWEEN_CELLS,
