@@ -23,13 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import care.intouch.app.core.navigation.EntryPoint
-import care.intouch.app.core.navigation.RootNavGraph
+import care.intouch.app.core.navigation.navhost.AuthorizationNavHost
 import care.intouch.app.core.navigation.Route
 import care.intouch.uikit.theme.InTouchTheme
 
@@ -58,7 +57,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
 
                     Column(
-                        verticalArrangement = Arrangement.SpaceEvenly,
+                        verticalArrangement = Arrangement.SpaceAround,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (!navIsShowed) {
@@ -71,48 +70,54 @@ class MainActivity : ComponentActivity() {
                                 Greeting("Android")
                             }
 
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(text = entryPoint.stringValue)
-                                Switch(
-                                    checked = entryPoint.boolValue,
-                                    onCheckedChange = {
-                                        entryPoint = if (it) EntryPoint.Authentication() else EntryPoint.Registration()
-                                    }
-                                )
-                            }
+                            if (!movedUiKitSample) {
 
-                            Button(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 8.dp),
-                                onClick = {
-                                    navIsShowed = !navIsShowed
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "Choose entry point for navigation",
+                                        style = InTouchTheme.typography.titleMedium
+                                    )
+                                    Text(text = entryPoint.stringValue)
+                                    Switch(
+                                        checked = entryPoint.boolValue,
+                                        onCheckedChange = {
+                                            entryPoint =
+                                                if (it) EntryPoint.Authentication() else EntryPoint.Registration()
+                                        }
+                                    )
                                 }
-                            ) {
-                                Text("Go to navigation")
+
+                                Button(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 8.dp),
+                                    onClick = {
+                                        navIsShowed = !navIsShowed
+                                    }
+                                ) {
+                                    Text("Go to navigation")
+                                }
                             }
                         } else {
 
                             when (entryPoint) {
                                 is EntryPoint.Authentication -> {
-                                    RootNavGraph(
+                                    AuthorizationNavHost(
                                         navController = navController,
                                         startDestination = Route.AUTHENTICATION
                                     )
                                 }
 
                                 is EntryPoint.Registration -> {
-                                    RootNavGraph(
+                                    AuthorizationNavHost(
                                         navController = navController,
                                         startDestination = Route.REGISTRATION
                                     )
                                 }
                             }
-
                         }
-
                     }
                 }
             }

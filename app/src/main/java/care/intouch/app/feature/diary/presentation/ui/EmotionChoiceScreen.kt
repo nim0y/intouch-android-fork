@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun EmotionChoiceScreen() {
+fun EmotionChoiceScreen(
+    goToDiaryEntriesScreen: () -> Unit
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -27,6 +29,13 @@ fun EmotionChoiceScreen() {
             style = InTouchTheme.typography.titleMedium
         )
 
+        Button(
+            onClick = {
+                goToDiaryEntriesScreen.invoke()
+            }
+        ) {
+            Text(text = "Go to DiaryEntriesScreen")
+        }
     }
 }
 
@@ -34,6 +43,8 @@ fun EmotionChoiceScreen() {
 @Preview(showBackground = true)
 fun EmotionChoiceScreenPreview() {
     InTouchTheme {
-        EmotionChoiceScreen()
+        EmotionChoiceScreen(
+            goToDiaryEntriesScreen = {}
+        )
     }
 }

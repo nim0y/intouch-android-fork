@@ -3,12 +3,12 @@ package care.intouch.app.core.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import care.intouch.app.core.navigation.navhost.BottomNavHost
 import care.intouch.uikit.ui.navigation.CustomBottomNavBar
+import care.intouch.uikit.ui.navigation.currentRoute
 
 
 @Composable
@@ -28,10 +28,11 @@ fun BottomNav() {
         }
     ) {
         Modifier.padding(it)
-        BottomNavGraph(
+        BottomNavHost(
             navController = navController,
             startDestination = Route.HOME
         )
+
     }
 }
 
@@ -48,10 +49,4 @@ fun BottomBar(
         screenRoute4 = Route.DIARY,
         screenRoute5 = Route.PROFILE
     )
-}
-
-@Composable
-fun currentRoute(navController: NavHostController): String? {
-    val navBackStackEntry = navController.currentBackStackEntryAsState().value
-    return navBackStackEntry?.destination?.route
 }

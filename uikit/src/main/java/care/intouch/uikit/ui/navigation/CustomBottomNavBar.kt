@@ -15,11 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,8 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import care.intouch.uikit.R
@@ -79,9 +73,12 @@ fun NavBottomComplexElement(
     onClick: () -> Unit,
     text: String,
     painter: Painter,
-    focusTint: Color,
+    onFocusTint: Color,
+    outFocusTint: Color,
     modifier: Modifier = Modifier
 ) {
+
+    val selected = navController?.let { currentRoute(navController = it) } == screenRoute
 
     Column(
         modifier = modifier
@@ -105,12 +102,12 @@ fun NavBottomComplexElement(
         Icon(
             painter = painter,
             contentDescription = null,
-            tint = focusTint,
+            tint = if (selected) onFocusTint else outFocusTint,
             modifier = modifier.padding(bottom = 5.dp)
         )
         Text(
             text = text,
-            color = focusTint,
+            color = if (selected) onFocusTint else outFocusTint,
             style = InTouchTheme.typography.tabBar,
             modifier = Modifier.padding(bottom = 4.dp),
             maxLines = 1,
@@ -128,7 +125,8 @@ fun NavBottomComplexElementPreview() {
             onClick = { /*TODO*/ },
             text = "Home",
             painter = painterResource(id = R.drawable.icon_home),
-            focusTint = InTouchTheme.colors.mainGreen,
+            onFocusTint = InTouchTheme.colors.mainGreen,
+            outFocusTint = InTouchTheme.colors.mainGreen40,
         )
     }
 }
@@ -164,11 +162,6 @@ fun CustomBottomNavBar(
             .background(Color.Transparent)
     ) {
 
-        var selectedElementId: ElementId by rememberSaveable {
-            mutableStateOf(ElementId.HOME_ID)
-        }
-
-
         val (homeTag, progressTag, plusTag, myPlanTag, additionalTag, box) = createRefs()
 
         Box(
@@ -188,13 +181,12 @@ fun CustomBottomNavBar(
             navController = navController,
             screenRoute = screenRoute1,
             onClick = {
-                selectedElementId = ElementId.HOME_ID
                 firstItemClick.invoke()
             },
             text = firstItemText,
             painter = firstItemImage,
-            focusTint = if (selectedElementId == ElementId.HOME_ID) onFocusTint
-            else outFocusTint,
+            onFocusTint = onFocusTint,
+            outFocusTint = outFocusTint,
             modifier = Modifier
                 .constrainAs(homeTag) {
                     bottom.linkTo(parent.bottom)
@@ -206,13 +198,12 @@ fun CustomBottomNavBar(
             navController = navController,
             screenRoute = screenRoute5,
             onClick = {
-                selectedElementId = ElementId.PROFILE_ID
                 fourthItemClick.invoke()
             },
             text = fourthItemText,
             painter = fourthItemImage,
-            focusTint = if (selectedElementId == ElementId.PROFILE_ID) onFocusTint
-            else outFocusTint,
+            onFocusTint = onFocusTint,
+            outFocusTint = outFocusTint,
             modifier = Modifier
                 .constrainAs(additionalTag) {
                     bottom.linkTo(parent.bottom)
@@ -228,7 +219,6 @@ fun CustomBottomNavBar(
                 top.linkTo(parent.top)
             }
         ) {
-            selectedElementId = ElementId.PLUS_ID
             onPlusItemClick.invoke()
         }
 
@@ -236,13 +226,12 @@ fun CustomBottomNavBar(
             navController = navController,
             screenRoute = screenRoute2,
             onClick = {
-                selectedElementId = ElementId.PLAN_ID
                 secondItemClick.invoke()
             },
             text = secondItemText,
             painter = secondItemImage,
-            focusTint = if (selectedElementId == ElementId.PLAN_ID) onFocusTint
-            else outFocusTint,
+            onFocusTint = onFocusTint,
+            outFocusTint = outFocusTint,
             modifier = Modifier
                 .constrainAs(progressTag) {
                     bottom.linkTo(parent.bottom)
@@ -255,13 +244,12 @@ fun CustomBottomNavBar(
             navController = navController,
             screenRoute = screenRoute4,
             onClick = {
-                selectedElementId = ElementId.DIARY_ID
                 thirdItemClick.invoke()
             },
             text = thirdItemText,
             painter = thirdItemImage,
-            focusTint = if (selectedElementId == ElementId.DIARY_ID) onFocusTint
-            else outFocusTint,
+            onFocusTint = onFocusTint,
+            outFocusTint = outFocusTint,
             modifier = Modifier
                 .constrainAs(myPlanTag) {
                     bottom.linkTo(parent.bottom)
@@ -278,8 +266,4 @@ fun CustomBottomNavBarPreview() {
     InTouchTheme {
         CustomBottomNavBar()
     }
-}
-
-enum class ElementId {
-    HOME_ID, PLAN_ID, PLUS_ID, DIARY_ID, PROFILE_ID;
 }
