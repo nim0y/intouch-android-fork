@@ -10,6 +10,9 @@ sealed class NetworkException(
     class BadRequest(errorMessage: String, httpStatusCode: Int) :
         NetworkException(errorMessage, httpStatusCode)
 
+    class Unauthorized(errorMessage: String, httpStatusCode: Int) :
+        NetworkException(errorMessage, httpStatusCode)
+
     class NotFound(errorMessage: String, httpStatusCode: Int) :
         NetworkException(errorMessage, httpStatusCode)
 
