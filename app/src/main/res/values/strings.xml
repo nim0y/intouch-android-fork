@@ -51,6 +51,7 @@
     <string name="sing_out_button">Sign out</string>
     <string name="save_changes_button">Save changes</string>
     <string name="delete_profile_button">Delete Profile Forever</string>
+    <string name="add_emotions_button">Add emotions</string>
 
     <string name="empty_plan">Your therapist hasn\'t given tasks yet, but let\'s start by diving into your diary</string>
     <string name="empty_diary">Share your thoughts and feelings — a wonderful way to begin your path to well-being</string>
@@ -61,6 +62,7 @@
     <string name="see_all">See all</string>
     <string name="show_all">Show all</string>
     <string name="danger_zone">Danger Zone</string>
+    <string name="share_with_therapist">Share this entry with my therapist</string>
 
     <string name="name_info_profile">Name</string>
     <string name="email_info_profile">E-mail</string>
@@ -100,7 +102,63 @@
     <string name="current_password_hint">Current Password</string>
     <string name="new_password_hint">New Password</string>
     <string name="confirm_password_hint">Confirm New Password</string>
+    <string name="edit_text_hint">Write your answer here…</string>
 
     <string name="duplicate_item_menu">Duplicate</string>
     <string name="clear_item_menu">Clear</string>
+
+    <string name="event_sub_title_emotional">Event Details</string>
+    <string name="thoughts_sub_title_emotional">Thoughts Analysis</string>
+    <string name="emotional_type_sub_title_emotional">Emotional Type</string>
+    <string name="sensations_sub_title_emotional">Physical Sensations</string>
+    <string name="event_desc_emotional">Describe the event or situaton. What happened?</string>
+    <string name="thoughts_desc_emotional">Reflect on your thoughts related to the situation. What were you thinking?</string>
+    <string name="emotional_type_desc_emotional">How are you feeling? Describe your emotions or choose from our prompt.</string>
+    <string name="sensations_desc_emotional">Describe any physical sensations or changes you noticed in your body. For example, tension, butterflies, etc.</string>
+
+
+    <string name="not_select_emotional_type">How are you feeling? Choose from our prompt.</string>
+    <string name="select_emotional_type">How are you feeling?</string>
+    <string name="terrible_emotional_type">TERRIBLE</string>
+    <string name="bad_primary_emotional">BAD</string>
+    <string name="okay_primary_emotional">OKAY</string>
+    <string name="good_primary_emotional">GOOD</string>
+    <string name="great_primary_emotional">GREAT</string>
+
+    <string name="loss_clarifying_emotional">Loss</string>
+    <string name="humility_clarifying_emotional">Humility</string>
+    <string name="anxiety_clarifying_emotional">Anxiety</string>
+    <string name="embarrassment_clarifying_emotional">Embarrassment</string>
+    <string name="depression_clarifying_emotional">Depression</string>
+    <string name="fear_clarifying_emotional">Fear</string>
+    <string name="anger_clarifying_emotional">Anger</string>
+    <string name="excitement_clarifying_emotional">Excitement</string>
+    <string name="shame_clarifying_emotional">Shame</string>
+    <string name="disgust_clarifying_emotional">Disgust</string>
+    <string name="guilt_clarifying_emotional">Guilt</string>
+    <string name="nervousness_clarifying_emotional">Nervousness</string>
+    <string name="sadness_clarifying_emotional">Sadness</string>
+    <string name="exhaustion_clarifying_emotional">Exhaustion</string>
+    <string name="impatience_clarifying_emotional">Impatience</string>
+    <string name="disappointment_clarifying_emotional">Disappointment</string>
+    <string name="confusion_clarifying_emotional">Confusion</string>
+    <string name="loneliness_clarifying_emotional">Loneliness</string>
+    <string name="acceptance_clarifying_emotional">Acceptance</string>
+    <string name="frustration_clarifying_emotional">Frustration</string>
+    <string name="laziness_clarifying_emotional">Laziness</string>
+    <string name="pride_clarifying_emotional">Pride</string>
+    <string name="hope_clarifying_emotional">Hope</string>
+    <string name="calmness_clarifying_emotional">Calmness</string>
+    <string name="gratitude_clarifying_emotional">Gratitude</string>
+    <string name="interest_clarifying_emotional">Interest</string>
+    <string name="respect_clarifying_emotional">Respect</string>
+    <string name="enthusiasm_clarifying_emotional">Enthusiasm</string>
+    <string name="happiness_clarifying_emotional">Happiness</string>
+    <string name="inspiration_clarifying_emotional">Inspiration</string>
+    <string name="joy_clarifying_emotional">Joy</string>
+    <string name="love_clarifying_emotional">Love</string>
+    <string name="amazement_clarifying_emotional">Amazement</string>
+    <string name="satisfaction_clarifying_emotional">Satisfaction</string>
+    <string name="self_love_clarifying_emotional">Self-love</string>
+    <string name="euphoria_clarifying_emotional">Euphoria</string>
 </resources>
