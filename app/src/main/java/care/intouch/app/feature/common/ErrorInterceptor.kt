@@ -1,7 +1,7 @@
 package care.intouch.app.feature.common
 
 import care.intouch.app.feature.common.data.api.NetworkConnectionProvider
-import care.intouch.app.feature.common.data.utill.exception.NetworkException
+import care.intouch.app.feature.common.data.models.exception.NetworkException
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException

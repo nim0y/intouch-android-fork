@@ -1,9 +1,11 @@
-package care.intouch.app.feature.authorization.data.api
+package care.intouch.app.feature.authorization.data.impl
 
+import care.intouch.app.feature.authorization.data.AuthenticationDataMapper
 import care.intouch.app.feature.authorization.data.NetworkToAuthenticationExceptionMapper
-import care.intouch.app.feature.authorization.data.models.AuthenticationDataMapper
-import care.intouch.app.feature.authorization.data.models.ConfirmEmailDto
-import care.intouch.app.feature.common.data.utill.exception.NetworkException
+import care.intouch.app.feature.authorization.data.api.AuthenticationApiService
+import care.intouch.app.feature.authorization.data.api.AuthenticationRemoteDataSource
+import care.intouch.app.feature.authorization.data.models.AuthenticationOutputDto
+import care.intouch.app.feature.common.data.models.exception.NetworkException
 import javax.inject.Inject
 
 class AuthenticationRemoteDataSourceImpl @Inject constructor(
@@ -12,7 +14,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
     private val networkToAuthenticationExceptionMapper: NetworkToAuthenticationExceptionMapper
 ) :
     AuthenticationRemoteDataSource {
-    override suspend fun confirmEmail(id: String, token: String): ConfirmEmailDto {
+    override suspend fun confirmEmail(id: String, token: String): AuthenticationOutputDto {
         return try {
             val response = apiService.confirmEmail(id, token)
             dataMapper.toConfirmEmailDto(response)

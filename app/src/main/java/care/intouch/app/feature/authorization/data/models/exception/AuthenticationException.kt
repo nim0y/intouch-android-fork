@@ -1,11 +1,11 @@
-package care.intouch.app.feature.common.data.utill.exception
+package care.intouch.app.feature.authorization.data.models.exception
 
 import java.io.IOException
 
 sealed class AuthenticationException(
     override val message: String,
 ) : IOException(message) {
-    data class NoConnection(
+    data class NoInternetConnection(
         override val message: String = NO_INTERNET_CONNECTION
     ) : AuthenticationException(message)
 
@@ -20,6 +20,10 @@ sealed class AuthenticationException(
         class NotFound(
             override val message: String,
         ) : Authentication(message)
+
+        class AlreadyActivated(
+            override val message: String,
+        ) : Authentication(message = message)
 
     }
 

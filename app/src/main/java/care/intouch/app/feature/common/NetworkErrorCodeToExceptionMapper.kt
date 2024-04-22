@@ -1,7 +1,7 @@
 package care.intouch.app.feature.common
 
 
-import care.intouch.app.feature.common.data.utill.exception.NetworkException
+import care.intouch.app.feature.common.data.models.exception.NetworkException
 import java.io.IOException
 import javax.inject.Inject
 

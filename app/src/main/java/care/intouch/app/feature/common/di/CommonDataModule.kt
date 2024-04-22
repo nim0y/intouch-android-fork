@@ -23,10 +23,6 @@ import javax.inject.Singleton
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitWithoutHeader
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class InternalServerRetrofit
-
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {

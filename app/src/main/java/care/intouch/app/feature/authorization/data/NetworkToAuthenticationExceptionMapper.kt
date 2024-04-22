@@ -1,8 +1,8 @@
 package care.intouch.app.feature.authorization.data
 
+import care.intouch.app.feature.authorization.data.models.exception.AuthenticationException
 import care.intouch.app.feature.authorization.data.models.response.ErrorResponse
-import care.intouch.app.feature.common.data.utill.exception.AuthenticationException
-import care.intouch.app.feature.common.data.utill.exception.NetworkException
+import care.intouch.app.feature.common.data.models.exception.NetworkException
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ class NetworkToAuthenticationExceptionMapper @Inject constructor(private val jso
     private fun handleCommonException(exception: NetworkException): AuthenticationException {
         return when (exception) {
             is NetworkException.NoInternetConnection -> {
-                AuthenticationException.NoConnection(message = exception.errorBody)
+                AuthenticationException.NoInternetConnection(message = exception.errorBody)
             }
 
             else -> {
