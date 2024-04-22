@@ -3,8 +3,9 @@ package care.intouch.app.feature.authorization.domain.models
 import care.intouch.app.feature.authorization.data.models.exception.AuthenticationException
 import care.intouch.app.feature.common.domain.models.BaseExceptionToErrorMapper
 import care.intouch.app.feature.common.domain.models.ErrorEntity
+import javax.inject.Inject
 
-class AuthenticationExceptionToErrorMapper : BaseExceptionToErrorMapper() {
+class AuthenticationExceptionToErrorMapper @Inject constructor() : BaseExceptionToErrorMapper() {
     override fun handleSpecificException(exception: Exception): ErrorEntity {
         return when (exception) {
             is AuthenticationException.Authentication.AlreadyActivated -> {

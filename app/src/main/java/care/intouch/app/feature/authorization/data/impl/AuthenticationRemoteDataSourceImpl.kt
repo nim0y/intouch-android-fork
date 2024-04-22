@@ -14,7 +14,7 @@ class AuthenticationRemoteDataSourceImpl @Inject constructor(
     private val networkToAuthenticationExceptionMapper: NetworkToAuthenticationExceptionMapper
 ) :
     AuthenticationRemoteDataSource {
-    override suspend fun confirmEmail(id: String, token: String): AuthenticationOutputDto {
+    override suspend fun confirmEmail(id: Int, token: String): AuthenticationOutputDto {
         return try {
             val response = apiService.confirmEmail(id, token)
             dataMapper.toConfirmEmailDto(response)

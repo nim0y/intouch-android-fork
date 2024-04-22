@@ -1,6 +1,7 @@
 package care.intouch.app.feature.authorization.data.impl
 
 import care.intouch.app.feature.authorization.data.api.AuthenticationRemoteDataSource
+import care.intouch.app.feature.authorization.data.di.AuthenticationExceptionMapper
 import care.intouch.app.feature.authorization.domain.api.AuthenticationRepository
 import care.intouch.app.feature.authorization.domain.models.AuthenticationDomainMapper
 import care.intouch.app.feature.authorization.domain.models.AuthenticationOutputData
@@ -12,10 +13,10 @@ import javax.inject.Inject
 class AuthenticationRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthenticationRemoteDataSource,
     private val domainMapper: AuthenticationDomainMapper,
-    private val exceptionToErrorMapper: BaseExceptionToErrorMapper
+    @AuthenticationExceptionMapper private val exceptionToErrorMapper: BaseExceptionToErrorMapper
 ) : AuthenticationRepository {
     override suspend fun confirmEmail(
-        id: String,
+        id: Int,
         code: String
     ): Resource<AuthenticationOutputData, ErrorEntity> {
         return try {

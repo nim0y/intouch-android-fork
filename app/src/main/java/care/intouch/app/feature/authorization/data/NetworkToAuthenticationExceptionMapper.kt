@@ -9,13 +9,6 @@ import javax.inject.Inject
 class NetworkToAuthenticationExceptionMapper @Inject constructor(private val json: Json) {
     fun handleException(exception: NetworkException): AuthenticationException {
         return when (exception) {
-            is NetworkException.Unauthorized -> {
-                val response = handleErrorResponse<ErrorResponse>(exception.errorBody)
-                AuthenticationException.Authentication.InvalidToken(
-                    message = response.error ?: BLANC_ERROR_MESSAGE
-                )
-            }
-
             is NetworkException.NotFound -> {
                 val response = handleErrorResponse<ErrorResponse>(exception.errorBody)
                 AuthenticationException.Authentication.NotFound(

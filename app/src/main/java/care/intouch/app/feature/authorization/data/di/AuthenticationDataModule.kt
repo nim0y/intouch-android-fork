@@ -34,7 +34,7 @@ interface AuthenticationDataModule {
 
     @AuthenticationExceptionMapper
     @Binds
-    fun bindProfileExceptionToErrorMapper(
+    fun bindAuthenticationExceptionToErrorMapper(
         impl: AuthenticationExceptionToErrorMapper
     ): BaseExceptionToErrorMapper
 }

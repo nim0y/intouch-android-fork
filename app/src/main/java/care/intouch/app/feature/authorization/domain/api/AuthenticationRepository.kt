@@ -6,7 +6,7 @@ import care.intouch.app.feature.common.domain.models.ErrorEntity
 
 interface AuthenticationRepository {
     suspend fun confirmEmail(
-        id: String,
+        id: Int,
         code: String
     ): Resource<AuthenticationOutputData, ErrorEntity>
 }
