@@ -4,12 +4,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +26,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import care.intouch.uikit.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
@@ -50,88 +52,111 @@ fun NoteCards(
 ) {
     Row(
         modifier = modifier
-            .height(109.dp)
-            .width(334.dp)
+            .heightIn(max = 109.dp)
+            .widthIn(max = 334.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(backgroundColor),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            modifier = Modifier.padding(start = 14.dp),
-            text = dateText.replace(dateTextDivider, "\n"),
-            color = dateColor,
-            style = dateTextStyle,
-            lineHeight = 30.sp
-        )
+        Column(
+            modifier = Modifier.padding(start = 17.dp, top = 21.dp)
+        ) {
+            Text(
+                text = dateText.substringBefore(dateTextDivider),
+                color = dateColor,
+                style = dateTextStyle
+            )
+            Text(
+                modifier = Modifier.padding(top = 2.dp),
+                text = dateText.substringAfter(dateTextDivider),
+                color = dateColor,
+                style = dateTextStyle
+            )
+        }
+
         Column(
             modifier = Modifier
-                .padding(start = 18.dp)
                 .fillMaxHeight()
-                .weight(1f),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.Start
+                .padding(start = 19.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier.padding(top = 14.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.padding(end = 18.dp, top = 10.5.dp),
                     text = stringResource(R.string.note),
                     style = InTouchTheme.typography.subTitle,
                     color = InTouchTheme.colors.textGreen
                 )
-                Text(
-                    maxLines = 2,
-                    text = noteText,
-                    overflow = TextOverflow.Ellipsis,
-                    style = noteTextStyle,
-                    color = noteColor
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(start = 18.dp)
+                        .width(160.dp)
+                        .height(44.dp),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Text(
+                        maxLines = 2,
+                        text = noteText,
+                        overflow = TextOverflow.Ellipsis,
+                        style = noteTextStyle,
+                        color = noteColor,
+                    )
+                }
             }
 
             Row(
                 modifier = Modifier.padding(bottom = 17.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    modifier = Modifier.padding(end = 9.dp),
+                    modifier = Modifier.padding(end = 8.dp).padding(bottom = 2.dp),
                     text = stringResource(R.string.mood),
                     color = InTouchTheme.colors.textGreen,
                     style = InTouchTheme.typography.subTitle,
                 )
-                for (mood in moodChipsList.take(2)) {
-                    EmotionalChipsSmall(
-                        modifier = Modifier.padding(start = 3.dp),
-                        text = mood,
-                        selected = true,
-                        selectedColorText = moodChipsTextColor,
-                        selectedColor = moodChipsBackgroundColor
-                    ) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .height(46.dp),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        for (mood in moodChipsList.take(2)) {
+                            EmotionalChipsSmall(
+                                modifier = Modifier.padding(horizontal = 2.dp),
+                                text = mood,
+                                selected = true,
+                                selectedColorText = moodChipsTextColor,
+                                selectedColor = moodChipsBackgroundColor
+                            ) {
 
+                            }
+                        }
+                        if (moodChipsList.size > 2) {
+                            Image(
+                                modifier = Modifier.padding(start = 1.dp),
+                                painter = painterResource(id = R.drawable.icon_elipsis_horizontal),
+                                contentDescription = "Ellipsis"
+                            )
+                        }
                     }
-                }
-                if (moodChipsList.size > 2) {
-                    Image(
-                        modifier = Modifier.padding(start = 1.dp),
-                        painter = painterResource(id = R.drawable.icon_elipsis_horizontal),
-                        contentDescription = "Ellipsis"
-                    )
                 }
             }
         }
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(end = 14.dp, bottom = 13.dp, top = 14.dp),
+                .padding(end = 12.dp, bottom = 12.dp, top = 12.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.End
         ) {
             Image(
                 modifier = Modifier
-                    .padding(end = 6.dp)
                     .clickable { onClickTrash() },
                 painter = painterResource(id = R.drawable.icon_trash_card),
                 contentDescription = "delete"
@@ -147,8 +172,13 @@ fun NoteCards(
 @Composable
 fun PreviewNoteCards() {
     InTouchTheme {
-        NoteCards(dateText = "13 jul", noteText = "Lorem Ipsum dolor", moodChipsList = listOf(
-            StringVO.Plain("Bad"), StringVO.Plain("Bad"), StringVO.Plain("Bad")
-        ), toggleIsChecked = false, onClickToggle = {}, onClickTrash = {})
+        NoteCards(dateText = "13 jul",
+            noteText = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+            moodChipsList = listOf(
+                StringVO.Plain("Bad"), StringVO.Plain("Loneliness"), StringVO.Plain("Loneliness")
+            ),
+            toggleIsChecked = false,
+            onClickToggle = {},
+            onClickTrash = {})
     }
 }
