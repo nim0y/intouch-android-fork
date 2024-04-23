@@ -1,4 +1,4 @@
-package care.intouch.app.feature.common
+package care.intouch.app.feature.common.data
 
 
 import care.intouch.app.feature.common.data.models.exception.NetworkException

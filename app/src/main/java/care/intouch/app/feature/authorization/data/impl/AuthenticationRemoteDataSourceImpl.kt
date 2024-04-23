@@ -4,12 +4,13 @@ import care.intouch.app.feature.authorization.data.AuthenticationDataMapper
 import care.intouch.app.feature.authorization.data.NetworkToAuthenticationExceptionMapper
 import care.intouch.app.feature.authorization.data.api.AuthenticationApiService
 import care.intouch.app.feature.authorization.data.api.AuthenticationRemoteDataSource
+import care.intouch.app.feature.authorization.data.di.AuthApiServiceWithoutToken
 import care.intouch.app.feature.authorization.data.models.AuthenticationOutputDto
 import care.intouch.app.feature.common.data.models.exception.NetworkException
 import javax.inject.Inject
 
 class AuthenticationRemoteDataSourceImpl @Inject constructor(
-    private val apiService: AuthenticationApiService,
+    @AuthApiServiceWithoutToken private val apiService: AuthenticationApiService,
     private val dataMapper: AuthenticationDataMapper,
     private val networkToAuthenticationExceptionMapper: NetworkToAuthenticationExceptionMapper
 ) :
