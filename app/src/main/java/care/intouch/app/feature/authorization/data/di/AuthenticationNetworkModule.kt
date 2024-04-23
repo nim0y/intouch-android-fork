@@ -25,7 +25,7 @@ class AuthenticationNetworkModule {
     @Provides
     @AuthApiServiceWithoutToken
     @Singleton
-    fun provideProfileApiService(
+    fun provideAuthenticationApiService(
         @RetrofitWithoutToken retrofit: Retrofit
     ): AuthenticationApiService {
         return retrofit.create(AuthenticationApiService::class.java)
@@ -34,7 +34,7 @@ class AuthenticationNetworkModule {
     @Provides
     @AuthenticationApiServiceWithToken
     @Singleton
-    fun provideProfileApiServiceWithToken(
+    fun provideAuthenticationApiServiceWithToken(
         @RetrofitWithToken retrofit: Retrofit
     ): AuthenticationApiService {
         return retrofit.create(AuthenticationApiService::class.java)

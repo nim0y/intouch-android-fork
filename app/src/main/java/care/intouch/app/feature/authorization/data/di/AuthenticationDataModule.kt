@@ -22,13 +22,13 @@ annotation class AuthenticationExceptionMapper
 interface AuthenticationDataModule {
     @Singleton
     @Binds
-    fun bindProfileRemoteDataSource(
+    fun bindAuthenticationRemoteDataSource(
         impl: AuthenticationRemoteDataSourceImpl
     ): AuthenticationRemoteDataSource
 
     @Singleton
     @Binds
-    fun bindProfileRepository(
+    fun bindAuthenticationRepository(
         impl: AuthenticationRepositoryImpl
     ): AuthenticationRepository
 
