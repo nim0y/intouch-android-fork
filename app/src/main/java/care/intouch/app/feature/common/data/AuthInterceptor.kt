@@ -13,18 +13,22 @@ import java.net.HttpURLConnection
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    @AuthApiServiceWithoutAuth private val authenticationApiService: AuthenticationApiService
+    @AuthApiServiceWithoutAuth private val authenticationApiService: AuthenticationApiService,
+    private val accountLocalDataSource: AccountLocalDataSource
 ) : Interceptor {
 
-    private val accountLocalDataSource = AccountLocalDataSource()
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = createRequestOnChainWithToken(chain, getAccessToken())
         val response = chain.proceed(request)
+
+        if (getAccessToken().isNullOrBlank() || getRefreshToken().isNullOrBlank()) return response
+
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             synchronized(this) {
                 val oldAccessToken =
                     response.request.header(HEADER_NAME)?.replace(BEARER, EMPTY_STRING)
                 val currentAccessToken = getAccessToken()
+
                 if (oldAccessToken != currentAccessToken) {
                     return chain.proceed(
                         createRequestOnResponseWithToken(
@@ -34,6 +38,7 @@ class AuthInterceptor @Inject constructor(
                     )
                 } else {
                     val responseNewTokens = getNewTokens(getRefreshToken())
+
                     if (responseNewTokens.code() == HttpURLConnection.HTTP_OK && responseNewTokens.body() != null) {
                         responseNewTokens.body()?.let { newTokens ->
                             accountLocalDataSource.saveAccountInformation(

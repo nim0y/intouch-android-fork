@@ -5,5 +5,5 @@ import care.intouch.app.feature.common.Resource
 import care.intouch.app.feature.common.domain.errors.ErrorEntity
 
 interface UserRepository {
-    suspend fun getUserData(): Resource<User, ErrorEntity>
+    suspend fun getUser(): Resource<User, ErrorEntity>
 }

@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.domain.impl
+package care.intouch.app.feature.authorization.domain.useCase
 
 import app.cashadvisor.common.utill.extensions.logDebugMessage
 import care.intouch.app.feature.authorization.domain.api.AuthenticationRepository

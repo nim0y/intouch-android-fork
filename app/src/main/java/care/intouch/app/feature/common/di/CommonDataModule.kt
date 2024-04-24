@@ -16,13 +16,21 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class OkhttpClientWithoutAuth
+annotation class OkhttpClientBuilder
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class OkhttpClientBuilderWithAuth
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class OkhttpClient
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -41,22 +49,31 @@ annotation class RetrofitWithAuth
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     @Singleton
+    @OkhttpClientBuilder
     @Provides
     fun provideOkhttpClientBuilder(): OkHttpClient.Builder {
         return OkHttpClient.Builder()
     }
 
     @Singleton
-    @OkhttpClientWithoutAuth
+    @OkhttpClientBuilderWithAuth
+    @Provides
+    fun provideOkhttpClientBuilderWithAuth(): OkHttpClient.Builder {
+        return OkHttpClient.Builder()
+    }
+
+
+    @Singleton
+    @OkhttpClient
     @Provides
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         errorInterceptor: ErrorInterceptor,
-        okkHttpClientBuilder: OkHttpClient.Builder
+        @OkhttpClientBuilder okkHttpClientBuilder: OkHttpClient.Builder
     ): OkHttpClient {
-        return okkHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(errorInterceptor).connectTimeout(TIMEOUT_180, TimeUnit.SECONDS)
-            .writeTimeout(TIMEOUT_180, TimeUnit.SECONDS).readTimeout(TIMEOUT_180, TimeUnit.SECONDS)
+        return okkHttpClientBuilder
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(errorInterceptor)
             .build()
     }
 
@@ -67,21 +84,21 @@ class NetworkModule {
         httpLoggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
         errorInterceptor: ErrorInterceptor,
-        okkHttpClientBuilder: OkHttpClient.Builder
+        @OkhttpClientBuilderWithAuth okkHttpClientBuilder: OkHttpClient.Builder
     ): OkHttpClient {
-        return okkHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(authInterceptor).addInterceptor(errorInterceptor)
-            .connectTimeout(TIMEOUT_180, TimeUnit.SECONDS)
-            .writeTimeout(TIMEOUT_180, TimeUnit.SECONDS).readTimeout(TIMEOUT_180, TimeUnit.SECONDS)
+        return okkHttpClientBuilder
+            .addInterceptor(errorInterceptor)
+            .addInterceptor(authInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
             .build()
     }
 
     @Provides
     @RetrofitWithoutAuth
     fun provideRetrofitWithoutToken(
-        @OkhttpClientWithoutAuth okHttpClient: OkHttpClient, json: Json
+        @OkhttpClient okHttpClient: OkHttpClient, json: Json
     ): Retrofit {
-        return Retrofit.Builder().baseUrl(MOVIE_DB_ENDPOINT_URL).client(okHttpClient)
+        return Retrofit.Builder().baseUrl(ENDPOINT_URL).client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
     }
 
@@ -90,7 +107,7 @@ class NetworkModule {
     fun provideMainRetrofitWithToken(
         @OkhttpClientWithAuth okHttpClient: OkHttpClient, json: Json
     ): Retrofit {
-        return Retrofit.Builder().baseUrl(MOVIE_DB_ENDPOINT_URL).client(okHttpClient)
+        return Retrofit.Builder().baseUrl(ENDPOINT_URL).client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
     }
 
@@ -111,7 +128,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val MOVIE_DB_ENDPOINT_URL = "https://app.intouch.care/"
-        const val TIMEOUT_180 = 180L
+        const val ENDPOINT_URL = "https://app.intouch.care/"
     }
 }

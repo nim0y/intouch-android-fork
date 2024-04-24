@@ -16,7 +16,7 @@ interface AuthenticationApiService {
         @Path("token") token: String
     ): ConfirmEmailResponse
 
-    @POST("/api/v1/confirm-email/{id}/{token}")
+    @POST("/api/v1/token/refresh/")
     fun getTokensByRefreshToken(
         @Body tokensRequest: TokensRequest
     ): Call<TokensResponse>

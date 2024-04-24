@@ -5,7 +5,8 @@ import care.intouch.app.feature.authorization.data.models.response.GetUserRespon
 import javax.inject.Inject
 
 class UserDataMapper @Inject constructor() {
-    fun toUserDto(user: GetUserResponse): UserDto {
+    fun toUserDto(users: List<GetUserResponse>): UserDto {
+        val user = users.first()
         return UserDto(
             id = user.id,
             firstName = user.firstName,

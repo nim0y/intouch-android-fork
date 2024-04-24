@@ -2,8 +2,9 @@ package care.intouch.app.feature.authorization.domain.models.mappers
 
 import care.intouch.app.feature.authorization.data.models.UserDto
 import care.intouch.app.feature.authorization.domain.models.User
+import javax.inject.Inject
 
-class UserDomainMapper {
+class UserDomainMapper @Inject constructor() {
     fun toUser(userDto: UserDto): User {
         return User(
             id = userDto.id ?: DEFAULT_ID,

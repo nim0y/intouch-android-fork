@@ -8,14 +8,15 @@ import care.intouch.app.feature.authorization.domain.models.mappers.UserDomainMa
 import care.intouch.app.feature.common.Resource
 import care.intouch.app.feature.common.domain.errors.ErrorEntity
 import care.intouch.app.feature.common.domain.models.BaseExceptionToErrorMapper
+import javax.inject.Inject
 
-class UserRepositoryImpl(
+class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource,
     private val userDomainMapper: UserDomainMapper,
     @UserExceptionMapper private val exceptionToErrorMapper: BaseExceptionToErrorMapper
 
 ) : UserRepository {
-    override suspend fun getUserData(): Resource<User, ErrorEntity> {
+    override suspend fun getUser(): Resource<User, ErrorEntity> {
         try {
             val response = remoteDataSource.getUser()
             return Resource.Success(userDomainMapper.toUser(response))
