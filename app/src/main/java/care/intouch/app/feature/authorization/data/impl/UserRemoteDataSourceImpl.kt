@@ -1,10 +1,10 @@
 package care.intouch.app.feature.authorization.data.impl
 
-import care.intouch.app.feature.authorization.data.NetworkToUserExceptionMapper
-import care.intouch.app.feature.authorization.data.UserDataMapper
 import care.intouch.app.feature.authorization.data.api.UserApiService
 import care.intouch.app.feature.authorization.data.api.UserRemoteDataSource
 import care.intouch.app.feature.authorization.data.models.UserDto
+import care.intouch.app.feature.authorization.data.models.mappers.NetworkToUserExceptionMapper
+import care.intouch.app.feature.authorization.data.models.mappers.UserDataMapper
 import care.intouch.app.feature.common.data.models.exception.NetworkException
 import javax.inject.Inject
 

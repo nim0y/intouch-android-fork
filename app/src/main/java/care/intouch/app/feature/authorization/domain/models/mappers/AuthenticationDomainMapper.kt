@@ -1,7 +1,8 @@
-package care.intouch.app.feature.authorization.domain.models
+package care.intouch.app.feature.authorization.domain.models.mappers
 
 import care.intouch.app.feature.authorization.data.models.AuthenticationOutputDto
 import care.intouch.app.feature.authorization.data.models.exception.AuthenticationException
+import care.intouch.app.feature.authorization.domain.models.AuthenticationOutputData
 import javax.inject.Inject
 
 class AuthenticationDomainMapper @Inject constructor() {

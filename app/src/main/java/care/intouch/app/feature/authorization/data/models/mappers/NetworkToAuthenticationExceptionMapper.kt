@@ -1,18 +1,17 @@
-package care.intouch.app.feature.authorization.data
+package care.intouch.app.feature.authorization.data.models.mappers
 
 import care.intouch.app.feature.authorization.data.models.exception.AuthenticationException
-import care.intouch.app.feature.authorization.data.models.exception.UserException
 import care.intouch.app.feature.authorization.data.models.response.ErrorResponse
 import care.intouch.app.feature.common.data.models.exception.NetworkException
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-class NetworkToUserExceptionMapper @Inject constructor(private val json: Json) {
-    fun handleException(exception: NetworkException): UserException {
+class NetworkToAuthenticationExceptionMapper @Inject constructor(private val json: Json) {
+    fun handleException(exception: NetworkException): AuthenticationException {
         return when (exception) {
-            is NetworkException.Unauthorized -> {
+            is NetworkException.NotFound -> {
                 val response = handleErrorResponse<ErrorResponse>(exception.errorBody)
-                UserException.User.InvalidToken(
+                AuthenticationException.Authentication.NotFound(
                     message = response.detail ?: BLANC_ERROR_MESSAGE,
                 )
             }
@@ -23,14 +22,14 @@ class NetworkToUserExceptionMapper @Inject constructor(private val json: Json) {
         }
     }
 
-    private fun handleCommonException(exception: NetworkException): UserException {
+    private fun handleCommonException(exception: NetworkException): AuthenticationException {
         return when (exception) {
             is NetworkException.NoInternetConnection -> {
-                UserException.NoInternetConnection(message = exception.errorBody)
+                AuthenticationException.NoInternetConnection(message = exception.errorBody)
             }
 
             else -> {
-                UserException.Undefined(message = exception.errorBody)
+                AuthenticationException.Undefined(message = exception.errorBody)
             }
         }
     }

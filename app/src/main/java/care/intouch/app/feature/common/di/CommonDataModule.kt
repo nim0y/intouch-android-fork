@@ -1,8 +1,8 @@
 package care.intouch.app.feature.common.di
 
 import android.content.Context
+import care.intouch.app.feature.common.data.AuthInterceptor
 import care.intouch.app.feature.common.data.ErrorInterceptor
-import care.intouch.app.feature.common.data.TokenInterceptor
 import care.intouch.app.feature.common.data.api.NetworkConnectionProvider
 import care.intouch.app.feature.common.data.impl.NetworkConnectionProviderImpl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -22,19 +22,19 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class OkhttpClientWithoutToken
+annotation class OkhttpClientWithoutAuth
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class OkhttpClientWithToken
+annotation class OkhttpClientWithAuth
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class RetrofitWithoutToken
+annotation class RetrofitWithoutAuth
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class RetrofitWithToken
+annotation class RetrofitWithAuth
 
 
 @Module
@@ -47,7 +47,7 @@ class NetworkModule {
     }
 
     @Singleton
-    @OkhttpClientWithoutToken
+    @OkhttpClientWithoutAuth
     @Provides
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
@@ -61,34 +61,34 @@ class NetworkModule {
     }
 
     @Singleton
-    @OkhttpClientWithToken
+    @OkhttpClientWithAuth
     @Provides
     fun provideOkHttpClientWithToken(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        tokenInterceptor: TokenInterceptor,
+        authInterceptor: AuthInterceptor,
         errorInterceptor: ErrorInterceptor,
         okkHttpClientBuilder: OkHttpClient.Builder
     ): OkHttpClient {
         return okkHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(tokenInterceptor).addInterceptor(errorInterceptor)
+            .addInterceptor(authInterceptor).addInterceptor(errorInterceptor)
             .connectTimeout(TIMEOUT_180, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_180, TimeUnit.SECONDS).readTimeout(TIMEOUT_180, TimeUnit.SECONDS)
             .build()
     }
 
     @Provides
-    @RetrofitWithoutToken
+    @RetrofitWithoutAuth
     fun provideRetrofitWithoutToken(
-        @OkhttpClientWithoutToken okHttpClient: OkHttpClient, json: Json
+        @OkhttpClientWithoutAuth okHttpClient: OkHttpClient, json: Json
     ): Retrofit {
         return Retrofit.Builder().baseUrl(MOVIE_DB_ENDPOINT_URL).client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
     }
 
     @Provides
-    @RetrofitWithToken
+    @RetrofitWithAuth
     fun provideMainRetrofitWithToken(
-        @OkhttpClientWithToken okHttpClient: OkHttpClient, json: Json
+        @OkhttpClientWithAuth okHttpClient: OkHttpClient, json: Json
     ): Retrofit {
         return Retrofit.Builder().baseUrl(MOVIE_DB_ENDPOINT_URL).client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()

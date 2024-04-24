@@ -1,7 +1,7 @@
 package care.intouch.app.feature.authorization.data.di
 
 import care.intouch.app.feature.authorization.data.api.UserApiService
-import care.intouch.app.feature.common.di.RetrofitWithToken
+import care.intouch.app.feature.common.di.RetrofitWithAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ class UserNetworkModule {
     @Provides
     @Singleton
     fun provideUserApiService(
-        @RetrofitWithToken retrofit: Retrofit
+        @RetrofitWithAuth retrofit: Retrofit
     ): UserApiService {
         return retrofit.create(UserApiService::class.java)
     }

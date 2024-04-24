@@ -3,7 +3,7 @@ package care.intouch.app.feature.authorization.domain.impl
 import app.cashadvisor.common.utill.extensions.logDebugMessage
 import care.intouch.app.feature.authorization.domain.api.AuthenticationRepository
 import care.intouch.app.feature.common.Resource
-import care.intouch.app.feature.common.domain.models.ErrorEntity
+import care.intouch.app.feature.common.domain.errors.ErrorEntity
 import javax.inject.Inject
 
 interface ConfirmEmailUseCase {

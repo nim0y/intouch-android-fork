@@ -1,8 +1,8 @@
 package care.intouch.app.feature.authorization.data.di
 
 import care.intouch.app.feature.authorization.data.api.AuthenticationApiService
-import care.intouch.app.feature.common.di.RetrofitWithToken
-import care.intouch.app.feature.common.di.RetrofitWithoutToken
+import care.intouch.app.feature.common.di.RetrofitWithAuth
+import care.intouch.app.feature.common.di.RetrofitWithoutAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,29 +13,29 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class AuthApiServiceWithoutToken
+annotation class AuthApiServiceWithoutAuth
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class AuthenticationApiServiceWithToken
+annotation class AuthenticationApiServiceWithAuth
 
 @Module
 @InstallIn(SingletonComponent::class)
 class AuthenticationNetworkModule {
     @Provides
-    @AuthApiServiceWithoutToken
+    @AuthApiServiceWithoutAuth
     @Singleton
     fun provideAuthenticationApiService(
-        @RetrofitWithoutToken retrofit: Retrofit
+        @RetrofitWithoutAuth retrofit: Retrofit
     ): AuthenticationApiService {
         return retrofit.create(AuthenticationApiService::class.java)
     }
 
     @Provides
-    @AuthenticationApiServiceWithToken
+    @AuthenticationApiServiceWithAuth
     @Singleton
     fun provideAuthenticationApiServiceWithToken(
-        @RetrofitWithToken retrofit: Retrofit
+        @RetrofitWithAuth retrofit: Retrofit
     ): AuthenticationApiService {
         return retrofit.create(AuthenticationApiService::class.java)
     }

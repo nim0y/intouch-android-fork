@@ -1,11 +1,13 @@
 package care.intouch.app.feature.common.domain.models
 
 import app.cashadvisor.common.utill.extensions.logNetworkError
+import care.intouch.app.feature.common.domain.errors.ErrorEntity
+import care.intouch.app.feature.common.domain.errors.NetworkError
 import java.net.ConnectException
 
 abstract class BaseExceptionToErrorMapper {
 
-    abstract fun handleSpecificException(exception: Exception): ErrorEntity
+    protected abstract fun handleSpecificException(exception: Exception): ErrorEntity
 
     fun handleException(exception: Exception): ErrorEntity {
         return when (exception) {
@@ -22,7 +24,7 @@ abstract class BaseExceptionToErrorMapper {
     }
 
     private fun handleNetworkError(exception: Exception): ErrorEntity {
-        return ErrorEntity.NetworksError.NoConnectionToServer(
+        return NetworkError.NoConnectionToServer(
             exception.message ?: NO_CONNECTION_TO_SERVER
         )
     }

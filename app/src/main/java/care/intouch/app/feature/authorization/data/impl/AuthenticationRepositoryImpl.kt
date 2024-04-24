@@ -3,11 +3,11 @@ package care.intouch.app.feature.authorization.data.impl
 import care.intouch.app.feature.authorization.data.api.AuthenticationRemoteDataSource
 import care.intouch.app.feature.authorization.data.di.AuthenticationExceptionMapper
 import care.intouch.app.feature.authorization.domain.api.AuthenticationRepository
-import care.intouch.app.feature.authorization.domain.models.AuthenticationDomainMapper
 import care.intouch.app.feature.authorization.domain.models.AuthenticationOutputData
+import care.intouch.app.feature.authorization.domain.models.mappers.AuthenticationDomainMapper
 import care.intouch.app.feature.common.Resource
+import care.intouch.app.feature.common.domain.errors.ErrorEntity
 import care.intouch.app.feature.common.domain.models.BaseExceptionToErrorMapper
-import care.intouch.app.feature.common.domain.models.ErrorEntity
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(

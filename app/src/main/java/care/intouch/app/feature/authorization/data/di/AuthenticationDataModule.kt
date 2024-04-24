@@ -4,7 +4,7 @@ import care.intouch.app.feature.authorization.data.api.AuthenticationRemoteDataS
 import care.intouch.app.feature.authorization.data.impl.AuthenticationRemoteDataSourceImpl
 import care.intouch.app.feature.authorization.data.impl.AuthenticationRepositoryImpl
 import care.intouch.app.feature.authorization.domain.api.AuthenticationRepository
-import care.intouch.app.feature.authorization.domain.models.AuthenticationExceptionToErrorMapper
+import care.intouch.app.feature.authorization.domain.models.mappers.AuthenticationExceptionToErrorMapper
 import care.intouch.app.feature.common.domain.models.BaseExceptionToErrorMapper
 import dagger.Binds
 import dagger.Module

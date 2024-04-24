@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.data
+package care.intouch.app.feature.authorization.data.models.mappers
 
 import care.intouch.app.feature.authorization.data.models.AuthenticationOutputDto
 import care.intouch.app.feature.authorization.data.models.response.ConfirmEmailResponse

@@ -1,7 +1,7 @@
 package care.intouch.app.feature.common.data
 
 import care.intouch.app.feature.authorization.data.api.AuthenticationApiService
-import care.intouch.app.feature.authorization.data.di.AuthApiServiceWithoutToken
+import care.intouch.app.feature.authorization.data.di.AuthApiServiceWithoutAuth
 import care.intouch.app.feature.authorization.data.models.TokensRequest
 import care.intouch.app.feature.authorization.data.models.response.TokensResponse
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,8 @@ import okhttp3.Response
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-class TokenInterceptor @Inject constructor(
-    @AuthApiServiceWithoutToken private val authenticationApiService: AuthenticationApiService
+class AuthInterceptor @Inject constructor(
+    @AuthApiServiceWithoutAuth private val authenticationApiService: AuthenticationApiService
 ) : Interceptor {
 
     private val accountLocalDataSource = AccountLocalDataSource()
