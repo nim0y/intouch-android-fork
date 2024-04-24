@@ -8,13 +8,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,9 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import care.intouch.app.core.navigation.EntryPoint
-import care.intouch.app.core.navigation.navhost.AuthorizationNavHost
 import care.intouch.app.core.navigation.Route
+import care.intouch.app.core.navigation.navhost.AuthorizationNavHost
 import care.intouch.uikit.theme.InTouchTheme
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     var entryPoint: EntryPoint by remember {
-                        mutableStateOf(EntryPoint.Authentication())
+                        mutableStateOf(EntryPoint.AUTHENTICATION)
                     }
 
                     val navController = rememberNavController()
@@ -73,20 +74,73 @@ class MainActivity : ComponentActivity() {
                             if (!movedUiKitSample) {
 
                                 Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    modifier = Modifier.selectableGroup()
                                 ) {
-                                    Text(
-                                        text = "Choose entry point for navigation",
-                                        style = InTouchTheme.typography.titleMedium
-                                    )
-                                    Text(text = entryPoint.stringValue)
-                                    Switch(
-                                        checked = entryPoint.boolValue,
-                                        onCheckedChange = {
-                                            entryPoint =
-                                                if (it) EntryPoint.Authentication() else EntryPoint.Registration()
-                                        }
-                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = entryPoint == EntryPoint.AUTHENTICATION,
+                                            onClick = { entryPoint = EntryPoint.AUTHENTICATION },
+                                            modifier = Modifier
+                                                .padding(vertical = 8.dp)
+                                        )
+
+                                        Text(
+                                            text = "Authentication",
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                    }
+
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = entryPoint == EntryPoint.REGISTRATION,
+                                            onClick = { entryPoint = EntryPoint.REGISTRATION },
+                                            modifier = Modifier
+                                                .padding(vertical = 8.dp)
+                                        )
+
+                                        Text(
+                                            text = "Registration",
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                    }
+
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = entryPoint == EntryPoint.PIN_CODE,
+                                            onClick = { entryPoint = EntryPoint.PIN_CODE },
+                                            modifier = Modifier
+                                                .padding(vertical = 8.dp)
+                                        )
+
+                                        Text(
+                                            text = "Enter Pin Code",
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                    }
+
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        RadioButton(
+                                            selected = entryPoint == EntryPoint.USER_IS_AUTHENTICATED,
+                                            onClick = {
+                                                entryPoint = EntryPoint.USER_IS_AUTHENTICATED
+                                            },
+                                            modifier = Modifier
+                                                .padding(vertical = 8.dp)
+                                        )
+
+                                        Text(
+                                            text = "User is Authenticated",
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                    }
                                 }
 
                                 Button(
@@ -101,19 +155,31 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         } else {
-
                             when (entryPoint) {
-                                is EntryPoint.Authentication -> {
+                                EntryPoint.AUTHENTICATION -> {
                                     AuthorizationNavHost(
                                         navController = navController,
                                         startDestination = Route.AUTHENTICATION
                                     )
                                 }
 
-                                is EntryPoint.Registration -> {
+                                EntryPoint.REGISTRATION -> {
                                     AuthorizationNavHost(
                                         navController = navController,
                                         startDestination = Route.REGISTRATION
+                                    )
+                                }
+
+                                EntryPoint.PIN_CODE -> {
+                                    AuthorizationNavHost(
+                                        navController = navController,
+                                        startDestination = Route.PIN_CODE_ENTER
+                                    )
+                                }
+                                EntryPoint.USER_IS_AUTHENTICATED -> {
+                                    AuthorizationNavHost(
+                                        navController = navController,
+                                        startDestination = Route.BOTTOM_NAV
                                     )
                                 }
                             }
@@ -140,9 +206,11 @@ fun MainScreenWithDebug(movedUiKitSample: Boolean, onChangeState: () -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
                 UiKitSample()
             }
             UikitSampleButton(
@@ -203,4 +271,8 @@ fun GreetingPreview() {
             )
         }
     }
+}
+
+enum class EntryPoint {
+    AUTHENTICATION, REGISTRATION, PIN_CODE, USER_IS_AUTHENTICATED
 }

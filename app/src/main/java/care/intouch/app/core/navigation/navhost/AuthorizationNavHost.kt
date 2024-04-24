@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import care.intouch.app.core.navigation.BottomNav
 import care.intouch.app.core.navigation.Route
 import care.intouch.app.feature.authorization.presentation.ui.AuthenticationScreen
+import care.intouch.app.feature.authorization.presentation.ui.EnterPinCodeScreen
 import care.intouch.app.feature.authorization.presentation.ui.PasswordRecoveryScreen
 import care.intouch.app.feature.authorization.presentation.ui.PinCodeConfirmationScreen
 import care.intouch.app.feature.authorization.presentation.ui.PinCodeInstallationScreen
@@ -46,6 +47,17 @@ fun AuthorizationNavHost(
             PinCodeConfirmationScreen(
                 goToHomeScreen = {
                     navController.navigate(route = Route.BOTTOM_NAV)
+                }
+            )
+        }
+
+        composable(route = Route.PIN_CODE_ENTER) {
+            EnterPinCodeScreen(
+                goToHomeScreen = {
+                    navController.navigate(route = Route.BOTTOM_NAV)
+                },
+                goToAuthenticationScreen = {
+                    navController.navigate(route = Route.AUTHENTICATION)
                 }
             )
         }
