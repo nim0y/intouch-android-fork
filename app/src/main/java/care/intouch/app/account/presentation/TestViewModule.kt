@@ -19,7 +19,7 @@ class TestViewModule @Inject constructor(
 ) : ViewModel() {
     fun clearAccount() {
         viewModelScope.launch {
-            clearAccountUC
+            clearAccountUC()
         }
     }
 
@@ -31,13 +31,13 @@ class TestViewModule @Inject constructor(
 
     fun getAccountStateFlow() {
         viewModelScope.launch {
-            getAccountStateFlowUC
+            getAccountStateFlowUC()
         }
     }
 
     fun getAccountState() {
         viewModelScope.launch {
-            getAccountStateUC
+            getAccountStateUC()
         }
     }
 }

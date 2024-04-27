@@ -9,13 +9,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface CommonDataModule {
+class CommonDataModule {
     @Provides
     @Singleton
     fun provideJson(): Json = Json { ignoreUnknownKeys = true }
@@ -23,10 +23,10 @@ interface CommonDataModule {
     @Provides
     @Singleton
     fun provideSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences =
-        appContext.getSharedPreferences("APP_PREFERENCES", Context.MODE_PRIVATE)
+        appContext.getSharedPreferences("KEY", Context.MODE_PRIVATE)
 
     @Provides
     @Singleton
-    fun coroutineScope(): CoroutineScope = MainScope()
+    fun coroutineScope(): CoroutineScope = CoroutineScope(Dispatchers.IO)
 
 }

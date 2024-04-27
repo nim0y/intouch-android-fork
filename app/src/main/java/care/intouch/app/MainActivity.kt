@@ -34,10 +34,8 @@ class MainActivity : ComponentActivity() {
     private val viewModule: TestViewModule by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModule.createAccount()
-        viewModule.getAccountState()
         viewModule.getAccountStateFlow()
-        viewModule.clearAccount()
+        viewModule.createAccount()
         setContent {
             InTouchTheme {
                 // A surface container using the 'background' color from the theme

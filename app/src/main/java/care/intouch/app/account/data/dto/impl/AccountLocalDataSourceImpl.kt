@@ -1,6 +1,7 @@
 package care.intouch.app.account.data.dto.impl
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import care.intouch.app.account.data.dto.AccountModel
 import care.intouch.app.account.domain.api.AccountLocalDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class AccountLocalDataSourceImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val coroutineScope: CoroutineScope,
+    private val json: Json,
 ) : AccountLocalDataSource, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _accountUpdateFlow = MutableStateFlow<AccountModel?>(null)
@@ -30,14 +32,15 @@ class AccountLocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveAccountInformation(account: AccountModel) {
         withContext(Dispatchers.IO) {
-            sharedPreferences.edit().putString(KEY, Json.encodeToString(account))
+            val data = json.encodeToString(account)
+            sharedPreferences.edit { putString(KEY, data) }
         }
     }
 
     override suspend fun getAccountInformation(): AccountModel? {
         return withContext(Dispatchers.IO) {
             sharedPreferences.getString(KEY, null)?.let {
-                Json.decodeFromString<AccountModel>(it)
+                json.decodeFromString<AccountModel>(it)
             }
         }
     }
@@ -54,7 +57,7 @@ class AccountLocalDataSourceImpl @Inject constructor(
 
     override suspend fun clearAccountInformation() {
         withContext(Dispatchers.IO) {
-            sharedPreferences.edit().remove(KEY)
+            sharedPreferences.edit { remove(KEY) }
             _accountUpdateFlow.emit(null)
         }
     }

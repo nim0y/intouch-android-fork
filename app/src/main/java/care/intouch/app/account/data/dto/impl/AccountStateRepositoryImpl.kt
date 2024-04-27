@@ -14,8 +14,8 @@ class AccountStateRepositoryImpl @Inject constructor(
 ) :
     AccountStateRepository {
     override suspend fun clearAccount() {
-        localDataSourceImpl.clearAccountInformation()
         Log.d("1", "clear")
+        localDataSourceImpl.clearAccountInformation()
     }
 
     override suspend fun createAccount(userId: Int, accessToken: String, refreshToken: String) {
