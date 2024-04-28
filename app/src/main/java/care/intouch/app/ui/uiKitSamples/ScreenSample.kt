@@ -15,4 +15,5 @@ sealed class ScreenSample {
     data object CheckboxSample : ScreenSample()
     data object ProgressBarSample: ScreenSample()
     data object CheckmarkSample: ScreenSample()
+    data object PinCodeInputFieldSample : ScreenSample()
 }
