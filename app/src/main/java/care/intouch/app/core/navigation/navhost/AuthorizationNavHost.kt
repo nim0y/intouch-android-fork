@@ -38,7 +38,11 @@ fun AuthorizationNavHost(
                     navController.navigate(route = Route.PIN_CODE_CONFIRMATION)
                 },
                 goToHomeScreen = {
-                    navController.navigate(route = Route.BOTTOM_NAV)
+                    navController.navigate(route = Route.BOTTOM_NAV) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -46,7 +50,11 @@ fun AuthorizationNavHost(
         composable(route = Route.PIN_CODE_CONFIRMATION) {
             PinCodeConfirmationScreen(
                 goToHomeScreen = {
-                    navController.navigate(route = Route.BOTTOM_NAV)
+                    navController.navigate(route = Route.BOTTOM_NAV) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -54,7 +62,11 @@ fun AuthorizationNavHost(
         composable(route = Route.PIN_CODE_ENTER) {
             EnterPinCodeScreen(
                 goToHomeScreen = {
-                    navController.navigate(route = Route.BOTTOM_NAV)
+                    navController.navigate(route = Route.BOTTOM_NAV) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 },
                 goToAuthenticationScreen = {
                     navController.navigate(route = Route.AUTHENTICATION)
