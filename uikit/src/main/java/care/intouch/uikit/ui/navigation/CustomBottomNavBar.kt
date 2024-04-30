@@ -151,6 +151,8 @@ fun CustomBottomNavBar(
     onPlusItemClick: () -> Unit = {}
 ) {
 
+    val currentRoute = navController?.let { currentRoute(navController = it) }
+
     ConstraintLayout(
         modifier = Modifier
             .height(70.dp)
@@ -175,7 +177,7 @@ fun CustomBottomNavBar(
 
         NavBottomComplexElement(
             screenRoute = screenRoute1,
-            currentRoute = navController?.let { currentRoute(navController = it) },
+            currentRoute = currentRoute,
             onClick = {
                 firstItemClick.invoke()
                 navController?.navigate(screenRoute1)  {
@@ -196,7 +198,7 @@ fun CustomBottomNavBar(
 
         NavBottomComplexElement(
             screenRoute = screenRoute5,
-            currentRoute = navController?.let { currentRoute(navController = it) },
+            currentRoute = currentRoute,
             onClick = {
                 fourthItemClick.invoke()
                 navController?.navigate(screenRoute5)  {
@@ -228,7 +230,7 @@ fun CustomBottomNavBar(
 
         NavBottomComplexElement(
             screenRoute = screenRoute2,
-            currentRoute = navController?.let { currentRoute(navController = it) },
+            currentRoute = currentRoute,
             onClick = {
                 secondItemClick.invoke()
                 navController?.navigate(screenRoute2)  {
@@ -250,7 +252,7 @@ fun CustomBottomNavBar(
 
         NavBottomComplexElement(
             screenRoute = screenRoute4,
-            currentRoute = navController?.let { currentRoute(navController = it) },
+            currentRoute = currentRoute,
             onClick = {
                 thirdItemClick.invoke()
                 navController?.navigate(screenRoute4)  {

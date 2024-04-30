@@ -180,7 +180,7 @@ fun GreetingPreview() {
 
 @Composable
 fun SelectEntryPoint(
-    entryPoint: EntryPoint,
+    entryPoint: EntryPoint?,
     onFirstRadioClick: () -> Unit,
     onSecondRadioClick: () -> Unit,
     onThirdRadioClick: () -> Unit,
@@ -265,6 +265,21 @@ fun SelectEntryPoint(
         ) {
             Text("Go to navigation")
         }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun SelectEntryPointPreview() {
+    InTouchTheme {
+        SelectEntryPoint(
+            entryPoint = null,
+            onFirstRadioClick = {},
+            onSecondRadioClick = {},
+            onThirdRadioClick = {},
+            onFourthRadioClick = {},
+            onButtonClick = {}
+        )
     }
 }
 
