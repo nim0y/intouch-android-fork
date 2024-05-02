@@ -1,9 +1,9 @@
-package care.intouch.app.account.data.dto.impl
+package care.intouch.app.account.data.impl
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import care.intouch.app.account.data.dto.AccountModel
-import care.intouch.app.account.domain.api.AccountLocalDataSource
+import care.intouch.app.account.data.api.AccountLocalDataSource
+import care.intouch.app.account.domain.dto.AccountModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

@@ -1,8 +1,9 @@
 package care.intouch.app.account.di
 
-import care.intouch.app.account.data.dto.impl.AccountLocalDataSourceImpl
-import care.intouch.app.account.data.dto.impl.AccountStateRepositoryImpl
-import care.intouch.app.account.domain.api.AccountLocalDataSource
+
+import care.intouch.app.account.data.api.AccountLocalDataSource
+import care.intouch.app.account.data.impl.AccountLocalDataSourceImpl
+import care.intouch.app.account.data.impl.AccountStateRepositoryImpl
 import care.intouch.app.account.domain.api.AccountStateRepository
 import dagger.Binds
 import dagger.Module

@@ -1,6 +1,6 @@
-package care.intouch.app.account.domain.api
+package care.intouch.app.account.data.api
 
-import care.intouch.app.account.data.dto.AccountModel
+import care.intouch.app.account.domain.dto.AccountModel
 import kotlinx.coroutines.flow.Flow
 
 interface AccountLocalDataSource {
