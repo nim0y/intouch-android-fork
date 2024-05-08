@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import care.intouch.app.core.navigation.navhost.BottomNavHost
@@ -40,13 +41,36 @@ fun BottomNav() {
 fun BottomBar(
     navController: NavHostController
 ) {
-
     CustomBottomNavBar(
-        navController = navController,
         screenRoute1 = Route.HOME,
         screenRoute2 = Route.PLAN,
         screenRoute3 = "", // TODO This screenRoure for Plus Button
         screenRoute4 = Route.DIARY,
-        screenRoute5 = Route.PROFILE
+        screenRoute5 = Route.PROFILE,
+        currentRoute = currentRoute(navController = navController),
+        firstItemClick = {
+            navController.navigate(Route.HOME)  {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        },
+        secondItemClick = {
+            navController.navigate(Route.PLAN)  {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        },
+        thirdItemClick = {
+            navController.navigate(Route.DIARY)  {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        },
+        fourthItemClick = {
+            navController.navigate(Route.PROFILE) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        },
     )
 }

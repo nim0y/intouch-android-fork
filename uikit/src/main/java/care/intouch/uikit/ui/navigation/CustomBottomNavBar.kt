@@ -68,8 +68,7 @@ fun NavBottomBarPlusButtonPreview() {
 
 @Composable
 fun NavBottomComplexElement(
-    screenRoute: String,
-    currentRoute: String? = null,
+    selected: Boolean = false,
     onClick: () -> Unit,
     text: String,
     painter: Painter,
@@ -77,8 +76,6 @@ fun NavBottomComplexElement(
     outFocusTint: Color,
     modifier: Modifier = Modifier
 ) {
-
-    val selected = screenRoute == currentRoute
 
     Column(
         modifier = modifier
@@ -116,7 +113,6 @@ fun NavBottomComplexElement(
 fun NavBottomComplexElementPreview() {
     InTouchTheme {
         NavBottomComplexElement(
-            screenRoute = "",
             onClick = { /*TODO*/ },
             text = "Home",
             painter = painterResource(id = R.drawable.icon_home),
@@ -128,12 +124,12 @@ fun NavBottomComplexElementPreview() {
 
 @Composable
 fun CustomBottomNavBar(
-    navController: NavHostController? = null,
     screenRoute1: String = "",
     screenRoute2: String = "",
     screenRoute3: String = "",
     screenRoute4: String = "",
     screenRoute5: String = "",
+    currentRoute: String? = "",
     onFocusTint: Color = InTouchTheme.colors.mainGreen,
     outFocusTint: Color = InTouchTheme.colors.mainGreen40,
     firstItemText: String = "Home",
@@ -150,8 +146,6 @@ fun CustomBottomNavBar(
     fourthItemClick: () -> Unit = {},
     onPlusItemClick: () -> Unit = {}
 ) {
-
-    val currentRoute = navController?.let { currentRoute(navController = it) }
 
     ConstraintLayout(
         modifier = Modifier
@@ -176,14 +170,9 @@ fun CustomBottomNavBar(
         )
 
         NavBottomComplexElement(
-            screenRoute = screenRoute1,
-            currentRoute = currentRoute,
+            selected = screenRoute1 == currentRoute,
             onClick = {
                 firstItemClick.invoke()
-                navController?.navigate(screenRoute1)  {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
             },
             text = firstItemText,
             painter = firstItemImage,
@@ -197,14 +186,9 @@ fun CustomBottomNavBar(
         )
 
         NavBottomComplexElement(
-            screenRoute = screenRoute5,
-            currentRoute = currentRoute,
+            selected = screenRoute5 == currentRoute,
             onClick = {
                 fourthItemClick.invoke()
-                navController?.navigate(screenRoute5)  {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
             },
             text = fourthItemText,
             painter = fourthItemImage,
@@ -229,14 +213,9 @@ fun CustomBottomNavBar(
         }
 
         NavBottomComplexElement(
-            screenRoute = screenRoute2,
-            currentRoute = currentRoute,
+            selected = screenRoute2 == currentRoute,
             onClick = {
                 secondItemClick.invoke()
-                navController?.navigate(screenRoute2)  {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
             },
             text = secondItemText,
             painter = secondItemImage,
@@ -251,14 +230,9 @@ fun CustomBottomNavBar(
         )
 
         NavBottomComplexElement(
-            screenRoute = screenRoute4,
-            currentRoute = currentRoute,
+            selected = screenRoute4 == currentRoute,
             onClick = {
                 thirdItemClick.invoke()
-                navController?.navigate(screenRoute4)  {
-                    popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
             },
             text = thirdItemText,
             painter = thirdItemImage,
