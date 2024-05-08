@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,19 +49,28 @@ fun PlanCard(
 ) {
     Box(
         modifier = modifier
-            .height(284.dp)
+            .wrapContentHeight()
             .width(334.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(backgroundColor)
-
     ) {
+
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Image(
+                modifier = Modifier.padding(top = 49.dp),
+                painter = painterResource(R.drawable.illustration_plan_card),
+                contentDescription = "illustration plan card",
+                contentScale = ContentScale.Crop
+            )
+        }
+
         Column(
-            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.wrapContentSize(), verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp, start = 14.dp, end = 20.dp),
+                    .padding(top = 10.dp, start = 14.dp, end = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -75,7 +84,7 @@ fun PlanCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 14.dp),
+                        .padding(start = 23.dp),
                     text = dateText,
                     color = dateTextColor,
                     style = dateTextStyle
@@ -86,17 +95,19 @@ fun PlanCard(
                     contentDescription = "",
                 )
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                    .padding(horizontal = 14.dp)
+                    .padding(top = 183.dp)
+                    .background(backgroundColor),//Для обрезки нижней части изображения. Без жестких размеров
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 15.dp),
+                        .padding(end = 15.dp, top = 5.dp, bottom = 8.dp),
                     text = text,
                     color = textColor,
                     style = textTextStyle,
@@ -106,15 +117,6 @@ fun PlanCard(
                     onClickToggle(it)
                 }
             }
-        }
-
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Image(
-                modifier = Modifier.padding(bottom = 55.dp, top = 20.dp),
-                painter = painterResource(R.drawable.illustration_plan_card),
-                contentDescription = "",
-                contentScale = ContentScale.Crop
-            )
         }
     }
 }
