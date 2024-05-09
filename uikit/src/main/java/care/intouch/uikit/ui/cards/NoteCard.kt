@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -78,52 +78,53 @@ fun NoteCards(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(start = 19.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.SpaceBetween
+                .padding(start = 19.dp, end = 12.dp),
+            horizontalAlignment = Alignment.Start
         ) {
+
             Row(
-                modifier = Modifier.padding(top = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.padding(top = 12.dp), verticalAlignment = Alignment.Top
             ) {
                 Text(
+                    modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(R.string.note),
                     style = InTouchTheme.typography.subTitle,
                     color = InTouchTheme.colors.textGreen
                 )
-                Box(
+                Text(
                     modifier = Modifier
-                        .padding(start = 18.dp)
-                        .width(160.dp)
-                        .height(44.dp),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    Text(
-                        maxLines = 2,
-                        text = noteText,
-                        overflow = TextOverflow.Ellipsis,
-                        style = noteTextStyle,
-                        color = noteColor,
-                    )
-                }
+                        .width(180.dp)
+                        .padding(top = 12.dp, start = 16.dp),
+                    maxLines = 2,
+                    text = noteText,
+                    overflow = TextOverflow.Ellipsis,
+                    style = noteTextStyle,
+                    color = noteColor,
+                )
+//                }
+                Image(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .clickable { onClickTrash() },
+                    painter = painterResource(id = R.drawable.icon_trash_card),
+                    contentDescription = "delete"
+                )
             }
 
             Row(
-                modifier = Modifier.padding(bottom = 17.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.Start
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    modifier = Modifier.padding(end = 8.dp).padding(bottom = 2.dp),
+                    modifier = Modifier.padding(end = 8.dp, bottom = 2.dp, top = 6.dp),
                     text = stringResource(R.string.mood),
                     color = InTouchTheme.colors.textGreen,
                     style = InTouchTheme.typography.subTitle,
                 )
                 Box(
                     modifier = Modifier
-                        .padding(top = 8.dp)
-                        .height(46.dp),
-                    contentAlignment = Alignment.BottomCenter
+                        .padding(top = 10.dp)
+                        .weight(1f)
                 ) {
                     Row(verticalAlignment = Alignment.Bottom) {
                         for (mood in moodChipsList.take(2)) {
@@ -146,23 +147,12 @@ fun NoteCards(
                         }
                     }
                 }
-            }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(end = 12.dp, bottom = 12.dp, top = 12.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.End
-        ) {
-            Image(
-                modifier = Modifier
-                    .clickable { onClickTrash() },
-                painter = painterResource(id = R.drawable.icon_trash_card),
-                contentDescription = "delete"
-            )
-            Toggle(isChecked = toggleIsChecked) {
-                onClickToggle(it)
+                Toggle(
+                    modifier = Modifier.padding(top = 2.dp),
+                    isChecked = toggleIsChecked
+                ) {
+                    onClickToggle(it)
+                }
             }
         }
     }
