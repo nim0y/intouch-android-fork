@@ -16,7 +16,7 @@ import care.intouch.uikit.ui.navigation.currentRoute
 fun BottomNav() {
 
     val screensWithBottomBar = listOf(
-        Route.HOME, Route.PLAN, Route.DIARY, Route.PROFILE
+        Home.route, Plan.route, Diary.route, Profile.route
     )
 
     val navController = rememberNavController()
@@ -28,12 +28,13 @@ fun BottomNav() {
             }
         }
     ) {
+
         Modifier.padding(it)
+
         BottomNavHost(
             navController = navController,
-            startDestination = Route.HOME
+            startDestination = Home.route
         )
-
     }
 }
 
@@ -41,33 +42,34 @@ fun BottomNav() {
 fun BottomBar(
     navController: NavHostController
 ) {
+
     CustomBottomNavBar(
-        screenRoute1 = Route.HOME,
-        screenRoute2 = Route.PLAN,
+        screenRoute1 = Home.route,
+        screenRoute2 = Plan.route,
         screenRoute3 = "", // TODO This screenRoure for Plus Button
-        screenRoute4 = Route.DIARY,
-        screenRoute5 = Route.PROFILE,
+        screenRoute4 = Diary.route,
+        screenRoute5 = Profile.route,
         currentRoute = currentRoute(navController = navController),
         firstItemClick = {
-            navController.navigate(Route.HOME)  {
+            navController.navigate(Home.route)  {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }
         },
         secondItemClick = {
-            navController.navigate(Route.PLAN)  {
+            navController.navigate(Plan.route)  {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }
         },
         thirdItemClick = {
-            navController.navigate(Route.DIARY)  {
+            navController.navigate(Diary.route)  {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }
         },
         fourthItemClick = {
-            navController.navigate(Route.PROFILE) {
+            navController.navigate(Profile.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }

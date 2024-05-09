@@ -1,45 +1,96 @@
 package care.intouch.app.core.navigation
 
-object Route {
+interface IntouchDestination {
+    val route: String
+}
 
-    // Authorization
-    const val REGISTRATION = "REGISTRATION"
-    const val AUTHENTICATION = "AUTHENTICATION"
-    const val PASSWORD_RECOVERY = "PASSWORD_RECOVERY"
-    const val PIN_CODE_CONFIRMATION = "PIN_CODE_CONFIRMATION"
-    const val PIN_CODE_INSTALLATION = "PIN_CODE_INSTALLATION"
-    const val PIN_CODE_ENTER = "PIN_CODE_ENTER"
-    const val SENDING_NOTIFICATION = "SENDING_NOTIFICATION"
+// Authorization
+object Registration: IntouchDestination {
+    override val route = "REGISTRATION"
+}
+object Authentication: IntouchDestination {
+    override val route = "AUTHENTICATION"
+}
+object PasswordRecovery: IntouchDestination {
+    override val route = "PASSWORD_RECOVERY"
+}
+object PinCodeConfirmation: IntouchDestination {
+    override val route = "PIN_CODE_CONFIRMATION"
+}
+object PinCodeInstallation: IntouchDestination {
+    override val route = "PIN_CODE_INSTALLATION"
+}
+object PinCodeEnter: IntouchDestination {
+    override val route = "PIN_CODE_ENTER"
+}
+object SendingNotification: IntouchDestination {
+    override val route = "SENDING_NOTIFICATION"
+}
 
-    //Bottom Navigation
-    const val BOTTOM_NAV = "BOTTOM_NAV"
+//Bottom Navigation
+object BottomNav: IntouchDestination {
+    override val route = "BOTTOM_NAV"
+}
+object Home: IntouchDestination {
+    override val route = "HOME"
+}
+object Plan: IntouchDestination {
+    override val route = "PLAN"
+}
+object Diary: IntouchDestination {
+    override val route = "DIARY"
+}
+object Profile: IntouchDestination {
+    override val route = "PROFILE"
+}
 
-    const val HOME = "HOME"
-    const val PLAN = "PLAN"
-    const val DIARY = "DIARY"
-    const val PROFILE = "PROFILE"
+// Plan branch
+object PlanRouteBranch: IntouchDestination {
+    override val route = "PLAN_ROUTE_BRANCH"
+}
+object Task: IntouchDestination {
+    override val route = "TASK"
+}
+object TaskIntroduction: IntouchDestination {
+    override val route = "TASK_INTRODUCTION"
+}
+object TaskEstimate: IntouchDestination {
+    override val route = "TASK_ESTIMATE"
+}
+object TaskCompleting: IntouchDestination {
+    override val route = "TASK_COMPLETING"
+}
 
-    // Plan branch
-    const val PLAN_ROUTE_BRANCH = "PLAN_ROUTE_BRANCH"
+// Diary branch
+object DiaryRouteBranch: IntouchDestination {
+    override val route = "DIARY_ROUTE_BRANCH"
+}
+object CreatingNoteIntroduction: IntouchDestination {
+    override val route = "CREATING_NOTE_INTRODUCTION"
+}
+object DiaryEntries: IntouchDestination {
+    override val route = "DIARY_ENTRIES"
+}
+object EmotionChoice: IntouchDestination {
+    override val route = "EMOTIONS_CHOICE"
+}
 
-    const val TASK = "TASK"
-    const val TASK_INTRODUCTION = "TASK_INTRODUCTION"
-    const val TASK_ESTIMATE = "TASK_ESTIMATE"
-    const val TASK_COMPLETING = "TASK_COMPLETING"
-
-    // Diary branch
-    const val DIARY_ROUTE_BRANCH = "DIARY_ROUTE_BRANCH"
-
-    const val CREATING_NOTE_INTRODUCTION = "CREATING_NOTE_INTRODUCTION"
-    const val DIARY_ENTRIES = "DIARY_ENTRIES"
-    const val EMOTIONS_CHOICE = "EMOTIONS_CHOICE"
-
-    // Profile branch
-    const val PROFILE_ROUTE_BRANCH = "PROFILE_ROUTE_BRANCH"
-
-    const val PASSWORD_CHANGE = "PASSWORD_CHANGE"
-    const val NEW_PIN_CODE = "NEW_PIN_CODE"
-    const val PIN_CODE_CHANGE = "PIN_CODE_CHANGE"
-    const val PIN_CODE_CONFIRM = "PIN_CODE_CONFIRM"
-    const val SUCCESSFUL_PIN_CODE_CHANGE = "SUCCESSFUL_PIN_CODE_CHANGE"
+// Profile branch
+object ProfileRouteBranch: IntouchDestination {
+    override val route = "PROFILE_ROUTE_BRANCH"
+}
+object PasswordChange: IntouchDestination {
+    override val route = "PASSWORD_CHANGE"
+}
+object NewPinCode: IntouchDestination {
+    override val route = "NEW_PIN_CODE"
+}
+object PinCodeChange: IntouchDestination {
+    override val route = "PIN_CODE_CHANGE"
+}
+object PinCodeConfirm: IntouchDestination {
+    override val route = "PIN_CODE_CONFIRM"
+}
+object SuccessfulPinCodeChange: IntouchDestination {
+    override val route = "SUCCESSFUL_PIN_CODE_CHANGE"
 }

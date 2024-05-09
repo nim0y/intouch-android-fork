@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,7 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import care.intouch.app.core.navigation.Route
+import care.intouch.app.core.navigation.Authentication
+import care.intouch.app.core.navigation.BottomNav
+import care.intouch.app.core.navigation.PinCodeEnter
+import care.intouch.app.core.navigation.Registration
 import care.intouch.app.core.navigation.navhost.AuthorizationNavHost
 import care.intouch.uikit.theme.InTouchTheme
 
@@ -292,27 +294,27 @@ fun GoToNavigation(
         EntryPoint.AUTHENTICATION -> {
             AuthorizationNavHost(
                 navController = navController,
-                startDestination = Route.AUTHENTICATION
+                startDestination = Authentication.route
             )
         }
 
         EntryPoint.REGISTRATION -> {
             AuthorizationNavHost(
                 navController = navController,
-                startDestination = Route.REGISTRATION
+                startDestination = Registration.route
             )
         }
 
         EntryPoint.PIN_CODE -> {
             AuthorizationNavHost(
                 navController = navController,
-                startDestination = Route.PIN_CODE_ENTER
+                startDestination = PinCodeEnter.route
             )
         }
         EntryPoint.USER_IS_AUTHENTICATED -> {
             AuthorizationNavHost(
                 navController = navController,
-                startDestination = Route.BOTTOM_NAV
+                startDestination = BottomNav.route
             )
         }
     }

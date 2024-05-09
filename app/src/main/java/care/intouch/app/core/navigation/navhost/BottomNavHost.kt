@@ -4,7 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import care.intouch.app.core.navigation.Route
+import care.intouch.app.core.navigation.Diary
+import care.intouch.app.core.navigation.DiaryRouteBranch
+import care.intouch.app.core.navigation.Home
+import care.intouch.app.core.navigation.PasswordChange
+import care.intouch.app.core.navigation.Plan
+import care.intouch.app.core.navigation.PlanRouteBranch
+import care.intouch.app.core.navigation.Profile
+import care.intouch.app.core.navigation.ProfileRouteBranch
 import care.intouch.app.feature.diary.presentation.ui.DiaryNoteScreen
 import care.intouch.app.feature.home.presentation.ui.HomeScreen
 import care.intouch.app.feature.plan.presentation.ui.PlanScreen
@@ -22,58 +29,46 @@ fun BottomNavHost(
 
         ) {
 
-        composable(route = Route.HOME) {
+        composable(route = Home.route) {
             HomeScreen()
         }
 
-        composable(route = Route.PLAN) {
+        composable(route = Plan.route) {
             PlanScreen(
                 goToTaskScreen = {
-                    navController.navigate(route = Route.PLAN_ROUTE_BRANCH)
+                    navController.navigate(route = PlanRouteBranch.route)
                 }
             )
         }
 
-        composable(route = Route.DIARY) {
+        composable(route = Diary.route) {
             DiaryNoteScreen(
                 goToCreatingNoteIntroductionScreen = {
-                    navController.navigate(route = Route.DIARY_ROUTE_BRANCH)
+                    navController.navigate(route = DiaryRouteBranch.route)
                 }
             )
         }
 
-        composable(route = Route.PROFILE) {
+        composable(route = Profile.route) {
             ProfileScreen(
                 goToPasswordChangeScreen = {
-                    navController.navigate(route = Route.PASSWORD_CHANGE)
+                    navController.navigate(route = PasswordChange.route)
                 },
                 goToPinCodeChangeScreen = {
-                    navController.navigate(route = Route.PROFILE_ROUTE_BRANCH)
+                    navController.navigate(route = ProfileRouteBranch.route)
                 }
             )
         }
 
-        composable(route = Route.PASSWORD_CHANGE) {
+        composable(route = PasswordChange.route) {
             PasswordChangeScreen()
         }
 
-        composable(route = Route.PLAN_ROUTE_BRANCH) {
-            PlanNavHost(
-                startDestination = Route.TASK
-            )
-        }
+        addNestedPlanGraph(navController = navController)
 
-        composable(route = Route.DIARY_ROUTE_BRANCH) {
-            DiaryNavHost(
-                startDestination = Route.CREATING_NOTE_INTRODUCTION
-            )
-        }
+        addNestedDiaryGraph(navController = navController)
 
-        composable(route = Route.PROFILE_ROUTE_BRANCH) {
-            ProfileNavHost(
-                startDestination = Route.PIN_CODE_CHANGE
-            )
-        }
+        addNestedProfileGraph(navController = navController)
     }
 }
 
