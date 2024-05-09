@@ -1,11 +1,14 @@
 package care.intouch.app.core.navigation.navhost
 
-import androidx.compose.runtime.Composable
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import care.intouch.app.core.navigation.Authentication
-import care.intouch.app.core.navigation.BottomNav
+import care.intouch.app.core.navigation.AuthorizationRouteBranch
+import care.intouch.app.core.navigation.MainNav
+import care.intouch.app.core.navigation.AppNavScreen
+import care.intouch.app.core.navigation.Home
 import care.intouch.app.core.navigation.PasswordRecovery
 import care.intouch.app.core.navigation.PinCodeConfirmation
 import care.intouch.app.core.navigation.PinCodeEnter
@@ -20,14 +23,13 @@ import care.intouch.app.feature.authorization.presentation.ui.PinCodeInstallatio
 import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreen
 import care.intouch.app.feature.authorization.presentation.ui.SendingNotificationScreen
 
-@Composable
-fun AuthorizationNavHost(
+fun NavGraphBuilder.addNestedAuthorizationGraph(
     navController: NavHostController,
-    startDestination: String
+    startDestination: String?
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination
+    navigation(
+        startDestination = startDestination ?: Authentication.route,
+        route = AuthorizationRouteBranch.route
     ) {
 
         composable(route = Registration.route) {
@@ -44,7 +46,7 @@ fun AuthorizationNavHost(
                     navController.navigate(route = PinCodeConfirmation.route)
                 },
                 goToHomeScreen = {
-                    navController.navigate(route = BottomNav.route) {
+                    navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
@@ -56,7 +58,7 @@ fun AuthorizationNavHost(
         composable(route = PinCodeConfirmation.route) {
             PinCodeConfirmationScreen(
                 goToHomeScreen = {
-                    navController.navigate(route = BottomNav.route) {
+                    navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
@@ -68,7 +70,7 @@ fun AuthorizationNavHost(
         composable(route = PinCodeEnter.route) {
             EnterPinCodeScreen(
                 goToHomeScreen = {
-                    navController.navigate(route = BottomNav.route) {
+                    navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
@@ -107,8 +109,10 @@ fun AuthorizationNavHost(
             )
         }
 
-        composable(route = BottomNav.route) {
-            BottomNav()
+        composable(route = MainNav.route) {
+            AppNavScreen(
+                startDestination = Home.route
+            )
         }
     }
 }

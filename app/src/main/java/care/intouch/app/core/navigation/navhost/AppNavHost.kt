@@ -19,9 +19,10 @@ import care.intouch.app.feature.profile.presentation.ui.PasswordChangeScreen
 import care.intouch.app.feature.profile.presentation.ui.ProfileScreen
 
 @Composable
-fun BottomNavHost(
+fun AppNavHost(
     navController: NavHostController,
     startDestination: String,
+    authStartDestination: String?
 ) {
     NavHost(
         navController = navController,
@@ -63,6 +64,11 @@ fun BottomNavHost(
         composable(route = PasswordChange.route) {
             PasswordChangeScreen()
         }
+
+        addNestedAuthorizationGraph(
+            navController = navController,
+            startDestination = authStartDestination
+        )
 
         addNestedPlanGraph(navController = navController)
 

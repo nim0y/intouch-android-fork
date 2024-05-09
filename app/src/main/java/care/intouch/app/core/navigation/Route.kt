@@ -5,6 +5,9 @@ interface IntouchDestination {
 }
 
 // Authorization
+object AuthorizationRouteBranch: IntouchDestination {
+    override val route = "AUTHORIZATION_ROUTE_BRANCH"
+}
 object Registration: IntouchDestination {
     override val route = "REGISTRATION"
 }
@@ -28,8 +31,8 @@ object SendingNotification: IntouchDestination {
 }
 
 //Bottom Navigation
-object BottomNav: IntouchDestination {
-    override val route = "BOTTOM_NAV"
+object MainNav: IntouchDestination {
+    override val route = "MAIN_NAV"
 }
 object Home: IntouchDestination {
     override val route = "HOME"

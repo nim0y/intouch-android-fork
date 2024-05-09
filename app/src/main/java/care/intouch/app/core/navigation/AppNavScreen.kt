@@ -7,13 +7,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import care.intouch.app.core.navigation.navhost.BottomNavHost
+import care.intouch.app.core.navigation.navhost.AppNavHost
 import care.intouch.uikit.ui.navigation.CustomBottomNavBar
 import care.intouch.uikit.ui.navigation.currentRoute
 
 
 @Composable
-fun BottomNav() {
+fun AppNavScreen(
+    startDestination: String,
+    authStartDestination: String? = null
+) {
 
     val screensWithBottomBar = listOf(
         Home.route, Plan.route, Diary.route, Profile.route
@@ -31,9 +34,10 @@ fun BottomNav() {
 
         Modifier.padding(it)
 
-        BottomNavHost(
+        AppNavHost(
             navController = navController,
-            startDestination = Home.route
+            startDestination = startDestination,
+            authStartDestination = authStartDestination
         )
     }
 }

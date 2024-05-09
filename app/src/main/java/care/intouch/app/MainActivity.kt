@@ -1,6 +1,6 @@
 package care.intouch.app
 
-import UiKitSample
+ import UiKitSample
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,13 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import care.intouch.app.core.navigation.Authentication
-import care.intouch.app.core.navigation.BottomNav
+import care.intouch.app.core.navigation.AuthorizationRouteBranch
+import care.intouch.app.core.navigation.Home
+import care.intouch.app.core.navigation.AppNavScreen
 import care.intouch.app.core.navigation.PinCodeEnter
 import care.intouch.app.core.navigation.Registration
-import care.intouch.app.core.navigation.navhost.AuthorizationNavHost
 import care.intouch.uikit.theme.InTouchTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,8 +57,6 @@ class MainActivity : ComponentActivity() {
                     var entryPoint: EntryPoint by rememberSaveable {
                         mutableStateOf(EntryPoint.AUTHENTICATION)
                     }
-
-                    val navController = rememberNavController()
 
                     Column(
                         verticalArrangement = Arrangement.SpaceAround,
@@ -88,7 +85,6 @@ class MainActivity : ComponentActivity() {
                         } else {
                             GoToNavigation(
                                 entryPoint = entryPoint,
-                                navController = navController
                             )
                         }
                     }
@@ -288,33 +284,32 @@ fun SelectEntryPointPreview() {
 @Composable
 fun GoToNavigation(
     entryPoint: EntryPoint,
-    navController: NavHostController
 ) {
     when (entryPoint) {
         EntryPoint.AUTHENTICATION -> {
-            AuthorizationNavHost(
-                navController = navController,
-                startDestination = Authentication.route
+            AppNavScreen(
+                startDestination = AuthorizationRouteBranch.route,
+                authStartDestination = Authentication.route
             )
         }
 
         EntryPoint.REGISTRATION -> {
-            AuthorizationNavHost(
-                navController = navController,
-                startDestination = Registration.route
+            AppNavScreen(
+                startDestination = AuthorizationRouteBranch.route,
+                authStartDestination = Registration.route
             )
         }
 
         EntryPoint.PIN_CODE -> {
-            AuthorizationNavHost(
-                navController = navController,
-                startDestination = PinCodeEnter.route
+            AppNavScreen(
+                startDestination = AuthorizationRouteBranch.route,
+                authStartDestination = PinCodeEnter.route
             )
         }
+
         EntryPoint.USER_IS_AUTHENTICATED -> {
-            AuthorizationNavHost(
-                navController = navController,
-                startDestination = BottomNav.route
+            AppNavScreen(
+                startDestination = Home.route
             )
         }
     }
