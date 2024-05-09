@@ -1,26 +1,30 @@
 package care.intouch.uikit.ui.cards
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,6 +65,7 @@ fun PlanCard(
     dropdownMenuItemIconColor: Color = InTouchTheme.colors.textBlue.copy(alpha = 0.5f),
     dropdownMenuItemTextColor: Color = InTouchTheme.colors.textBlue.copy(alpha = 0.5f),
     dropdownMenuItemTextStyle: TextStyle = InTouchTheme.typography.caption2Semibold,
+    dropdownMenuItemColorSelect: Color = InTouchTheme.colors.accentGreen30
 ) {
 
     Box(
@@ -105,39 +110,58 @@ fun PlanCard(
                     color = dateTextColor,
                     style = dateTextStyle
                 )
-                DropdownMenu(modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
-                    .background(InTouchTheme.colors.input),
-//                    offset = DpOffset(x = 5.dp, y = 30.dp),
-                    expanded = true,
-                    onDismissRequest = { onClickSetting.invoke(!isSettingsClicked) }) {
-                    dropdownMenuItemsList.forEach {
-                        DropdownMenuItem(
-                            modifier = Modifier.padding(start = 0.dp),
-                            leadingIcon = {
-                                Icon(
-                                    tint = dropdownMenuItemIconColor,
-                                    painter = painterResource(id = it.icon),
-                                    contentDescription = ""
-                                )
-                            },
-                            text = {
-                                Text(
-                                    text = it.text,
-                                    color = dropdownMenuItemTextColor,
-                                    style = dropdownMenuItemTextStyle
-                                )
-                            },
-                            onClick = { it.onClick },
-                            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 1.dp)
-                        )
-                    }
-                }
+
                 Box {
+                    var selectedItemIndex by remember {
+                        mutableIntStateOf(-1)
+                    }
+                    DropdownMenu(modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(InTouchTheme.colors.input),
+                        offset = DpOffset(x = -(8.dp), y = -(28.dp)),
+                        expanded = isSettingsClicked,
+                        onDismissRequest = { onClickSetting.invoke(!isSettingsClicked) }) {
+                        dropdownMenuItemsList.forEachIndexed { index, dropdownMenuItemsPlanCard ->
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isPressed by interactionSource.collectIsPressedAsState()
+                            DropdownMenuItem(modifier = Modifier
+                                .height(40.dp)
+                                .width(144.dp)
+                                .clickable(
+                                    interactionSource = interactionSource,
+                                    indication = rememberRipple(color = dropdownMenuItemColorSelect)
+                                ) {}
+                                .background(
+                                    if (isPressed && index == selectedItemIndex) {
+                                        dropdownMenuItemColorSelect
+                                    } else {
+                                        InTouchTheme.colors.input
+                                    }
+                                ), interactionSource = interactionSource,
+
+                                leadingIcon = {
+                                    Icon(
+                                        tint = dropdownMenuItemIconColor,
+                                        painter = painterResource(id = dropdownMenuItemsPlanCard.icon),
+                                        contentDescription = ""
+                                    )
+                                }, text = {
+                                    Text(
+                                        modifier = Modifier.padding(start = 4.dp),
+                                        text = dropdownMenuItemsPlanCard.text,
+                                        color = dropdownMenuItemTextColor,
+                                        style = dropdownMenuItemTextStyle
+                                    )
+                                }, onClick = {
+                                    selectedItemIndex = index
+                                    dropdownMenuItemsPlanCard.onClick
+                                }, contentPadding = PaddingValues(horizontal = 24.dp)
+                            )
+                        }
+                    }
                     Image(
                         modifier = Modifier.clickable {
                             onClickSetting.invoke(!isSettingsClicked)
-                            Log.d("TAG", isSettingsClicked.toString())
                         },
                         painter = painterResource(id = R.drawable.icon_elipsis_vertical),
                         contentDescription = "",
