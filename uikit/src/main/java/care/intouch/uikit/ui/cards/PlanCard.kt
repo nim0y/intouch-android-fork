@@ -1,11 +1,13 @@
 package care.intouch.uikit.ui.cards
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,8 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.R
 import care.intouch.uikit.common.StringVO
@@ -44,9 +54,15 @@ fun PlanCard(
     textTextStyle: TextStyle = InTouchTheme.typography.bodyBold,
     toggleIsChecked: Boolean,
     backgroundColor: Color = InTouchTheme.colors.mainBlue,
-    onClickSetting: () -> Unit,
-    onClickToggle: (Boolean) -> Unit
+    isSettingsClicked: Boolean,
+    onClickSetting: (Boolean) -> Unit,
+    onClickToggle: (Boolean) -> Unit,
+    dropdownMenuItemsList: List<DropdownMenuItemsPlanCard>,
+    dropdownMenuItemIconColor: Color = InTouchTheme.colors.textBlue.copy(alpha = 0.5f),
+    dropdownMenuItemTextColor: Color = InTouchTheme.colors.textBlue.copy(alpha = 0.5f),
+    dropdownMenuItemTextStyle: TextStyle = InTouchTheme.typography.caption2Semibold,
 ) {
+
     Box(
         modifier = modifier
             .wrapContentHeight()
@@ -89,11 +105,46 @@ fun PlanCard(
                     color = dateTextColor,
                     style = dateTextStyle
                 )
-                Image(
-                    modifier = Modifier.clickable { onClickSetting() },
-                    painter = painterResource(id = R.drawable.icon_elipsis_vertical),
-                    contentDescription = "",
-                )
+                DropdownMenu(modifier = Modifier
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(InTouchTheme.colors.input),
+//                    offset = DpOffset(x = 5.dp, y = 30.dp),
+                    expanded = true,
+                    onDismissRequest = { onClickSetting.invoke(!isSettingsClicked) }) {
+                    dropdownMenuItemsList.forEach {
+                        DropdownMenuItem(
+                            modifier = Modifier.padding(start = 0.dp),
+                            leadingIcon = {
+                                Icon(
+                                    tint = dropdownMenuItemIconColor,
+                                    painter = painterResource(id = it.icon),
+                                    contentDescription = ""
+                                )
+                            },
+                            text = {
+                                Text(
+                                    text = it.text,
+                                    color = dropdownMenuItemTextColor,
+                                    style = dropdownMenuItemTextStyle
+                                )
+                            },
+                            onClick = { it.onClick },
+                            contentPadding = PaddingValues(horizontal = 24.dp, vertical = 1.dp)
+                        )
+                    }
+                }
+                Box {
+                    Image(
+                        modifier = Modifier.clickable {
+                            onClickSetting.invoke(!isSettingsClicked)
+                            Log.d("TAG", isSettingsClicked.toString())
+                        },
+                        painter = painterResource(id = R.drawable.icon_elipsis_vertical),
+                        contentDescription = "",
+                    )
+
+                }
+
             }
 
             Row(
@@ -106,8 +157,7 @@ fun PlanCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(end = 15.dp, top = 5.dp, bottom = 8.dp),
+                    modifier = Modifier.padding(end = 15.dp, top = 5.dp, bottom = 8.dp),
                     text = text,
                     color = textColor,
                     style = textTextStyle,
@@ -117,19 +167,30 @@ fun PlanCard(
                     onClickToggle(it)
                 }
             }
+
+
         }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewPlanCards() {
+    val menuItems: List<DropdownMenuItemsPlanCard> =
+        listOf(DropdownMenuItemsPlanCard("Duplicate", R.drawable.icon_duplicate) {},
+            DropdownMenuItemsPlanCard("Clear", R.drawable.icon_small_trash) {})
     InTouchTheme {
-        PlanCard(chipText = StringVO.Plain("Done"),
+        var onClickSetting by remember { mutableStateOf(false) }
+        PlanCard(
+            chipText = StringVO.Plain("Done"),
             dateText = "May, 15  2023",
             text = "Socratic dialogue Learning...\n" + "Lorem ipsum dolor sit amet ",
             toggleIsChecked = false,
             onClickToggle = {},
-            onClickSetting = {})
+            onClickSetting = { onClickSetting = it },
+            dropdownMenuItemsList = menuItems,
+            isSettingsClicked = onClickSetting
+        )
     }
 }
