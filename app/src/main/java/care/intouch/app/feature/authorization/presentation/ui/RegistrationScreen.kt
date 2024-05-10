@@ -14,7 +14,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun RegistrationScreen(
-    goToPinCodeInstallation: () -> Unit
+    onSetPasswordClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,10 +31,10 @@ fun RegistrationScreen(
 
         Button(
             onClick = { 
-                goToPinCodeInstallation.invoke()
+                onSetPasswordClick.invoke()
             }
         ) {
-            Text(text = "Go to PinCodeInstallationScreen")
+            Text(text = "Set Password")
         }
     }
 }
@@ -43,6 +43,6 @@ fun RegistrationScreen(
 @Preview(showBackground = true)
 fun RegistrationScreenPreview() {
     RegistrationScreen(
-        goToPinCodeInstallation = {}
+        onSetPasswordClick = {}
     )
 }

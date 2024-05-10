@@ -1,6 +1,7 @@
 package care.intouch.app.feature.plan.presentation.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -13,7 +14,10 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun TaskEstimateScreen() {
+fun TaskEstimateScreen(
+    onDoneClick: () -> Unit,
+    onSkipClick: () -> Unit
+) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -27,6 +31,26 @@ fun TaskEstimateScreen() {
             text = "TaskEstimateScreen",
             style = InTouchTheme.typography.titleMedium
         )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Button(
+                onClick = {
+                    onDoneClick.invoke()
+                }
+            ) {
+                Text(text = "Done")
+            }
+
+            Button(
+                onClick = {
+                    onSkipClick.invoke()
+                }
+            ) {
+                Text(text = "Skip")
+            }
+        }
     }
 }
 
@@ -34,6 +58,9 @@ fun TaskEstimateScreen() {
 @Preview(showBackground = true)
 fun TaskEstimateScreenPreview() {
     InTouchTheme {
-        TaskEstimateScreen()
+        TaskEstimateScreen(
+            onDoneClick = {},
+            onSkipClick = {}
+        )
     }
 }

@@ -34,7 +34,7 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = Registration.route) {
             RegistrationScreen(
-                goToPinCodeInstallation = {
+                onSetPasswordClick = {
                     navController.navigate(route = PinCodeInstallation.route)
                 }
             )
@@ -42,10 +42,10 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = PinCodeInstallation.route) {
             PinCodeInstallationScreen(
-                goToPinCodeConfirmationScreen = {
+                onSaveClick = {
                     navController.navigate(route = PinCodeConfirmation.route)
                 },
-                goToHomeScreen = {
+                onSkipClick = {
                     navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
@@ -57,7 +57,14 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = PinCodeConfirmation.route) {
             PinCodeConfirmationScreen(
-                goToHomeScreen = {
+                onSaveClick = {
+                    navController.navigate(route = MainNav.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onSkipClick = {
                     navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
@@ -69,14 +76,14 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = PinCodeEnter.route) {
             EnterPinCodeScreen(
-                goToHomeScreen = {
+                onNextClick = {
                     navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
                     }
                 },
-                goToAuthenticationScreen = {
+                onForgotPicCodeClick = {
                     navController.navigate(route = Authentication.route)
                 }
             )
@@ -84,10 +91,10 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = Authentication.route) {
             AuthenticationScreen(
-                goToPasswordRecoveryScreen = {
+                onForgotPasswordClick = {
                     navController.navigate(route = PasswordRecovery.route)
                 },
-                goToPinCodeInstallation = {
+                onLoginClick = {
                     navController.navigate(route = PinCodeInstallation.route)
                 }
             )
@@ -95,7 +102,7 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = PasswordRecovery.route) {
             PasswordRecoveryScreen(
-                goToSendingNotificationScreen = {
+                onSendPasswordClick = {
                     navController.navigate(route = SendingNotification.route)
                 }
             )
@@ -103,7 +110,7 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
 
         composable(route = SendingNotification.route) {
             SendingNotificationScreen(
-                goToAuthenticationScreen = {
+                onGoBackClick = {
                     navController.navigate(route = Authentication.route)
                 }
             )

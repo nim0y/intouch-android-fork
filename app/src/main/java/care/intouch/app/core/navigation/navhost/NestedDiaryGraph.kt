@@ -21,7 +21,7 @@ fun NavGraphBuilder.addNestedDiaryGraph(
     ) {
         composable(route = CreatingNoteIntroduction.route) {
             CreatingNoteIntroductionScreen(
-                goToDiaryEntriesScreen = {
+                onNextClick = {
                     navController.navigate(route = DiaryEntries.route)
                 }
             )
@@ -29,7 +29,7 @@ fun NavGraphBuilder.addNestedDiaryGraph(
 
         composable(route = DiaryEntries.route) {
             DiaryEntriesScreen(
-                goToEmotionChoiceScreen = {
+                onNextClick = {
                     navController.navigate(route = EmotionChoice.route)
                 }
             )
@@ -37,7 +37,7 @@ fun NavGraphBuilder.addNestedDiaryGraph(
 
         composable(route = EmotionChoice.route) {
             EmotionChoiceScreen(
-                goToDiaryEntriesScreen = {
+                onSaveClick = {
                     navController.navigate(route = DiaryEntries.route)
                 }
             )

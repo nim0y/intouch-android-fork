@@ -91,6 +91,9 @@ object Profile: IntouchDestination {
 object PlanRouteBranch: IntouchDestination {
     override val route = "PLAN_ROUTE_BRANCH"
 }
+object PlanBottomNav: IntouchDestination {
+    override val route = "PLAN_BOTTOM_NAV"
+}
 object Task: IntouchDestination {
     override val route = "TASK"
 }

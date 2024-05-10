@@ -18,6 +18,7 @@ package care.intouch.app
  import care.intouch.app.core.navigation.AppNavScreen
  import care.intouch.app.core.navigation.Authentication
  import care.intouch.app.core.navigation.AuthorizationRouteBranch
+ import care.intouch.app.core.navigation.Home
  import care.intouch.app.core.navigation.navhost.MainNavHost
  import care.intouch.uikit.theme.InTouchTheme
 
@@ -45,5 +46,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-

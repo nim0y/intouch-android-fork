@@ -14,7 +14,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun TaskIntroductionScreen(
-    goToTaskCompletingScreen: () -> Unit
+    onNextClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,10 +31,10 @@ fun TaskIntroductionScreen(
 
         Button(
             onClick = {
-                goToTaskCompletingScreen.invoke()
+                onNextClick.invoke()
             }
         ) {
-            Text(text = "Go to TaskCompletingScreen")
+            Text(text = "Next")
         }
     }
 }
@@ -44,7 +44,7 @@ fun TaskIntroductionScreen(
 fun TaskIntroductionScreenPreview() {
     InTouchTheme {
         TaskIntroductionScreen(
-            goToTaskCompletingScreen = {}
+            onNextClick = {}
         )
     }
 }

@@ -15,7 +15,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun PlanScreen(
-    goToTaskScreen: () -> Unit
+    onTaskListItemClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -34,10 +34,10 @@ fun PlanScreen(
 
         Button(
             onClick = {
-                goToTaskScreen.invoke()
+                onTaskListItemClick.invoke()
             }
         ) {
-            Text(text = "Go to ToTaskScreen")
+            Text(text = "Task List")
         }
     }
 }
@@ -47,7 +47,7 @@ fun PlanScreen(
 fun PlanScreenPreview() {
     InTouchTheme {
         PlanScreen(
-            goToTaskScreen = {}
+            onTaskListItemClick = {}
         )
     }
 }

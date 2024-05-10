@@ -14,7 +14,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun SendingNotificationScreen(
-    goToAuthenticationScreen: () -> Unit
+    onGoBackClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,10 +31,10 @@ fun SendingNotificationScreen(
 
         Button(
             onClick = {
-                goToAuthenticationScreen.invoke()
+                onGoBackClick.invoke()
             }
         ) {
-            Text(text = "Go to AuthenticationScreen")
+            Text(text = "Back")
         }
     }
 }
@@ -44,7 +44,7 @@ fun SendingNotificationScreen(
 fun SendingNotificationScreenPreview() {
     InTouchTheme {
         SendingNotificationScreen(
-            goToAuthenticationScreen = {}
+            onGoBackClick = {}
         )
     }
 }

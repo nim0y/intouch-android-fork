@@ -15,7 +15,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun DiaryNoteScreen(
-    goToCreatingNoteIntroductionScreen: () -> Unit
+    onMakeNoteClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -34,10 +34,10 @@ fun DiaryNoteScreen(
 
         Button(
             onClick = {
-                goToCreatingNoteIntroductionScreen.invoke()
+                onMakeNoteClick.invoke()
             }
         ) {
-            Text(text = "Go to CreatingNoteIntroductionScreen")
+            Text(text = "Make Note")
         }
     }
 }
@@ -47,7 +47,7 @@ fun DiaryNoteScreen(
 fun DiaryNoteScreenPreview() {
     InTouchTheme {
         DiaryNoteScreen(
-            goToCreatingNoteIntroductionScreen = {}
+            onMakeNoteClick = {}
         )
     }
 }

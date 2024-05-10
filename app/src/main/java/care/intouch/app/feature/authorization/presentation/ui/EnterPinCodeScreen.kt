@@ -15,8 +15,8 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun EnterPinCodeScreen(
-    goToHomeScreen: () -> Unit,
-    goToAuthenticationScreen: () -> Unit
+    onNextClick: () -> Unit,
+    onForgotPicCodeClick: () -> Unit
 
 ) {
     Box(
@@ -37,19 +37,19 @@ fun EnterPinCodeScreen(
         ) {
             Button(
                 onClick = {
-                    goToAuthenticationScreen.invoke()
+                    onNextClick.invoke()
                 }
             ) {
-                Text(text = "Go to AuthenticationScreen")
+                Text(text = "Next")
             }
-
             Button(
                 onClick = {
-                    goToHomeScreen.invoke()
+                    onForgotPicCodeClick.invoke()
                 }
             ) {
-                Text(text = "Go to HomeScreen")
+                Text(text = "Forgot Pin Code?")
             }
+
         }
 
     }
@@ -60,8 +60,8 @@ fun EnterPinCodeScreen(
 fun EnterPinCodeScreenPreview() {
     InTouchTheme {
         EnterPinCodeScreen(
-            goToHomeScreen = {},
-            goToAuthenticationScreen = {}
+            onNextClick = {},
+            onForgotPicCodeClick = {}
         )
     }
 }

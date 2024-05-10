@@ -14,7 +14,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun DiaryEntriesScreen(
-    goToEmotionChoiceScreen: () -> Unit
+    onNextClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,10 +31,10 @@ fun DiaryEntriesScreen(
 
         Button(
             onClick = {
-                goToEmotionChoiceScreen.invoke()
+                onNextClick.invoke()
             }
         ) {
-            Text(text = "Go to EmotionChoiceScreen")
+            Text(text = "Next")
         }
     }
 }
@@ -44,7 +44,7 @@ fun DiaryEntriesScreen(
 fun DiaryEntriesScreenPreview() {
     InTouchTheme {
         DiaryEntriesScreen(
-            goToEmotionChoiceScreen = {}
+            onNextClick = {}
         )
     }
 }

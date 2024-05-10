@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import care.intouch.app.core.navigation.Authentication
 import care.intouch.app.core.navigation.Diary
 import care.intouch.app.core.navigation.DiaryRouteBranch
 import care.intouch.app.core.navigation.Home
@@ -36,7 +37,7 @@ fun AppNavHost(
 
         composable(route = Plan.route) {
             PlanScreen(
-                goToTaskScreen = {
+                onTaskListItemClick = {
                     navController.navigate(route = PlanRouteBranch.route)
                 }
             )
@@ -44,7 +45,7 @@ fun AppNavHost(
 
         composable(route = Diary.route) {
             DiaryNoteScreen(
-                goToCreatingNoteIntroductionScreen = {
+                onMakeNoteClick = {
                     navController.navigate(route = DiaryRouteBranch.route)
                 }
             )
@@ -52,17 +53,21 @@ fun AppNavHost(
 
         composable(route = Profile.route) {
             ProfileScreen(
-                goToPasswordChangeScreen = {
+                onSecurityClick = {
                     navController.navigate(route = PasswordChange.route)
                 },
-                goToPinCodeChangeScreen = {
+                onChangePinCode = {
                     navController.navigate(route = ProfileRouteBranch.route)
                 }
             )
         }
 
         composable(route = PasswordChange.route) {
-            PasswordChangeScreen()
+            PasswordChangeScreen(
+                onDeleteProfileForeverClick = {
+                    navController.navigate(route = Authentication.route)
+                }
+            )
         }
 
         addNestedAuthorizationGraph(

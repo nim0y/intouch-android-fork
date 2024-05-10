@@ -14,7 +14,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun PasswordRecoveryScreen(
-    goToSendingNotificationScreen: () -> Unit
+    onSendPasswordClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,10 +31,10 @@ fun PasswordRecoveryScreen(
 
         Button(
             onClick = {
-                goToSendingNotificationScreen.invoke()
+                onSendPasswordClick.invoke()
             }
         ) {
-            Text(text = "Go to SendingNotificationScreen")
+            Text(text = "Send Password")
         }
     }
 }
@@ -44,7 +44,7 @@ fun PasswordRecoveryScreen(
 fun PasswordRecoveryScreenPreview() {
     InTouchTheme {
         PasswordRecoveryScreen(
-            goToSendingNotificationScreen = {}
+            onSendPasswordClick = {}
         )
     }
 }

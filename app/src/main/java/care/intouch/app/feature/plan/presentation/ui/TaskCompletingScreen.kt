@@ -14,7 +14,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun TaskCompletingScreen(
-    goToTaskEstimateScreen: () -> Unit
+    onCompleteTaskClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,10 +31,10 @@ fun TaskCompletingScreen(
 
         Button(
             onClick = {
-                goToTaskEstimateScreen.invoke()
+                onCompleteTaskClick.invoke()
             }
         ) {
-            Text(text = "Go to TaskEstimateScreen")
+            Text(text = "Complete Task")
         }
     }
 }
@@ -44,7 +44,7 @@ fun TaskCompletingScreen(
 fun TaskCompletingScreenPreview() {
     InTouchTheme {
         TaskCompletingScreen(
-            goToTaskEstimateScreen = {}
+            onCompleteTaskClick = {}
         )
     }
 }

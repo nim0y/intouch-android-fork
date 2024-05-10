@@ -3,6 +3,7 @@ package care.intouch.app.feature.profile.presentation.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun SuccessfulPinCodeChangeScreen() {
+fun SuccessfulPinCodeChangeScreen(
+    onBackToHome: () -> Unit
+) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -26,6 +29,14 @@ fun SuccessfulPinCodeChangeScreen() {
             text = "SuccessfulPinCodeChangeScreen",
             style = InTouchTheme.typography.titleMedium
         )
+
+        Button(
+            onClick = {
+                onBackToHome.invoke()
+            }
+        ) {
+            Text(text = "Back To Home")
+        }
     }
 }
 
@@ -33,6 +44,8 @@ fun SuccessfulPinCodeChangeScreen() {
 @Preview(showBackground = true)
 fun SuccessfulPinCodeChangeScreenPreview() {
     InTouchTheme {
-        SuccessfulPinCodeChangeScreen()
+        SuccessfulPinCodeChangeScreen(
+            onBackToHome = {}
+        )
     }
 }

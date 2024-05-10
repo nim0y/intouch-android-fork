@@ -15,8 +15,8 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun AuthenticationScreen(
-    goToPasswordRecoveryScreen: () -> Unit,
-    goToPinCodeInstallation: () -> Unit
+    onForgotPasswordClick: () -> Unit,
+    onLoginClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -31,21 +31,23 @@ fun AuthenticationScreen(
             style = InTouchTheme.typography.titleMedium
         )
 
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Button(
                 onClick = {
-                    goToPasswordRecoveryScreen.invoke()
+                    onForgotPasswordClick.invoke()
                 }
             ) {
-                Text(text = "Go to PasswordRecoveryScreen")
+                Text(text = "Forgot Password?")
             }
 
             Button(
                 onClick = {
-                    goToPinCodeInstallation.invoke()
+                    onLoginClick.invoke()
                 }
             ) {
-                Text(text = "Go to PinCodeInstallationScreen")
+                Text(text = "Login")
             }
         }
     }
@@ -56,8 +58,8 @@ fun AuthenticationScreen(
 fun AuthenticationScreenPreview() {
     InTouchTheme {
         AuthenticationScreen(
-            goToPasswordRecoveryScreen = {},
-            goToPinCodeInstallation = {}
+            onForgotPasswordClick = {},
+            onLoginClick = {}
         )
     }
 }

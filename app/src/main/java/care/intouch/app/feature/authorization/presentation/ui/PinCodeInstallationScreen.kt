@@ -15,8 +15,8 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun PinCodeInstallationScreen(
-    goToPinCodeConfirmationScreen: () -> Unit,
-    goToHomeScreen: () -> Unit
+    onSaveClick: () -> Unit,
+    onSkipClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -36,18 +36,18 @@ fun PinCodeInstallationScreen(
         ) {
             Button(
                 onClick = {
-                    goToPinCodeConfirmationScreen.invoke()
+                    onSaveClick.invoke()
                 }
             ) {
-                Text(text = "Go to PinCodeConfirmationScreen")
+                Text(text = "Save")
             }
 
             Button(
                 onClick = {
-                    goToHomeScreen.invoke()
+                    onSkipClick.invoke()
                 }
             ) {
-                Text(text = "Go to HomeScreen")
+                Text(text = "Skip")
             }
         }
     }
@@ -58,8 +58,8 @@ fun PinCodeInstallationScreen(
 fun PinCodeInstallationScreenPreview() {
     InTouchTheme {
         PinCodeInstallationScreen(
-            goToPinCodeConfirmationScreen = {},
-            goToHomeScreen = {}
+            onSaveClick = {},
+            onSkipClick = {}
         )
     }
 }

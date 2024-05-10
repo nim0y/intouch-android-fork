@@ -16,8 +16,8 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun ProfileScreen(
-    goToPasswordChangeScreen: () -> Unit,
-    goToPinCodeChangeScreen: () -> Unit
+    onSecurityClick: () -> Unit,
+    onChangePinCode: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -40,18 +40,18 @@ fun ProfileScreen(
 
             Button(
                 onClick = {
-                    goToPasswordChangeScreen.invoke()
+                    onSecurityClick.invoke()
                 }
             ) {
-                Text(text = "Go to PasswordChangeScreen")
+                Text(text = "Security")
             }
 
             Button(
                 onClick = {
-                    goToPinCodeChangeScreen.invoke()
+                    onChangePinCode.invoke()
                 }
             ) {
-                Text(text = "Go to PinCodeChangeScreen")
+                Text(text = "Change Pin Code")
             }
 
         }
@@ -63,8 +63,8 @@ fun ProfileScreen(
 fun ProfileScreenPreview() {
     InTouchTheme {
         ProfileScreen(
-            goToPasswordChangeScreen = {},
-            goToPinCodeChangeScreen = {}
+            onSecurityClick = {},
+            onChangePinCode = {}
         )
     }
 }

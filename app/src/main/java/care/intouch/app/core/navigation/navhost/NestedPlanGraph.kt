@@ -4,49 +4,64 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import care.intouch.app.core.navigation.AppNavScreen
+import care.intouch.app.core.navigation.MainNav
+import care.intouch.app.core.navigation.Plan
+import care.intouch.app.core.navigation.PlanBottomNav
 import care.intouch.app.core.navigation.PlanRouteBranch
-import care.intouch.app.core.navigation.Task
 import care.intouch.app.core.navigation.TaskCompleting
 import care.intouch.app.core.navigation.TaskEstimate
 import care.intouch.app.core.navigation.TaskIntroduction
 import care.intouch.app.feature.plan.presentation.ui.TaskCompletingScreen
 import care.intouch.app.feature.plan.presentation.ui.TaskEstimateScreen
 import care.intouch.app.feature.plan.presentation.ui.TaskIntroductionScreen
-import care.intouch.app.feature.plan.presentation.ui.TaskScreen
 
 fun NavGraphBuilder.addNestedPlanGraph(
     navController: NavHostController
 ) {
     navigation(
-        startDestination = Task.route,
+        startDestination = TaskIntroduction.route,
         route = PlanRouteBranch.route,
     ) {
 
-        composable(route = Task.route) {
-            TaskScreen(
-                goToTaskIntroductionScreen = {
-                    navController.navigate(route = TaskIntroduction.route)
-                }
-            )
-        }
-
         composable(route = TaskIntroduction.route) {
             TaskIntroductionScreen(
-                goToTaskCompletingScreen = {
+                onNextClick = {
                     navController.navigate(route = TaskCompleting.route)
                 }
             )
         }
 
         composable(route = TaskEstimate.route) {
-            TaskEstimateScreen()
+            TaskEstimateScreen(
+                onDoneClick = {
+                    navController.navigate(route = PlanBottomNav.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onSkipClick = {
+                    navController.navigate(route = PlanBottomNav.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         composable(route = TaskCompleting.route) {
             TaskCompletingScreen(
-                goToTaskEstimateScreen = {
+                onCompleteTaskClick = {
                     navController.navigate(route = TaskEstimate.route)
                 }
+            )
+        }
+
+        composable(route = PlanBottomNav.route) {
+            AppNavScreen(
+                startDestination = Plan.route
             )
         }
     }

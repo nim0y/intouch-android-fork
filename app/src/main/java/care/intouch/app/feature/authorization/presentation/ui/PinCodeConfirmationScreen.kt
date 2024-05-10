@@ -1,6 +1,7 @@
 package care.intouch.app.feature.authorization.presentation.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -14,7 +15,8 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun PinCodeConfirmationScreen(
-    goToHomeScreen: () -> Unit
+    onSaveClick: () -> Unit,
+    onSkipClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -29,14 +31,25 @@ fun PinCodeConfirmationScreen(
             style = InTouchTheme.typography.titleMedium
         )
 
-        Button(
-            onClick = {
-                goToHomeScreen.invoke()
-            }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Go to HomeScreen")
-        }
+            Button(
+                onClick = {
+                    onSaveClick.invoke()
+                }
+            ) {
+                Text(text = "Save")
+            }
 
+            Button(
+                onClick = {
+                    onSkipClick.invoke()
+                }
+            ) {
+                Text(text = "Skip")
+            }
+        }
     }
 }
 
@@ -45,7 +58,8 @@ fun PinCodeConfirmationScreen(
 fun PinCodeConfirmationScreenPreview() {
     InTouchTheme {
         PinCodeConfirmationScreen(
-            goToHomeScreen = {}
+            onSaveClick = {},
+            onSkipClick = {}
         )
     }
 }

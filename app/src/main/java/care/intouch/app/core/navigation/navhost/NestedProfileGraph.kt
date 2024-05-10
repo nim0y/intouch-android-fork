@@ -4,14 +4,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import care.intouch.app.core.navigation.NewPinCode
+import care.intouch.app.core.navigation.MainNav
 import care.intouch.app.core.navigation.PinCodeChange
 import care.intouch.app.core.navigation.PinCodeConfirm
 import care.intouch.app.core.navigation.ProfileRouteBranch
 import care.intouch.app.core.navigation.SuccessfulPinCodeChange
-import care.intouch.app.feature.profile.presentation.ui.NewPinCodeScreen
-import care.intouch.app.feature.profile.presentation.ui.PinCodeChangeScreen
-import care.intouch.app.feature.profile.presentation.ui.PinCodeConfirmationScreen
+import care.intouch.app.feature.authorization.presentation.ui.PinCodeInstallationScreen
 import care.intouch.app.feature.profile.presentation.ui.SuccessfulPinCodeChangeScreen
 
 fun NavGraphBuilder.addNestedProfileGraph(
@@ -23,31 +21,45 @@ fun NavGraphBuilder.addNestedProfileGraph(
     ) {
 
         composable(route = PinCodeChange.route) {
-            PinCodeChangeScreen(
-                goToNewPinCodeScreen = {
-                    navController.navigate(route = NewPinCode.route)
-                }
-            )
-        }
-
-        composable(route = NewPinCode.route) {
-            NewPinCodeScreen(
-                goToPinCodeConfirmationScreen = {
+            PinCodeInstallationScreen(
+                onSaveClick = {
                     navController.navigate(route = PinCodeConfirm.route)
+                },
+                onSkipClick = {
+                    navController.navigate(route = MainNav.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
 
         composable(route = PinCodeConfirm.route) {
-            PinCodeConfirmationScreen(
-                goToSuccessfulPinCodeChangeScreen = {
+            care.intouch.app.feature.authorization.presentation.ui.PinCodeConfirmationScreen(
+                onSaveClick = {
                     navController.navigate(route = SuccessfulPinCodeChange.route)
+                },
+                onSkipClick = {
+                    navController.navigate(route = MainNav.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
 
         composable(route = SuccessfulPinCodeChange.route) {
-            SuccessfulPinCodeChangeScreen()
+            SuccessfulPinCodeChangeScreen(
+                onBackToHome = {
+                    navController.navigate(route = MainNav.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
     }
 }
