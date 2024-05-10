@@ -1,6 +1,10 @@
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,15 +12,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import care.intouch.app.UikitSampleButton
+import androidx.compose.ui.unit.dp
 import care.intouch.app.ui.uiKitSamples.ScreenSample
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.MultilineTextFieldSampleScreen
-import care.intouch.app.ui.uiKitSamples.samples.NavigationSample
+import care.intouch.app.ui.uiKitSamples.samples.NavigationAppSample
 import care.intouch.app.ui.uiKitSamples.samples.OneLineTextFieldSampleScreen
-import care.intouch.app.ui.uiKitSamples.samples.RegularChipsSample
 import care.intouch.app.ui.uiKitSamples.samples.PasswordTextFieldSampleScreen
-import care.intouch.app.ui.uiKitSamples.samples.SliderSample
+import care.intouch.app.ui.uiKitSamples.samples.RegularChipsSample
+import care.intouch.app.ui.uiKitSamples.samples.SliderSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.ToggleSampleScreen
 import care.intouch.uikit.theme.InTouchTheme
 
@@ -89,7 +93,7 @@ fun UiKitSample() {
         }
 
         ScreenSample.NavigationSample -> {
-            NavigationSample()
+            NavigationAppSample()
         }
 
         ScreenSample.ChipsSample -> {
@@ -105,7 +109,7 @@ fun UiKitSample() {
         }
 
         ScreenSample.SliderSample -> {
-            SliderSample()
+            SliderSampleScreen()
         }
     }
 }
@@ -115,6 +119,30 @@ fun UiKitSample() {
 fun UiKitSamplePreview() {
     InTouchTheme {
         UiKitSample()
+    }
+}
+
+@Composable
+fun UikitSampleButton(
+    text: String,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = ButtonColors(
+            containerColor = InTouchTheme.colors.mainGreen,
+            contentColor = InTouchTheme.colors.input,
+            disabledContainerColor = InTouchTheme.colors.mainGreen,
+            disabledContentColor = InTouchTheme.colors.mainGreen,
+        ),
+        onClick = { onClick.invoke() }
+    ) {
+        Text(
+            text = text,
+            style = InTouchTheme.typography.bodyRegular,
+        )
     }
 }
 

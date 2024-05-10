@@ -4,6 +4,46 @@ interface IntouchDestination {
     val route: String
 }
 
+//Debug
+object DebugMode: IntouchDestination {
+    override val route = "DEBUG_MODE"
+}
+object Navigation: IntouchDestination {
+    override val route = "NAVIGATION"
+}
+object Sample: IntouchDestination {
+    override val route = "SAMPLE"
+}
+
+//Samples
+object SampleRouteBranch: IntouchDestination {
+    override val route = "SAMPLE_ROUTE_BRANCH"
+}
+object ButtonsSample: IntouchDestination {
+    override val route = "BUTTONS_SAMPLE"
+}
+object ChipsSample: IntouchDestination {
+    override val route = "CHIPS_SAMPLE"
+}
+object MultilineTextFieldSample: IntouchDestination {
+    override val route = "MULTILINE_TEXT_FIELD_SAMPLE"
+}
+object NavigationSample: IntouchDestination {
+    override val route = "NAVIGATION_SAMPLE"
+}
+object OneLineTextFieldSample: IntouchDestination {
+    override val route = "ONE_LINE_TEXT_FIELD_SAMPLE"
+}
+object PasswordTextFieldSample: IntouchDestination {
+    override val route = "PASSWORD_TEXT_FIELD_SAMPLE"
+}
+object SliderSample: IntouchDestination {
+    override val route = "SLIDER_SAMPLE"
+}
+object ToggleSample: IntouchDestination {
+    override val route = "TOGGLE_SAMPLE"
+}
+
 // Authorization
 object AuthorizationRouteBranch: IntouchDestination {
     override val route = "AUTHORIZATION_ROUTE_BRANCH"

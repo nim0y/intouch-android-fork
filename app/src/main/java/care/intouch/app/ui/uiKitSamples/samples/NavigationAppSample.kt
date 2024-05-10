@@ -9,10 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import care.intouch.app.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.navigation.CustomBottomNavBar
 import care.intouch.uikit.ui.navigation.CustomTopBar
@@ -21,13 +18,13 @@ import care.intouch.uikit.ui.navigation.CustomTopBar
 @Preview(showBackground = true)
 fun NavigationSamplePreview() {
     InTouchTheme {
-        NavigationSample()
+        NavigationAppSample()
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationSample() {
+fun NavigationAppSample() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
