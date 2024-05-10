@@ -159,9 +159,10 @@ fun UiKitSample() {
             ProgressBarSample()
         }
 
-        ScreenSample.CardsSample ->{
+        ScreenSample.CardsSample -> {
             CardsSample()
-            
+        }
+
         ScreenSample.CheckmarkSample -> {
             CheckmarkSample()
         }

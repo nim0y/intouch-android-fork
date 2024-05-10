@@ -212,7 +212,7 @@ fun PreviewPlanCards() {
             dateText = "May, 15  2023",
             text = "Socratic dialogue Learning...\n" + "Lorem ipsum dolor sit amet ",
             toggleIsChecked = toggleIsChecked,
-            onClickToggle = {toggleIsChecked = !toggleIsChecked},
+            onClickToggle = { toggleIsChecked = !toggleIsChecked },
             onClickSetting = { onClickSetting = it },
             dropdownMenuItemsList = menuItems,
             isSettingsClicked = onClickSetting
