@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,7 +84,10 @@ fun NoteCards(
         ) {
 
             Row(
-                modifier = Modifier.padding(top = 12.dp), verticalAlignment = Alignment.Top
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .weight(1f),
+                verticalAlignment = Alignment.Top
             ) {
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
@@ -101,29 +105,32 @@ fun NoteCards(
                     style = noteTextStyle,
                     color = noteColor,
                 )
-//                }
                 Image(
                     modifier = Modifier
                         .padding(start = 16.dp)
+                        .size(width = 32.dp, height = 29.dp)
                         .clickable { onClickTrash() },
                     painter = painterResource(id = R.drawable.icon_trash_card),
-                    contentDescription = "delete"
+                    contentDescription = "Trash"
                 )
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 11.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    modifier = Modifier.padding(end = 8.dp, bottom = 2.dp, top = 6.dp),
+                    modifier = Modifier.padding(end = 8.dp, bottom = 6.dp),
                     text = stringResource(R.string.mood),
                     color = InTouchTheme.colors.textGreen,
                     style = InTouchTheme.typography.subTitle,
                 )
                 Box(
                     modifier = Modifier
-                        .padding(top = 10.dp)
+                        .padding(bottom = 6.dp)
                         .weight(1f)
                 ) {
                     Row(verticalAlignment = Alignment.Bottom) {
@@ -148,8 +155,7 @@ fun NoteCards(
                     }
                 }
                 Toggle(
-                    modifier = Modifier.padding(top = 2.dp),
-                    isChecked = toggleIsChecked
+                    modifier = Modifier.padding(top = 2.dp), isChecked = toggleIsChecked
                 ) {
                     onClickToggle(it)
                 }
@@ -163,7 +169,7 @@ fun NoteCards(
 fun PreviewNoteCards() {
     InTouchTheme {
         NoteCards(dateText = "13 jul",
-            noteText = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+            noteText = "Lorem Ipsum dolor sit amet Lorem Ipsum...",
             moodChipsList = listOf(
                 StringVO.Plain("Bad"), StringVO.Plain("Loneliness"), StringVO.Plain("Loneliness")
             ),

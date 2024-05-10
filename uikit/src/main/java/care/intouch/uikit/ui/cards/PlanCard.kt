@@ -56,16 +56,16 @@ fun PlanCard(
     text: String,
     textColor: Color = InTouchTheme.colors.textGreen,
     textTextStyle: TextStyle = InTouchTheme.typography.bodyBold,
-    toggleIsChecked: Boolean,
+    toggleIsChecked: Boolean = false,
     backgroundColor: Color = InTouchTheme.colors.mainBlue,
     isSettingsClicked: Boolean,
     onClickSetting: (Boolean) -> Unit,
-    onClickToggle: (Boolean) -> Unit,
     dropdownMenuItemsList: List<DropdownMenuItemsPlanCard>,
     dropdownMenuItemIconColor: Color = InTouchTheme.colors.textBlue.copy(alpha = 0.5f),
     dropdownMenuItemTextColor: Color = InTouchTheme.colors.textBlue.copy(alpha = 0.5f),
     dropdownMenuItemTextStyle: TextStyle = InTouchTheme.typography.caption2Semibold,
-    dropdownMenuItemColorSelect: Color = InTouchTheme.colors.accentGreen30
+    dropdownMenuItemColorSelect: Color = InTouchTheme.colors.accentGreen30,
+    onClickToggle: (Boolean) -> Unit
 ) {
 
     Box(
@@ -191,16 +191,17 @@ fun PlanCard(
                     onClickToggle(it)
                 }
             }
-
-
         }
     }
 }
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewPlanCards() {
+    var toggleIsChecked by remember {
+        mutableStateOf(false)
+    }
     val menuItems: List<DropdownMenuItemsPlanCard> =
         listOf(DropdownMenuItemsPlanCard("Duplicate", R.drawable.icon_duplicate) {},
             DropdownMenuItemsPlanCard("Clear", R.drawable.icon_small_trash) {})
@@ -210,8 +211,8 @@ fun PreviewPlanCards() {
             chipText = StringVO.Plain("Done"),
             dateText = "May, 15  2023",
             text = "Socratic dialogue Learning...\n" + "Lorem ipsum dolor sit amet ",
-            toggleIsChecked = false,
-            onClickToggle = {},
+            toggleIsChecked = toggleIsChecked,
+            onClickToggle = {toggleIsChecked = !toggleIsChecked},
             onClickSetting = { onClickSetting = it },
             dropdownMenuItemsList = menuItems,
             isSettingsClicked = onClickSetting
