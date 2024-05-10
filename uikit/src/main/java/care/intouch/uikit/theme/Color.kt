@@ -28,11 +28,13 @@ val inputColor85 = Color(0xD9FFFFFF)
 
 val errorRedColor = Color(0xFFE22749)
 
+
 @Immutable
 data class InTouchColors(
     val mainBlue: Color = mainColorBlue,
     val mainGreen: Color = mainColorGreen,
     val mainGreen40: Color = mainColorGreen40,
+    val darkGreen: Color = Color(0xFF356C76),
     val accentYellow: Color = accentColorYellow,
     val accentGreen: Color = accentColorGreen,
     val accentGreen30: Color = accentColorGreen30,
@@ -46,6 +48,8 @@ data class InTouchColors(
     val input: Color = inputColor,
     val input40: Color = inputColor40,
     val input85: Color = inputColor85,
+    val transparent: Color = Color.Transparent,
     val accentBeige: Color = accentColorBeige,
     val errorRed: Color = errorRedColor,
+    val errorMaroonColor: Color = Color(0xFFA61B34),
 )
