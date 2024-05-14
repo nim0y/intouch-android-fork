@@ -1,4 +1,4 @@
-package care.intouch.app.feature.registration.presentation.ui
+package care.intouch.app.feature.authorization.presentation.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import care.intouch.app.R
-import care.intouch.app.feature.registration.presentation.viewmodel.RegistrationEvent
+import care.intouch.app.feature.authorization.presentation.viewmodel.RegistrationEvent
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton

@@ -1,4 +1,4 @@
-package care.intouch.app.feature.registration.presentation.viewmodel
+package care.intouch.app.feature.authorization.presentation.viewmodel
 
 sealed class RegistrationEvent {
     data class OnGetUserInfo(

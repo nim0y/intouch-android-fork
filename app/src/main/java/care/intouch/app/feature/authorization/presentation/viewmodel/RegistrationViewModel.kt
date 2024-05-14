@@ -1,8 +1,8 @@
-package care.intouch.app.feature.registration.presentation.viewmodel
+package care.intouch.app.feature.authorization.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import care.intouch.app.feature.registration.presentation.ui.RegistrationScreenState
+import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

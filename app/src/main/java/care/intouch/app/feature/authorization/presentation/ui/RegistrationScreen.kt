@@ -1,4 +1,4 @@
-package care.intouch.app.feature.registration.presentation.ui
+package care.intouch.app.feature.authorization.presentation.ui
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -20,8 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.uikit.R
-import care.intouch.app.feature.registration.presentation.viewmodel.RegistrationEvent
-import care.intouch.app.feature.registration.presentation.viewmodel.RegistrationViewModel
+import care.intouch.app.feature.authorization.presentation.viewmodel.RegistrationEvent
+import care.intouch.app.feature.authorization.presentation.viewmodel.RegistrationViewModel
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable

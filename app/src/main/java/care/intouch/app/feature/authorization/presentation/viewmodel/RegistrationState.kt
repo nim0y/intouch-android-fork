@@ -1,6 +1,6 @@
-package care.intouch.app.feature.registration.presentation.viewmodel
+package care.intouch.app.feature.authorization.presentation.viewmodel
 
-import care.intouch.app.feature.registration.presentation.ui.RegistrationScreenState
+import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreenState
 
 data class RegistrationState(
     val screenState: RegistrationScreenState = RegistrationScreenState.Loading,

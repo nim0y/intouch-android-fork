@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import care.intouch.app.feature.registration.presentation.ui.RegistrationScreen
+import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreen
 
 @Composable
 fun NavigationController(
