@@ -1,13 +1,13 @@
-package care.intouch.app.feature.authorization.presentation.viewmodel
+package care.intouch.app.feature.authorization.presentation
 
-sealed class RegistrationEvent {
+sealed class AuthorizationEvent {
     data class OnGetUserInfo(
         val userId: String?,
         val token: String?
-    ): RegistrationEvent()
+    ): AuthorizationEvent()
 
     data class OnSetPassword(
         val password: String,
         val confirmPassword: String,
-    ): RegistrationEvent()
+    ): AuthorizationEvent()
 }

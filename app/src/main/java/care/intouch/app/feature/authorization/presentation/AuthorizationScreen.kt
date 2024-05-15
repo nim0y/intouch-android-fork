@@ -1,6 +1,5 @@
-package care.intouch.app.feature.authorization.presentation.ui
+package care.intouch.app.feature.authorization.presentation
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,31 +16,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import care.intouch.uikit.R
-import care.intouch.app.feature.authorization.presentation.viewmodel.RegistrationEvent
-import care.intouch.app.feature.authorization.presentation.viewmodel.RegistrationViewModel
 import care.intouch.uikit.theme.InTouchTheme
+import timber.log.Timber
 
 @Composable
-fun RegistrationScreen(
+fun AuthorizationScreen(
+    navController: NavController,
     userId: String? = null,
     token: String? = null,
-    viewModel: RegistrationViewModel = hiltViewModel()
+    viewModel: AuthorizationViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState()
 
-    Log.d("TEST", "id: ${userId}  token: ${token}")
-    viewModel.onEvent(RegistrationEvent.OnGetUserInfo(userId, token))
+    Timber.tag("TEST").d("id: $userId  token: $token")
+    viewModel.onEvent(AuthorizationEvent.OnGetUserInfo(userId, token))
 
     Scaffold { paddingValues ->
-        when (state.value.screenState) {
-            RegistrationScreenState.Loading -> {
+        when (state.value.uiState) {
+            AuthorizationUiState.Loading -> {
 
             }
 
-            RegistrationScreenState.Registration -> {
+            AuthorizationUiState.SetPassword -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -68,13 +69,24 @@ fun RegistrationScreen(
                     Spacer(modifier = Modifier.height(48.dp))
                     SetPasswordScreen(
                         userName = state.value.userName,
-                        errorPassword = state.value.errorPassword,
-                        errorPasswordText = state.value.errorPasswordText,
+                        errorPassword = state.value.error != null,
+                        errorPasswordText = state.value.error?.let { getTextError(it) } ?: "",
                         onEvent = viewModel::onEvent
                     )
                 }
             }
+
+            AuthorizationUiState.Authorized -> {
+                //TODO navigate to set pin code
+                navController.navigate(
+                    "startScreen"
+                )
+            }
         }
     }
+}
 
+@Composable
+fun getTextError(errorType: InputPasswordError) = when (errorType) {
+    InputPasswordError.NotMatch -> stringResource(id = care.intouch.app.R.string.password_not_match_error)
 }

@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreen
+import care.intouch.app.feature.authorization.presentation.AuthorizationScreen
 
 @Composable
 fun NavigationController(
@@ -29,9 +29,10 @@ fun NavigationController(
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("clientId")
             val token = backStackEntry.arguments?.getString("token")
-            RegistrationScreen(
-                userId,
-                token
+            AuthorizationScreen(
+                navController = navController,
+                userId = userId,
+                token = token
             )
         }
     }

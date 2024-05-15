@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.presentation.ui
+package care.intouch.app.feature.authorization.presentation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import care.intouch.app.R
-import care.intouch.app.feature.authorization.presentation.viewmodel.RegistrationEvent
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
@@ -41,7 +40,7 @@ fun SetPasswordScreen(
     userName: String,
     errorPassword: Boolean = false,
     errorPasswordText: String = "",
-    onEvent: (RegistrationEvent) -> Unit
+    onEvent: (AuthorizationEvent) -> Unit
 ) {
     val context = LocalContext.current
     var password by rememberSaveable { mutableStateOf("") }
@@ -161,7 +160,7 @@ fun SetPasswordScreen(
             disableTextColor = InTouchTheme.colors.textGreen40,
             onClick = {
                 onEvent.invoke(
-                    RegistrationEvent.OnSetPassword(
+                    AuthorizationEvent.OnSetPassword(
                         password, confirmPassword
                     )
                 )
