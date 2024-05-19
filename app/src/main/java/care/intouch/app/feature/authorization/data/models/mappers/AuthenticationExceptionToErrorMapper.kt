@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.domain.models.mappers
+package care.intouch.app.feature.authorization.data.models.mappers
 
 import care.intouch.app.feature.authorization.data.models.exception.AuthenticationException
 import care.intouch.app.feature.common.domain.errors.AuthenticationError

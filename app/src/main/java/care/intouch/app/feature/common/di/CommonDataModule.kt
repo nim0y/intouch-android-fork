@@ -4,6 +4,7 @@ import android.content.Context
 import care.intouch.app.feature.common.data.AuthInterceptor
 import care.intouch.app.feature.common.data.ErrorInterceptor
 import care.intouch.app.feature.common.data.api.NetworkConnectionProvider
+import care.intouch.app.feature.common.data.api.TokensApiService
 import care.intouch.app.feature.common.data.impl.NetworkConnectionProviderImpl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -27,7 +28,6 @@ annotation class OkhttpClientBuilder
 @Retention(AnnotationRetention.BINARY)
 annotation class OkhttpClientBuilderWithAuth
 
-
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class OkhttpClient
@@ -44,10 +44,10 @@ annotation class RetrofitWithoutAuth
 @Retention(AnnotationRetention.BINARY)
 annotation class RetrofitWithAuth
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+
     @Singleton
     @OkhttpClientBuilder
     @Provides
@@ -62,16 +62,15 @@ class NetworkModule {
         return OkHttpClient.Builder()
     }
 
-
     @Singleton
     @OkhttpClient
     @Provides
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         errorInterceptor: ErrorInterceptor,
-        @OkhttpClientBuilder okkHttpClientBuilder: OkHttpClient.Builder
+        @OkhttpClientBuilder okHttpClientBuilder: OkHttpClient.Builder
     ): OkHttpClient {
-        return okkHttpClientBuilder
+        return okHttpClientBuilder
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(errorInterceptor)
             .build()
@@ -84,9 +83,9 @@ class NetworkModule {
         httpLoggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
         errorInterceptor: ErrorInterceptor,
-        @OkhttpClientBuilderWithAuth okkHttpClientBuilder: OkHttpClient.Builder
+        @OkhttpClientBuilderWithAuth okHttpClientBuilder: OkHttpClient.Builder
     ): OkHttpClient {
-        return okkHttpClientBuilder
+        return okHttpClientBuilder
             .addInterceptor(errorInterceptor)
             .addInterceptor(authInterceptor)
             .addInterceptor(httpLoggingInterceptor)
@@ -125,6 +124,14 @@ class NetworkModule {
     @Singleton
     fun provideNetworkConnectionProvider(@ApplicationContext context: Context): NetworkConnectionProvider {
         return NetworkConnectionProviderImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenApiService(
+        @RetrofitWithoutAuth retrofit: Retrofit
+    ): TokensApiService {
+        return retrofit.create(TokensApiService::class.java)
     }
 
     companion object {

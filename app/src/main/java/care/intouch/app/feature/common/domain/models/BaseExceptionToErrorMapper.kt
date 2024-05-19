@@ -1,6 +1,5 @@
 package care.intouch.app.feature.common.domain.models
 
-import app.cashadvisor.common.utill.extensions.logNetworkError
 import care.intouch.app.feature.common.domain.errors.ErrorEntity
 import care.intouch.app.feature.common.domain.errors.NetworkError
 import java.net.ConnectException
@@ -12,12 +11,10 @@ abstract class BaseExceptionToErrorMapper {
     fun handleException(exception: Exception): ErrorEntity {
         return when (exception) {
             is ConnectException -> {
-                logNetworkError(exception.message)
                 handleNetworkError(exception)
             }
 
             else -> {
-                logNetworkError(exception.message)
                 handleSpecificException(exception)
             }
         }

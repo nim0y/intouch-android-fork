@@ -1,30 +1,30 @@
 package care.intouch.app.feature.common.data
 
-import care.intouch.app.feature.authorization.data.api.AuthenticationApiService
-import care.intouch.app.feature.authorization.data.di.AuthApiServiceWithoutAuth
 import care.intouch.app.feature.authorization.data.models.TokensRequest
 import care.intouch.app.feature.authorization.data.models.response.TokensResponse
+import care.intouch.app.feature.common.data.api.TokensApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import java.net.HttpURLConnection
+import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
+import kotlin.concurrent.withLock
 
 class AuthInterceptor @Inject constructor(
-    @AuthApiServiceWithoutAuth private val authenticationApiService: AuthenticationApiService,
+    private val tokensApiService: TokensApiService,
     private val accountLocalDataSource: AccountLocalDataSource
 ) : Interceptor {
 
+    private val lock = ReentrantLock()
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = createRequestOnChainWithToken(chain, getAccessToken())
         val response = chain.proceed(request)
-
         if (getAccessToken().isNullOrBlank() || getRefreshToken().isNullOrBlank()) return response
-
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            synchronized(this) {
+            lock.withLock {
                 val oldAccessToken =
                     response.request.header(HEADER_NAME)?.replace(BEARER, EMPTY_STRING)
                 val currentAccessToken = getAccessToken()
@@ -84,7 +84,7 @@ class AuthInterceptor @Inject constructor(
 
     private fun getNewTokens(refreshTokens: String): retrofit2.Response<TokensResponse> =
         runBlocking(Dispatchers.IO) {
-            return@runBlocking authenticationApiService.getTokensByRefreshToken(
+            return@runBlocking tokensApiService.getTokensByRefreshToken(
                 TokensRequest(refresh = refreshTokens)
             ).execute()
         }

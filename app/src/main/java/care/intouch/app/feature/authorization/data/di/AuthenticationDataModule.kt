@@ -4,18 +4,11 @@ import care.intouch.app.feature.authorization.data.api.AuthenticationRemoteDataS
 import care.intouch.app.feature.authorization.data.impl.AuthenticationRemoteDataSourceImpl
 import care.intouch.app.feature.authorization.data.impl.AuthenticationRepositoryImpl
 import care.intouch.app.feature.authorization.domain.api.AuthenticationRepository
-import care.intouch.app.feature.authorization.domain.models.mappers.AuthenticationExceptionToErrorMapper
-import care.intouch.app.feature.common.domain.models.BaseExceptionToErrorMapper
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Qualifier
 import javax.inject.Singleton
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AuthenticationExceptionMapper
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -31,10 +24,4 @@ interface AuthenticationDataModule {
     fun bindAuthenticationRepository(
         impl: AuthenticationRepositoryImpl
     ): AuthenticationRepository
-
-    @AuthenticationExceptionMapper
-    @Binds
-    fun bindAuthenticationExceptionToErrorMapper(
-        impl: AuthenticationExceptionToErrorMapper
-    ): BaseExceptionToErrorMapper
 }

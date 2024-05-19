@@ -1,6 +1,5 @@
 package care.intouch.app.feature.common.data
 
-import app.cashadvisor.common.utill.extensions.logDebugMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -17,14 +16,11 @@ class AccountLocalDataSource @Inject constructor() {
     }
 
     fun saveAccountInformation(accountModel: AccountModel) {
-        logDebugMessage("new accessToken: ${accountModel.accessToken}")
-        logDebugMessage("new refreshToken: ${accountModel.refreshToken}")
         state.update { accountModel }
     }
 
     fun clearAccountInformation() {
         state.update { null }
-        logDebugMessage("clearAccountInformation")
     }
 }
 
