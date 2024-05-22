@@ -27,7 +27,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        signingConfig = signingConfigs.getByName("debug")
     }
 
     signingConfigs {
@@ -64,6 +63,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
                 serviceCredentialsFile = "app/serviceCredentialsFile.json"
                 artifactType = "APK"
