@@ -1,6 +1,6 @@
-package care.intouch.app.account.data.api
+package care.intouch.app.feature.authorization.data.api
 
-import care.intouch.app.account.domain.dto.AccountModel
+import care.intouch.app.feature.authorization.domain.dto.AccountModel
 import kotlinx.coroutines.flow.Flow
 
 interface AccountLocalDataSource {
@@ -9,5 +9,4 @@ interface AccountLocalDataSource {
     fun getAccountFlow(): Flow<AccountModel?>
     suspend fun hasAccount(): Boolean
     suspend fun clearAccountInformation()
-
 }

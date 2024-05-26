@@ -1,9 +1,9 @@
-package care.intouch.app.account.data.impl
+package care.intouch.app.feature.authorization.data.impl
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import care.intouch.app.account.data.api.AccountLocalDataSource
-import care.intouch.app.account.domain.dto.AccountModel
+import care.intouch.app.feature.authorization.data.api.AccountLocalDataSource
+import care.intouch.app.feature.authorization.domain.dto.AccountModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -75,5 +75,4 @@ class AccountLocalDataSourceImpl @Inject constructor(
     companion object {
         const val KEY = "KEY"
     }
-
 }

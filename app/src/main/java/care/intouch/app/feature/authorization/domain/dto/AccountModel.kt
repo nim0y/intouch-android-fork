@@ -1,4 +1,4 @@
-package care.intouch.app.account.domain.dto
+package care.intouch.app.feature.authorization.domain.dto
 
 import kotlinx.serialization.Serializable
 

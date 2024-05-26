@@ -1,9 +1,9 @@
-package care.intouch.app.account.data.impl
+package care.intouch.app.feature.authorization.data.impl
 
-import care.intouch.app.account.data.api.AccountLocalDataSource
-import care.intouch.app.account.data.dto.AccountState
-import care.intouch.app.account.domain.api.AccountStateRepository
-import care.intouch.app.account.domain.dto.AccountModel
+import care.intouch.app.feature.authorization.data.api.AccountLocalDataSource
+import care.intouch.app.feature.authorization.data.dto.AccountState
+import care.intouch.app.feature.authorization.domain.api.AccountStateRepository
+import care.intouch.app.feature.authorization.domain.dto.AccountModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class AccountStateRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getAccountState(): Flow<AccountState?> {
+    override suspend fun getAccountState(): Flow<AccountState> {
         return localDataSource.getAccountFlow().map {
             if (it == null) {
                 AccountState.NoAccount

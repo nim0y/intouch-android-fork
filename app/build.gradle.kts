@@ -70,18 +70,21 @@ android {
                 releaseNotesFile = "app/src/stage/qa/releaseNotes.txt"
                 testers = "QA"
             }
+            buildConfigField("String", "LOGGING_LEVEL", "\"RELEASE\"")
         }
 
         getByName("debug") {
             isDebuggable = true
             applicationIdSuffix = ".debug"
             matchingFallbacks += listOf("release")
+            buildConfigField("String", "LOGGING_LEVEL", "\"DEBUG\"")
         }
 
         create("qa") {
             initWith(getByName("release"))
             applicationIdSuffix = ".qa"
             matchingFallbacks += listOf("release")
+            buildConfigField("String", "LOGGING_LEVEL", "\"QA\"")
         }
     }
 

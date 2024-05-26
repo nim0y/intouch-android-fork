@@ -1,7 +1,9 @@
 package care.intouch.app.feature.common.data
 
+import care.intouch.app.feature.authorization.data.api.AccountLocalDataSource
 import care.intouch.app.feature.authorization.data.models.TokensRequest
 import care.intouch.app.feature.authorization.data.models.response.TokensResponse
+import care.intouch.app.feature.authorization.domain.dto.AccountModel
 import care.intouch.app.feature.common.data.api.TokensApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -20,9 +22,9 @@ class AuthInterceptor @Inject constructor(
 
     private val lock = ReentrantLock()
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = createRequestOnChainWithToken(chain, getAccessToken())
+        val request = getOrCreateRequestOnChainWithToken(chain, getAccessToken())
         val response = chain.proceed(request)
-        if (getAccessToken().isNullOrBlank() || getRefreshToken().isNullOrBlank()) return response
+        if (getAccessToken().isBlank() || getRefreshToken().isBlank()) return response
         if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             lock.withLock {
                 val oldAccessToken =
@@ -37,25 +39,17 @@ class AuthInterceptor @Inject constructor(
                         )
                     )
                 } else {
-                    val responseNewTokens = getNewTokens(getRefreshToken())
-
-                    if (responseNewTokens.code() == HttpURLConnection.HTTP_OK && responseNewTokens.body() != null) {
-                        responseNewTokens.body()?.let { newTokens ->
-                            accountLocalDataSource.saveAccountInformation(
-                                AccountModel(
-                                    accessToken = newTokens.access,
-                                    refreshToken = newTokens.refresh
-                                )
-                            )
-                        }
+                    try {
+                        val newTokens = getNewTokens(getRefreshToken())
+                        saveCredentials(userId = getUserId(), newTokens.access, newTokens.refresh)
                         return chain.proceed(
                             createRequestOnResponseWithToken(
                                 response,
                                 getAccessToken()
                             )
                         )
-                    } else {
-                        accountLocalDataSource.clearAccountInformation()
+                    } catch (e: Exception) {
+                        clearCredentials()
                     }
                 }
             }
@@ -63,38 +57,68 @@ class AuthInterceptor @Inject constructor(
         return response
     }
 
-    private fun createRequestOnChainWithToken(
+    private fun getOrCreateRequestOnChainWithToken(
         chain: Interceptor.Chain,
         accessToken: String
     ): Request {
-        return chain.request().newBuilder().run {
-            if (accessToken.isNotBlank()) {
-                header(HEADER_NAME, BEARER + accessToken)
-            }
-            build()
-        }
+        return if (accessToken.isBlank()) {
+            chain.request()
+        } else chain.request()
+            .newBuilder()
+            .header(HEADER_NAME, BEARER + accessToken)
+            .build()
     }
 
-    private fun createRequestOnResponseWithToken(response: Response, accessToken: String): Request {
+    private fun createRequestOnResponseWithToken(
+        response: Response,
+        accessToken: String
+    ): Request {
         return response.request.newBuilder()
             .header(HEADER_NAME, "$BEARER${accessToken}")
             .build()
     }
 
 
-    private fun getNewTokens(refreshTokens: String): retrofit2.Response<TokensResponse> =
+    private fun getNewTokens(refreshTokens: String): TokensResponse =
         runBlocking(Dispatchers.IO) {
             return@runBlocking tokensApiService.getTokensByRefreshToken(
                 TokensRequest(refresh = refreshTokens)
-            ).execute()
+            )
         }
 
-    private fun getAccessToken(): String {
-        return accountLocalDataSource.getAccountInformation()?.accessToken ?: EMPTY_STRING
+    private fun getUserId(): Int =
+        runBlocking(Dispatchers.IO) {
+            return@runBlocking accountLocalDataSource.getAccountInformation()?.userId ?: 0
+        }
+
+    private fun getAccessToken(): String =
+        runBlocking(Dispatchers.IO) {
+            return@runBlocking accountLocalDataSource.getAccountInformation()?.accessToken
+                ?: EMPTY_STRING
+        }
+
+    private fun getRefreshToken(): String =
+        runBlocking(Dispatchers.IO) {
+            return@runBlocking accountLocalDataSource.getAccountInformation()?.refreshToken
+                ?: EMPTY_STRING
+        }
+
+    private fun saveCredentials(userId: Int, accessToken: String, refreshToken: String) {
+        runBlocking(Dispatchers.IO) {
+            accountLocalDataSource.saveAccountInformation(
+                AccountModel(
+                    userId = userId,
+                    accessToken = accessToken,
+                    refreshToken = refreshToken
+                )
+            )
+        }
     }
 
-    private fun getRefreshToken(): String {
-        return accountLocalDataSource.getAccountInformation()?.refreshToken ?: EMPTY_STRING
+    private fun clearCredentials() {
+        runBlocking(Dispatchers.IO) {
+            accountLocalDataSource.clearAccountInformation()
+        }
     }
 
     companion object {

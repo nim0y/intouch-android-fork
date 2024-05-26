@@ -1,10 +1,10 @@
-package care.intouch.app.account.di
+package care.intouch.app.feature.authorization.di
 
 
-import care.intouch.app.account.data.api.AccountLocalDataSource
-import care.intouch.app.account.data.impl.AccountLocalDataSourceImpl
-import care.intouch.app.account.data.impl.AccountStateRepositoryImpl
-import care.intouch.app.account.domain.api.AccountStateRepository
+import care.intouch.app.feature.authorization.data.api.AccountLocalDataSource
+import care.intouch.app.feature.authorization.data.impl.AccountLocalDataSourceImpl
+import care.intouch.app.feature.authorization.data.impl.AccountStateRepositoryImpl
+import care.intouch.app.feature.authorization.domain.api.AccountStateRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
