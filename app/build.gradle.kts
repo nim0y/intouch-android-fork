@@ -82,6 +82,7 @@ android {
             initWith(getByName("release"))
             applicationIdSuffix = ".qa"
             matchingFallbacks += listOf("release")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
