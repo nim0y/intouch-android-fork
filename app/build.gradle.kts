@@ -34,13 +34,13 @@ android {
             val localProperties = gradleLocalProperties(rootDir, providers)
 
             val storePasswordLocal: String =
-                System.getenv("STOREPASSWORD") ?: localProperties.getProperty("storePassword")
+                System.getenv("STORE_PASSWORD") ?: localProperties.getProperty("storePassword")
                 ?: "storePasswordEmpty"
             val keyAliasLocal: String =
-                System.getenv("KEYALIAS") ?: localProperties.getProperty("keyAlias")
+                System.getenv("KEY_ALIAS") ?: localProperties.getProperty("keyAlias")
                 ?: "keyAliasEmpty"
             val keyPasswordLocal: String =
-                System.getenv("KEYPASSWORD") ?: localProperties.getProperty("keyPassword")
+                System.getenv("KEY_PASSWORD") ?: localProperties.getProperty("keyPassword")
                 ?: "keyPasswordEmpty"
 
             storeFile = file("keyStore/intouch.jks")
