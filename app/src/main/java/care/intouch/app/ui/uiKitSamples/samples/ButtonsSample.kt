@@ -14,6 +14,8 @@ import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
 import care.intouch.uikit.ui.buttons.PrimaryButtonStroke
 import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
+import care.intouch.uikit.ui.buttons.SecondaryButtonDark
+import care.intouch.uikit.ui.buttons.SecondaryButtonWhite
 
 @Composable
 fun ButtonSampleScreen() {
@@ -28,24 +30,40 @@ fun ButtonSampleScreen() {
         ) {
             PrimaryButtonGreen(
                 onClick = { },
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 5.dp),
                 text = "Call to action"
             )
             PrimaryButtonGreen(
                 onClick = { },
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 5.dp),
                 text = "Call to action",
                 isEnabled = false
             )
             PrimaryButtonStroke(
                 onClick = {},
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 5.dp),
                 text = "Call to action"
             )
             PrimaryButtonWhite(
                 onClick = {},
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 5.dp),
                 text = "Call to action"
+            )
+            SecondaryButtonDark(
+                onClick = { },
+                modifier = Modifier.padding(top = 5.dp),
+                text = "Call to action"
+            )
+            SecondaryButtonWhite(
+                onClick = { },
+                modifier = Modifier.padding(top = 5.dp),
+                text = "Call to action"
+            )
+            SecondaryButtonDark(
+                onClick = {},
+                modifier = Modifier.padding(top = 5.dp),
+                text = "Call to action",
+                isEnabled = false
             )
         }
     }
