@@ -44,6 +44,30 @@ object ToggleSample: IntouchDestination {
     override val route = "TOGGLE_SAMPLE"
 }
 
+object ButtonSample2: IntouchDestination {
+    override val route = "BUTTON_SAMPLE_2"
+}
+
+object CardSample: IntouchDestination {
+    override val route = "CARD_SAMPLE"
+}
+
+object CheckboxSample: IntouchDestination {
+    override val route = "CHECKBOX_SAMPLE"
+}
+
+object CheckmarkSample: IntouchDestination {
+    override val route = "CHECKMARK_SAMPLE"
+}
+
+object PinCodeSample: IntouchDestination {
+    override val route = "PIN_CODE_SAMPLE"
+}
+
+object ProgressBarSample: IntouchDestination {
+    override val route = "PROGRESS_BAR_SAMPLE"
+}
+
 // Authorization
 object AuthorizationRouteBranch: IntouchDestination {
     override val route = "AUTHORIZATION_ROUTE_BRANCH"

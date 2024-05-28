@@ -5,7 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import care.intouch.app.core.navigation.Authentication
+import care.intouch.app.core.navigation.ButtonSample2
 import care.intouch.app.core.navigation.ButtonsSample
+import care.intouch.app.core.navigation.CardSample
+import care.intouch.app.core.navigation.CheckboxSample
+import care.intouch.app.core.navigation.CheckmarkSample
 import care.intouch.app.core.navigation.ChipsSample
 import care.intouch.app.core.navigation.DebugMode
 import care.intouch.app.core.navigation.MainNav
@@ -15,6 +19,8 @@ import care.intouch.app.core.navigation.NavigationSample
 import care.intouch.app.core.navigation.OneLineTextFieldSample
 import care.intouch.app.core.navigation.PasswordTextFieldSample
 import care.intouch.app.core.navigation.PinCodeEnter
+import care.intouch.app.core.navigation.PinCodeSample
+import care.intouch.app.core.navigation.ProgressBarSample
 import care.intouch.app.core.navigation.Registration
 import care.intouch.app.core.navigation.Sample
 import care.intouch.app.core.navigation.SliderSample
@@ -61,21 +67,40 @@ fun MainNavHost(
         composable(route = Sample.route) {
             SampleScreen(
                 onButtonSampleClick = { navController.navigate(route = ButtonsSample.route) },
+
                 onChipSampleClick = { navController.navigate(route = ChipsSample.route) },
+
                 onMultilineTextFieldSampleClick = {
                     navController.navigate(route = MultilineTextFieldSample.route)
                 },
+
                 onNavigationSampleClick = {
                     navController.navigate(route = NavigationSample.route)
                 },
+
                 onOneLineTextFieldSampleClick = {
                     navController.navigate(route = OneLineTextFieldSample.route)
                 },
+
                 onPasswordTextFieldSampleClick = {
                     navController.navigate(route = PasswordTextFieldSample.route)
                 },
+
                 onSliderSampleClick = { navController.navigate(route = SliderSample.route) },
-                onToggleSampleClick = { navController.navigate(route = ToggleSample.route) }
+
+                onToggleSampleClick = { navController.navigate(route = ToggleSample.route) },
+
+                onProgressBarSampleClick = { navController.navigate(route = ProgressBarSample.route) },
+
+                onPinCodeSampleClick = { navController.navigate(route = PinCodeSample.route) },
+
+                onCheckmarkSampleClick = { navController.navigate(route = CheckmarkSample.route) },
+
+                onCheckboxSampleClick = { navController.navigate(route = CheckboxSample.route) },
+
+                onCardSampleClick = { navController.navigate(route = CardSample.route) },
+
+                onButtonSample2Click = { navController.navigate(route = ButtonSample2.route) }
             )
         }
 

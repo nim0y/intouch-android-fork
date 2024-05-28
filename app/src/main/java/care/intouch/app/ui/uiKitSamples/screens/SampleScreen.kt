@@ -23,7 +23,13 @@ fun SampleScreen(
     onOneLineTextFieldSampleClick: () -> Unit,
     onPasswordTextFieldSampleClick: () -> Unit,
     onSliderSampleClick: () -> Unit,
-    onToggleSampleClick: () -> Unit
+    onToggleSampleClick: () -> Unit,
+    onProgressBarSampleClick: () -> Unit,
+    onPinCodeSampleClick: () -> Unit,
+    onCheckmarkSampleClick: () -> Unit,
+    onCheckboxSampleClick: () -> Unit,
+    onCardSampleClick: () -> Unit,
+    onButtonSample2Click: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
@@ -39,7 +45,7 @@ fun SampleScreen(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onButtonSampleClick.invoke() }
         ) {
-            Text(text = "Go To Buttons Sample")
+            Text(text = "Go To Button Sample")
         }
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -83,6 +89,42 @@ fun SampleScreen(
         ) {
             Text(text = "Go To Toggle Sample")
         }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onProgressBarSampleClick.invoke() }
+        ) {
+            Text(text = "Go To Progress Bar Sample")
+        }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onPinCodeSampleClick.invoke() }
+        ) {
+            Text(text = "Go To Pin Code Sample")
+        }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onCheckmarkSampleClick.invoke() }
+        ) {
+            Text(text = "Go To Checkmark Sample")
+        }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onCheckboxSampleClick.invoke() }
+        ) {
+            Text(text = "Go To Checkbox Sample")
+        }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onCardSampleClick.invoke() }
+        ) {
+            Text(text = "Go To Card Sample")
+        }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onButtonSample2Click.invoke() }
+        ) {
+            Text(text = "Go To Button 2 Sample")
+        }
     }
 }
 
@@ -98,7 +140,13 @@ fun SampleScreenPreview() {
             onOneLineTextFieldSampleClick = {},
             onPasswordTextFieldSampleClick = {},
             onSliderSampleClick = {},
-            onToggleSampleClick = {}
+            onToggleSampleClick = {},
+            onProgressBarSampleClick = {},
+            onPinCodeSampleClick = {},
+            onCheckmarkSampleClick = {},
+            onCheckboxSampleClick = {},
+            onCardSampleClick = {},
+            onButtonSample2Click = {}
         )
     }
 }
