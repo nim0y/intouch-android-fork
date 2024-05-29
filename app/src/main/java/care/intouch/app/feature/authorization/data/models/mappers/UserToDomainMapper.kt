@@ -9,9 +9,7 @@ class UserToDomainMapper @Inject constructor() {
     fun toUser(response: UserResponse): User {
         with(response) {
             if (id == null || firstName == null || email == null) {
-                throw UserException.User.MissingRequiredFields(
-                    "UserResponse is missing required fields: id, firstName, or email."
-                )
+                throwException()
             }
             return User(
                 id = id,
@@ -25,11 +23,16 @@ class UserToDomainMapper @Inject constructor() {
         }
     }
 
+    private fun throwException(): Nothing {
+        throw UserException.User.MissingRequiredFields(
+            "UserResponse is missing required fields: id, firstName, or email."
+        )
+    }
+
     companion object {
         private const val DEFAULT_LAST_NAME = ""
         private const val DEFAULT_ACCEPT_POLICY = false
         private const val DEFAULT_NEW_EMAIL_TEMP = ""
         private const val DEFAULT_NEW_EMAIL_CHANGING = false
     }
-
 }
