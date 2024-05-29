@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -132,10 +133,10 @@ fun CustomBottomNavBar(
     currentRoute: String? = "",
     onFocusTint: Color = InTouchTheme.colors.mainGreen,
     outFocusTint: Color = InTouchTheme.colors.mainGreen40,
-    firstItemText: String = "Home",
-    secondItemText: String = "My plan",
-    thirdItemText: String = "My diary",
-    fourthItemText: String = "Profile",
+    firstItemText: String = stringResource(id = R.string.bottom_nav_home),
+    secondItemText: String = stringResource(id = R.string.bottom_nav_my_plan),
+    thirdItemText: String = stringResource(id = R.string.bottom_nav_my_diary),
+    fourthItemText: String = stringResource(id = R.string.bottom_nav_profile),
     firstItemImage: Painter = painterResource(id = R.drawable.icon_home),
     secondItemImage: Painter = painterResource(id = R.drawable.icon_plan_notebook),
     thirdItemImage: Painter = painterResource(id = R.drawable.icon_diary),
@@ -151,7 +152,7 @@ fun CustomBottomNavBar(
         modifier = Modifier
             .height(70.dp)
             .fillMaxWidth()
-            .background(Color.Transparent)
+            .background(InTouchTheme.colors.transparent)
     ) {
 
         val (homeTag, progressTag, plusTag, myPlanTag, additionalTag, box) = createRefs()
