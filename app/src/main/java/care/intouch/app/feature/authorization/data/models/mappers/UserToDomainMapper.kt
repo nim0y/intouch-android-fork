@@ -1,5 +1,6 @@
 package care.intouch.app.feature.authorization.data.models.mappers
 
+import care.intouch.app.feature.authorization.data.models.exception.UserException
 import care.intouch.app.feature.authorization.data.models.response.UserResponse
 import care.intouch.app.feature.authorization.domain.models.User
 import javax.inject.Inject
@@ -8,7 +9,9 @@ class UserToDomainMapper @Inject constructor() {
     fun toUser(response: UserResponse): User {
         with(response) {
             if (id == null || firstName == null || email == null) {
-                throw IllegalArgumentException("UserResponse is missing required fields: id, firstName, or email.")
+                throw UserException.User.MissingRequiredFields(
+                    "UserResponse is missing required fields: id, firstName, or email."
+                )
             }
             return User(
                 id = id,

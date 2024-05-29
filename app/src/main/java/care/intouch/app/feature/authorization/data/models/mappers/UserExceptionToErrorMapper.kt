@@ -22,6 +22,7 @@ class UserExceptionToErrorMapper @Inject constructor() : BaseExceptionToErrorMap
             )
 
             is UserException.Undefined -> UserError.Unknown(exception.message)
+            is UserException.User.MissingRequiredFields -> UserError.Unknown(exception.message)
             is UserException.User.InvalidToken -> UserError.Unauthorised(exception.message)
         }
     }

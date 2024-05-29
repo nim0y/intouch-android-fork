@@ -16,6 +16,10 @@ sealed class UserException(
         class InvalidToken(
             override val message: String,
         ) : User(message)
+
+        class MissingRequiredFields(
+            override val message: String,
+        ) : User(message)
     }
 
     companion object {
