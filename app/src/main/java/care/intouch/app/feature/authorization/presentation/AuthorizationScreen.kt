@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -19,10 +18,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import care.intouch.uikit.R
 import care.intouch.uikit.theme.InTouchTheme
-import timber.log.Timber
 
 @Composable
 fun AuthorizationScreen(
@@ -31,9 +30,8 @@ fun AuthorizationScreen(
     token: String? = null,
     viewModel: AuthorizationViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsState()
+    val state = viewModel.state.collectAsStateWithLifecycle()
 
-    Timber.tag("TEST").d("id: $userId  token: $token")
     viewModel.onEvent(AuthorizationEvent.OnGetUserInfo(userId, token))
 
     Scaffold { paddingValues ->
