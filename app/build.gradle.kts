@@ -27,6 +27,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        manifestPlaceholders["hostName"] = "app.intouch.care"
     }
 
     signingConfigs {
