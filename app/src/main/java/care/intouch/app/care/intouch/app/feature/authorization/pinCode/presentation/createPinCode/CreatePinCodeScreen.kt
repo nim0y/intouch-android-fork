@@ -40,7 +40,8 @@ import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 fun CreatePinCodeScreen(
-    viewModel: CreatePinCodeViewModel = hiltViewModel(), modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CreatePinCodeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -99,7 +100,9 @@ fun CreatePinCodeContent(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().focusRequester(focusRequester),
+        modifier = Modifier
+            .fillMaxSize()
+            .focusRequester(focusRequester),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -167,7 +170,9 @@ fun ConfirmContent(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().focusRequester(focusRequester),
+        modifier = Modifier
+            .fillMaxSize()
+            .focusRequester(focusRequester),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -224,7 +229,9 @@ fun ErrorConfirmContent(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().focusRequester(focusRequester),
+        modifier = Modifier
+            .fillMaxSize()
+            .focusRequester(focusRequester),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
