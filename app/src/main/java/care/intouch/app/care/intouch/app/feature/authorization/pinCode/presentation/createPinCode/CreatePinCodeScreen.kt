@@ -6,31 +6,31 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import care.intouch.app.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
@@ -40,7 +40,7 @@ import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 @Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 fun CreatePinCodeScreen(
-    viewModel: CreatePinCodeViewModel = viewModel(), modifier: Modifier = Modifier
+    viewModel: CreatePinCodeViewModel = hiltViewModel(), modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -48,7 +48,6 @@ fun CreatePinCodeScreen(
         modifier = modifier
             .fillMaxSize()
             .background(InTouchTheme.colors.input)
-
     ) {
         Image(
             modifier = Modifier
@@ -61,17 +60,17 @@ fun CreatePinCodeScreen(
         when (state) {
             CreatePinCodeScreenState.Confirm -> {
                 Log.d("TAG", "CreatePinCodeScreenState.Confirm")
-                ConfirmContent(clickToConfirm = viewModel::event)
+                ConfirmContent(clickToConfirm = viewModel::onEvent)
             }
 
             CreatePinCodeScreenState.Create -> {
                 Log.d("TAG", "CreatePinCodeScreenState.Create")
-                CreatePinCodeContent(clickToCreate = viewModel::event)
+                CreatePinCodeContent(clickToCreate = viewModel::onEvent)
             }
 
             CreatePinCodeScreenState.Error -> {
                 Log.d("TAG", "CreatePinCodeScreenState.Error")
-                ErrorConfirmContent(clickToConfirm = viewModel::event)
+                ErrorConfirmContent(clickToConfirm = viewModel::onEvent)
             }
 
             CreatePinCodeScreenState.ConfirmSuccess -> {
@@ -88,10 +87,19 @@ fun CreatePinCodeContent(
     clickToCreate: (event: CreatePinCodeEvent) -> Unit = {},
 
     ) {
+
     var pinCode by rememberSaveable { mutableStateOf("") }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
+    }
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().focusRequester(focusRequester),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -121,7 +129,6 @@ fun CreatePinCodeContent(
         )
         Spacer(modifier = Modifier.height(12.dp))
         PinCodeInputField(
-           // modifier = Modifier.focus(),
             value = pinCode,
             onValueChange = { pinCode = it })
 
@@ -151,8 +158,16 @@ fun ConfirmContent(
 ) {
     var pinCode by rememberSaveable { mutableStateOf("") }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
+    }
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().focusRequester(focusRequester),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -200,8 +215,16 @@ fun ErrorConfirmContent(
 ) {
     var pinCode by rememberSaveable { mutableStateOf("") }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
+    }
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().focusRequester(focusRequester),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

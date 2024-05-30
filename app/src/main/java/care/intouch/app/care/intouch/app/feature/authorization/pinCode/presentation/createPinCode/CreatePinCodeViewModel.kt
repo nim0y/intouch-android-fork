@@ -16,7 +16,7 @@ class CreatePinCodeViewModel @Inject constructor() : ViewModel() {
     val state: StateFlow<CreatePinCodeScreenState> = _state.asStateFlow()
     private var tempPinCode: String? = null
 
-    fun event(event: CreatePinCodeEvent) {
+    fun onEvent(event: CreatePinCodeEvent) {
         when(event){
             is CreatePinCodeEvent.Create -> {
                 tempPinCode = event.pinCode
