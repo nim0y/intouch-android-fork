@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun PinCodeInstallationScreen(
+fun PinCodeInstallationScreen22(
     onSaveClick: () -> Unit,
     onSkipClick: () -> Unit
 ) {
@@ -57,7 +57,7 @@ fun PinCodeInstallationScreen(
 @Preview(showBackground = true)
 fun PinCodeInstallationScreenPreview() {
     InTouchTheme {
-        PinCodeInstallationScreen(
+        PinCodeInstallationScreen22(
             onSaveClick = {},
             onSkipClick = {}
         )

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun PinCodeConfirmationScreen(
+fun PinCodeConfirmationScreen11(
     onSaveClick: () -> Unit,
     onSkipClick: () -> Unit
 ) {
@@ -57,7 +57,7 @@ fun PinCodeConfirmationScreen(
 @Preview(showBackground = true)
 fun PinCodeConfirmationScreenPreview() {
     InTouchTheme {
-        PinCodeConfirmationScreen(
+        PinCodeConfirmationScreen11(
             onSaveClick = {},
             onSkipClick = {}
         )

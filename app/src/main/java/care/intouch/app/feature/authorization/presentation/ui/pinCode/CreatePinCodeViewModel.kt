@@ -1,4 +1,4 @@
-package care.intouch.app.care.intouch.app.feature.authorization.pinCode.presentation.createPinCode
+package care.intouch.app.feature.authorization.presentation.ui.pinCode
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,16 +17,19 @@ class CreatePinCodeViewModel @Inject constructor() : ViewModel() {
     private var tempPinCode: String? = null
 
     fun onEvent(event: CreatePinCodeEvent) {
-        when(event){
-            is CreatePinCodeEvent.Create -> {
-                tempPinCode = event.pinCode
-                _state.update { CreatePinCodeScreenState.Confirm }
-            }
-            is CreatePinCodeEvent.Confirm -> {
-                if (tempPinCode == event.pinCode){
-                    _state.update { CreatePinCodeScreenState.ConfirmSuccess }
-                }else{
+        when (event) {
+            is CreatePinCodeEvent.Init -> {
+                if (event.pinCode.isNullOrEmpty()) {
                     _state.update { CreatePinCodeScreenState.Error }
+                }
+                tempPinCode = event.pinCode
+            }
+
+            is CreatePinCodeEvent.Statement -> {
+                if (tempPinCode == event.pinCode) {
+                    _state.update { CreatePinCodeScreenState.Confirmed }
+                } else {
+                    _state.update { CreatePinCodeScreenState.NotConfirmed }
                 }
             }
         }

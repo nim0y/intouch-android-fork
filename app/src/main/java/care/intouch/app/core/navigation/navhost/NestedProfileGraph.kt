@@ -9,57 +9,51 @@ import care.intouch.app.core.navigation.PinCodeChange
 import care.intouch.app.core.navigation.PinCodeConfirm
 import care.intouch.app.core.navigation.ProfileRouteBranch
 import care.intouch.app.core.navigation.SuccessfulPinCodeChange
-import care.intouch.app.feature.authorization.presentation.ui.PinCodeInstallationScreen
+import care.intouch.app.feature.authorization.presentation.ui.pinCode.PinCodeConfirmationScreen
+import care.intouch.app.feature.authorization.presentation.ui.pinCode.PinCodeInstallationScreen
 import care.intouch.app.feature.profile.presentation.ui.SuccessfulPinCodeChangeScreen
 
 fun NavGraphBuilder.addNestedProfileGraph(
     navController: NavHostController
 ) {
     navigation(
-        startDestination = PinCodeChange.route,
-        route = ProfileRouteBranch.route
+        startDestination = PinCodeChange.route, route = ProfileRouteBranch.route
     ) {
 
         composable(route = PinCodeChange.route) {
-            PinCodeInstallationScreen(
-                onSaveClick = {
-                    navController.navigate(route = PinCodeConfirm.route)
-                },
-                onSkipClick = {
-                    navController.navigate(route = MainNav.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
+            PinCodeInstallationScreen(onSaveClick = { argument ->
+                navController.navigate(route = PinCodeConfirm.route + "/$argument")
+            }, onSkipClick = {
+                navController.navigate(route = MainNav.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
                     }
                 }
-            )
+            })
         }
 
-        composable(route = PinCodeConfirm.route) {
-            care.intouch.app.feature.authorization.presentation.ui.PinCodeConfirmationScreen(
-                onSaveClick = {
-                    navController.navigate(route = SuccessfulPinCodeChange.route)
-                },
-                onSkipClick = {
-                    navController.navigate(route = MainNav.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
+        composable(
+            route = PinCodeConfirm.route + "/{pinCodeInst}"
+        ) { backStackEntry ->
+            PinCodeConfirmationScreen(onSaveClick = {
+                navController.navigate(route = SuccessfulPinCodeChange.route)
+            }, onSkipClick = {
+                navController.navigate(route = MainNav.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
                     }
                 }
-            )
+            }, pinCodeInst = backStackEntry.arguments?.getString("pinCodeInst"))
         }
 
         composable(route = SuccessfulPinCodeChange.route) {
-            SuccessfulPinCodeChangeScreen(
-                onBackToHome = {
-                    navController.navigate(route = MainNav.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
+            SuccessfulPinCodeChangeScreen(onBackToHome = {
+                navController.navigate(route = MainNav.route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
                     }
                 }
-            )
+            })
         }
     }
 }
