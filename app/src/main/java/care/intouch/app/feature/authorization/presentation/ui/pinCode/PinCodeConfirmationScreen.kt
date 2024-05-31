@@ -67,12 +67,6 @@ fun PinCodeConfirmationScreen(
             contentScale = ContentScale.FillBounds,
         )
 
-
-        LaunchedEffect(key1 = Unit) {
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -133,7 +127,6 @@ fun PinCodeConfirmationScreen(
                 }
             }
 
-
             IntouchButton(
                 onClick = {
                     viewModel.onEvent(CreatePinCodeEvent.Statement(pinCode))
@@ -151,5 +144,9 @@ fun PinCodeConfirmationScreen(
                 text = stringResource(id = care.intouch.app.R.string.skip_button)
             )
         }
+    }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
     }
 }

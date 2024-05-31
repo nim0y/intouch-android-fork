@@ -60,11 +60,6 @@ fun PinCodeInstallationScreen(
         )
 
 
-        LaunchedEffect(key1 = Unit) {
-            focusRequester.requestFocus()
-            keyboardController?.show()
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -83,6 +78,7 @@ fun PinCodeInstallationScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
             Text(
+                modifier = Modifier.height(42.dp),
                 text = stringResource(id = care.intouch.app.R.string.info_about_setup_pin),
                 style = InTouchTheme.typography.bodySemibold,
                 textAlign = TextAlign.Center,
@@ -116,5 +112,10 @@ fun PinCodeInstallationScreen(
                 text = stringResource(id = care.intouch.app.R.string.skip_button)
             )
         }
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+        keyboardController?.show()
     }
 }
