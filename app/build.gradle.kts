@@ -72,12 +72,14 @@ android {
                 releaseNotesFile = "app/src/stage/qa/releaseNotes.txt"
                 testers = "QA"
             }
+            buildConfigField("String", "LOGGING_LEVEL", "\"RELEASE\"")
         }
 
         getByName("debug") {
             isDebuggable = true
             applicationIdSuffix = ".debug"
             matchingFallbacks += listOf("release")
+            buildConfigField("String", "LOGGING_LEVEL", "\"DEBUG\"")
         }
 
         create("qa") {
@@ -85,6 +87,7 @@ android {
             applicationIdSuffix = ".qa"
             matchingFallbacks += listOf("release")
             signingConfig = signingConfigs.getByName("release")
+            buildConfigField("String", "LOGGING_LEVEL", "\"QA\"")
         }
     }
 
@@ -185,6 +188,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
 
     //Testing
     testImplementation(libs.junit)
