@@ -2,6 +2,8 @@ package care.intouch.app.feature.authorization.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import care.intouch.app.feature.authorization.domain.useCase.GetUserNameUseCase
+import care.intouch.app.feature.common.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthorizationViewModel @Inject constructor(
-
+    private val getUserNameUseCase: GetUserNameUseCase,
 ) : ViewModel() {
     private var _state = MutableStateFlow(AuthorizationState())
     val state = _state.asStateFlow()
@@ -33,12 +35,17 @@ class AuthorizationViewModel @Inject constructor(
     private fun getUserInfo(userId: String?, token: String?) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                //TODO get user's info
-                _state.update { registrationState ->
-                    registrationState.copy(
-                        uiState = AuthorizationUiState.SetPassword,
-                        userName = "UserName"
-                    )
+                val userInfo = getUserNameUseCase.invoke()
+
+                if(userInfo is Resource.Success) {
+                    _state.update { registrationState ->
+                        registrationState.copy(
+                            uiState = AuthorizationUiState.SetPassword,
+                            userName = userInfo.data
+                        )
+                    }
+                } else {
+
                 }
             }
         }

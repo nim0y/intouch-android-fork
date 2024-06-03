@@ -28,6 +28,7 @@ fun AuthorizationScreen(
     navController: NavController,
     userId: String? = null,
     token: String? = null,
+    onGoPinCodeInstallationScreen: () -> Unit,
     viewModel: AuthorizationViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
@@ -75,10 +76,7 @@ fun AuthorizationScreen(
             }
 
             AuthorizationUiState.Authorized -> {
-                //TODO navigate to set pin code
-                navController.navigate(
-                    "startScreen"
-                )
+                onGoPinCodeInstallationScreen.invoke()
             }
         }
     }
