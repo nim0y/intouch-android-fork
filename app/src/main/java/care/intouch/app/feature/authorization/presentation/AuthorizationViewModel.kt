@@ -35,18 +35,18 @@ class AuthorizationViewModel @Inject constructor(
     private fun getUserInfo(userId: String?, token: String?) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val userInfo = getUserNameUseCase.invoke()
+//                val userInfo = getUserNameUseCase.invoke()
 
-                if(userInfo is Resource.Success) {
+//                if(userInfo is Resource.Success) {
                     _state.update { registrationState ->
                         registrationState.copy(
                             uiState = AuthorizationUiState.SetPassword,
-                            userName = userInfo.data
+                            userName = "UserName"
                         )
                     }
-                } else {
-
-                }
+//                } else {
+//
+//                }
             }
         }
     }

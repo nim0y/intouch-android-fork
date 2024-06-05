@@ -27,9 +27,9 @@ jobs:
 
       - name: Run build script
         env:
-          STORE_PASSWORD: ${{ secrets.STOREPASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEYALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEYPASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew :app:build
 
       - name: Check status
