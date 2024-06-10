@@ -27,7 +27,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        signingConfig = signingConfigs.getByName("debug")
+
+        manifestPlaceholders["hostName"] = "app.intouch.care"
     }
 
     signingConfigs {
@@ -64,24 +65,29 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
             firebaseAppDistribution {
                 serviceCredentialsFile = "app/serviceCredentialsFile.json"
                 artifactType = "APK"
                 releaseNotesFile = "app/src/stage/qa/releaseNotes.txt"
                 testers = "QA"
             }
+            buildConfigField("String", "LOGGING_LEVEL", "\"RELEASE\"")
         }
 
         getByName("debug") {
             isDebuggable = true
             applicationIdSuffix = ".debug"
             matchingFallbacks += listOf("release")
+            buildConfigField("String", "LOGGING_LEVEL", "\"DEBUG\"")
         }
 
         create("qa") {
             initWith(getByName("release"))
             applicationIdSuffix = ".qa"
             matchingFallbacks += listOf("release")
+            signingConfig = signingConfigs.getByName("release")
+            buildConfigField("String", "LOGGING_LEVEL", "\"QA\"")
         }
     }
 
@@ -182,6 +188,11 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+
+    //Security-crypto
+    implementation(libs.security.crypto)
+
 
     //Testing
     testImplementation(libs.junit)
