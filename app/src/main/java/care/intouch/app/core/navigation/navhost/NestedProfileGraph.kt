@@ -9,8 +9,8 @@ import care.intouch.app.core.navigation.PinCodeChange
 import care.intouch.app.core.navigation.PinCodeConfirm
 import care.intouch.app.core.navigation.ProfileRouteBranch
 import care.intouch.app.core.navigation.SuccessfulPinCodeChange
-import care.intouch.app.feature.authorization.presentation.ui.pinCode.PinCodeConfirmationScreen
-import care.intouch.app.feature.authorization.presentation.ui.pinCode.PinCodeInstallationScreen
+import care.intouch.app.feature.pinCode.ui.confirm.PinCodeConfirmationScreen
+import care.intouch.app.feature.pinCode.ui.install.PinCodeInstallationScreen
 import care.intouch.app.feature.profile.presentation.ui.SuccessfulPinCodeChangeScreen
 
 fun NavGraphBuilder.addNestedProfileGraph(

@@ -1,6 +1,7 @@
-package care.intouch.app.feature.authorization.pinCode.data
+package care.intouch.app.feature.pinCode.data
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import care.intouch.app.feature.authorization.data.models.mappers.AuthenticationExceptionToErrorMapper
 import care.intouch.app.feature.common.Resource
@@ -26,6 +27,7 @@ class PinCodeRepositoryImpl @Inject constructor(
                 defaultPrefs.edit {
                     putBoolean(SKIPPED, false)
                 }
+                Log.d("TAG", "CONFIRMED = $pinCode")
                 Resource.Success(true)
             } catch (e: Exception) {
                 val error = exceptionToErrorMapper.handleException(e)
@@ -81,6 +83,7 @@ class PinCodeRepositoryImpl @Inject constructor(
                 defaultPrefs.edit {
                     putBoolean(SKIPPED, true)
                 }
+                Log.d("TAG", "SKIPPED")
                 Resource.Success(true)
             } catch (e: Exception) {
                 val error = exceptionToErrorMapper.handleException(e)

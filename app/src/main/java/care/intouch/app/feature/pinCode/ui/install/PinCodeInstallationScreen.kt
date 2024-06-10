@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.presentation.ui.pinCode
+package care.intouch.app.feature.pinCode.ui.install
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.uikit.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
@@ -39,6 +40,7 @@ fun PinCodeInstallationScreen(
     onSaveClick: (argument: String) -> Unit,
     onSkipClick: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: PinCodeInstallationViewModel = hiltViewModel()
 ) {
 
     var pinCode by rememberSaveable { mutableStateOf("") }
@@ -107,7 +109,10 @@ fun PinCodeInstallationScreen(
 
             Spacer(modifier = Modifier.height(2.dp))
             PrimaryButtonWhite(
-                onClick = { onSkipClick() },
+                onClick = {
+                    viewModel.skip()
+                    onSkipClick()
+                },
                 modifier = Modifier,
                 text = stringResource(id = care.intouch.app.R.string.skip_button)
             )

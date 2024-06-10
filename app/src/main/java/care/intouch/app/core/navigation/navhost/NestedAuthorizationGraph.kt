@@ -7,10 +7,8 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import care.intouch.app.core.navigation.AppNavScreen
 import care.intouch.app.core.navigation.Authentication
-import care.intouch.app.core.navigation.AuthorizationRouteBranch
-import care.intouch.app.core.navigation.MainNav
-import care.intouch.app.core.navigation.AppNavScreen
 import care.intouch.app.core.navigation.Authorization
+import care.intouch.app.core.navigation.AuthorizationRouteBranch
 import care.intouch.app.core.navigation.Home
 import care.intouch.app.core.navigation.MainNav
 import care.intouch.app.core.navigation.PasswordRecovery
@@ -25,8 +23,8 @@ import care.intouch.app.feature.authorization.presentation.ui.EnterPinCodeScreen
 import care.intouch.app.feature.authorization.presentation.ui.PasswordRecoveryScreen
 import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreen
 import care.intouch.app.feature.authorization.presentation.ui.SendingNotificationScreen
-import care.intouch.app.feature.authorization.presentation.ui.pinCode.PinCodeConfirmationScreen
-import care.intouch.app.feature.authorization.presentation.ui.pinCode.PinCodeInstallationScreen
+import care.intouch.app.feature.pinCode.ui.confirm.PinCodeConfirmationScreen
+import care.intouch.app.feature.pinCode.ui.install.PinCodeInstallationScreen
 
 fun NavGraphBuilder.addNestedAuthorizationGraph(
     navController: NavHostController,

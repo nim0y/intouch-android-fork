@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.presentation.ui.pinCode
+package care.intouch.app.feature.pinCode.ui.confirm
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,8 +28,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import care.intouch.app.BuildConfig
 import care.intouch.uikit.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
@@ -43,11 +44,11 @@ fun PinCodeConfirmationScreen(
     onSkipClick: () -> Unit,
     pinCodeInst: String?,
     modifier: Modifier = Modifier,
-    viewModel: CreatePinCodeViewModel = viewModel(),
+    viewModel: PinCodeConfirmationViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    viewModel.onEvent(CreatePinCodeEvent.Init(pinCodeInst))
+    viewModel.onEvent(PinCodeConfirmationEvent.Init(pinCodeInst))
 
     var pinCode by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -97,21 +98,21 @@ fun PinCodeConfirmationScreen(
 
                 when (state) {
 
-                    CreatePinCodeScreenState.Confirmed -> {
+                    PinCodeConfirmationScreenState.Confirmed -> {
                         onSaveClick()
                         Spacer(modifier = Modifier.height(28.dp))
-
                     }
 
-                    CreatePinCodeScreenState.Error -> {
-                        Snackbar { Text(text = "Пришел пустой или null pincode") }
+                    PinCodeConfirmationScreenState.Error -> {
+                        if (BuildConfig.DEBUG)
+                            Snackbar { Text(text = "Пришел пустой или null pincode") }
                     }
 
-                    CreatePinCodeScreenState.Default -> {
+                    PinCodeConfirmationScreenState.Default -> {
                         Spacer(modifier = Modifier.height(28.dp))
                     }
 
-                    CreatePinCodeScreenState.NotConfirmed -> {
+                    PinCodeConfirmationScreenState.NotConfirmed -> {
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
@@ -129,7 +130,7 @@ fun PinCodeConfirmationScreen(
 
             IntouchButton(
                 onClick = {
-                    viewModel.onEvent(CreatePinCodeEvent.Statement(pinCode))
+                    viewModel.onEvent(PinCodeConfirmationEvent.Statement(pinCode))
                     pinCode = ""
                 },
                 modifier = Modifier,
@@ -139,7 +140,10 @@ fun PinCodeConfirmationScreen(
 
             Spacer(modifier = Modifier.height(2.dp))
             PrimaryButtonWhite(
-                onClick = { onSkipClick() },
+                onClick = {
+                    viewModel.onEvent(PinCodeConfirmationEvent.Skip)
+                    onSkipClick()
+                },
                 modifier = Modifier,
                 text = stringResource(id = care.intouch.app.R.string.skip_button)
             )
