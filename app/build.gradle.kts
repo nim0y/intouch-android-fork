@@ -16,6 +16,17 @@ android {
     namespace = "care.intouch.app"
     compileSdk = 34
 
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val buildNumber = System.getenv("GITHUB_RUN_NUMBER") ?: "1"
+                val newApkName = "${variant.name}-${buildNumber}.apk"
+                output.outputFileName = newApkName
+            }
+    }
+
     defaultConfig {
         applicationId = "care.intouch.app"
         minSdk = 23
@@ -181,6 +192,7 @@ dependencies {
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.appdistribution.api)
 
     //Network
     implementation(libs.retrofit)
