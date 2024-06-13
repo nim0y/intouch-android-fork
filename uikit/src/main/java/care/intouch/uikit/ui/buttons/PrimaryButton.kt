@@ -62,6 +62,8 @@ fun PrimaryButtonWhite(
     onClick: () -> Unit,
     modifier: Modifier,
     text: String,
+    enableTextColor: Color = InTouchTheme.colors.textBlue,
+    disableTextColor: Color = InTouchTheme.colors.mainGreen40,
     textStyle: TextStyle = InTouchTheme.typography.titleMedium,
     isEnabled: Boolean = true,
 ) {
@@ -73,8 +75,8 @@ fun PrimaryButtonWhite(
         isEnabled = isEnabled,
         enableBackgroundColor = InTouchTheme.colors.input,
         disableBackgroundColor = InTouchTheme.colors.input,
-        enableTextColor = InTouchTheme.colors.textBlue,
-        disableTextColor = InTouchTheme.colors.textBlue
+        enableTextColor = enableTextColor,
+        disableTextColor = disableTextColor
     )
 }
 

@@ -18,6 +18,8 @@
     <string name="create_pin_title">Create a PIN code</string>
     <string name="confirm_pin_title">Confirm a PIN code</string>
     <string name="forgot_pin_title">Forgot PIN code?</string>
+    <string name="forgot_your_pin_title">Forgot your PIN code?</string>
+    <string name="create_new_pin_title">Create a new one. To do this, you\'ll need to log in again to the app and enter a new PIN code.</string>
     <string name="pin_code">PIN code</string>
     <string name="diary_title">Diary</string>
     <string name="profile_title">Profile</string>
