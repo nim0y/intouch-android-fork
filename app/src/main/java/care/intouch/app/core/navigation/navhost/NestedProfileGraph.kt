@@ -2,11 +2,14 @@ package care.intouch.app.core.navigation.navhost
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import care.intouch.app.core.navigation.MainNav
 import care.intouch.app.core.navigation.PinCodeChange
 import care.intouch.app.core.navigation.PinCodeConfirm
+import care.intouch.app.core.navigation.PinCodeConfirmation
 import care.intouch.app.core.navigation.ProfileRouteBranch
 import care.intouch.app.core.navigation.SuccessfulPinCodeChange
 import care.intouch.app.feature.pinCode.ui.confirm.PinCodeConfirmationScreen
@@ -33,8 +36,9 @@ fun NavGraphBuilder.addNestedProfileGraph(
         }
 
         composable(
-            route = PinCodeConfirm.route + "/{pinCodeInst}"
-        ) { backStackEntry ->
+            route = PinCodeConfirmation.route + "/{pinCodeInst}",
+            arguments = listOf(navArgument("pinCodeInst") { type = NavType.StringType })
+        ) {
             PinCodeConfirmationScreen(onSaveClick = {
                 navController.navigate(route = SuccessfulPinCodeChange.route)
             }, onSkipClick = {
@@ -43,7 +47,7 @@ fun NavGraphBuilder.addNestedProfileGraph(
                         inclusive = true
                     }
                 }
-            }, pinCodeInst = backStackEntry.arguments?.getString("pinCodeInst"))
+            })
         }
 
         composable(route = SuccessfulPinCodeChange.route) {

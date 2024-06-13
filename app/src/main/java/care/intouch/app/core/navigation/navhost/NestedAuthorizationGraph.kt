@@ -2,7 +2,9 @@ package care.intouch.app.core.navigation.navhost
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import care.intouch.app.core.navigation.AppNavScreen
@@ -56,8 +58,9 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
         }
 
         composable(
-            route = PinCodeConfirmation.route + "/{pinCodeInst}"
-        ) { backStackEntry ->
+            route = PinCodeConfirmation.route + "/{pinCodeInst}",
+            arguments = listOf(navArgument("pinCodeInst") { type = NavType.StringType })
+        ) {
             PinCodeConfirmationScreen(onSaveClick = {
                 navController.navigate(route = MainNav.route) {
                     popUpTo(navController.graph.startDestinationId) {
@@ -70,7 +73,7 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
                         inclusive = true
                     }
                 }
-            }, pinCodeInst = backStackEntry.arguments?.getString("pinCodeInst"))
+            })
         }
 
         composable(route = PinCodeEnter.route) {

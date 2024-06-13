@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import care.intouch.app.BuildConfig
 import care.intouch.uikit.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
@@ -42,13 +40,10 @@ import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 fun PinCodeConfirmationScreen(
     onSaveClick: () -> Unit,
     onSkipClick: () -> Unit,
-    pinCodeInst: String?,
     modifier: Modifier = Modifier,
     viewModel: PinCodeConfirmationViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    viewModel.onEvent(PinCodeConfirmationEvent.Init(pinCodeInst))
 
     var pinCode by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -101,11 +96,6 @@ fun PinCodeConfirmationScreen(
                     PinCodeConfirmationScreenState.Confirmed -> {
                         onSaveClick()
                         Spacer(modifier = Modifier.height(28.dp))
-                    }
-
-                    PinCodeConfirmationScreenState.Error -> {
-                        if (BuildConfig.DEBUG)
-                            Snackbar { Text(text = "Пришел пустой или null pincode") }
                     }
 
                     PinCodeConfirmationScreenState.Default -> {

@@ -1,5 +1,6 @@
 package care.intouch.app.feature.pinCode.ui.confirm
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import care.intouch.app.feature.common.Resource
@@ -14,8 +15,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PinCodeConfirmationViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: PinCodeRepository
 ) : ViewModel() {
+
+    private val pinCodeInst: String = checkNotNull(savedStateHandle["pinCodeInst"])
+
+    init {
+        onEvent(PinCodeConfirmationEvent.Init(pinCodeInst))
+    }
 
     private val _state = MutableStateFlow(PinCodeConfirmationScreenState.Initial)
 
@@ -26,7 +34,7 @@ class PinCodeConfirmationViewModel @Inject constructor(
         when (event) {
             is PinCodeConfirmationEvent.Init -> {
                 if (event.pinCode.isNullOrEmpty()) {
-                    _state.update { PinCodeConfirmationScreenState.Error }
+                    _state.update { PinCodeConfirmationScreenState.NotConfirmed }
                 }
                 tempPinCode = event.pinCode
             }

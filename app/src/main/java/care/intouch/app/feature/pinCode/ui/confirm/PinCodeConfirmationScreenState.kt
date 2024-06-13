@@ -14,8 +14,6 @@ sealed interface PinCodeConfirmationScreenState {
     @Immutable
     data object NotConfirmed : PinCodeConfirmationScreenState
 
-    @Immutable
-    data object Error : PinCodeConfirmationScreenState
     companion object {
         val Initial: PinCodeConfirmationScreenState = Default
     }
