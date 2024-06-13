@@ -17,6 +17,8 @@
     <string name="welcome_title">Welcome to INtouch!</string>
     <string name="create_pin_title">Create a PIN code</string>
     <string name="confirm_pin_title">Confirm a PIN code</string>
+    <string name="forgot_pin_title">Forgot PIN code?</string>
+    <string name="pin_code">PIN code</string>
     <string name="diary_title">Diary</string>
     <string name="profile_title">Profile</string>
     <string name="security_title">Security</string>
