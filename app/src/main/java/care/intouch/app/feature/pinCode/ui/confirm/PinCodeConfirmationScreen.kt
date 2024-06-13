@@ -2,12 +2,14 @@ package care.intouch.app.feature.pinCode.ui.confirm
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +27,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,11 +38,12 @@ import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
 import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 
-
+@Preview
 @Composable
 fun PinCodeConfirmationScreen(
-    onSaveClick: () -> Unit,
-    onSkipClick: () -> Unit,
+    onSaveClick: () -> Unit = {},
+    onSkipClick: () -> Unit = {},
+    onBackClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: PinCodeConfirmationViewModel = hiltViewModel(),
 ) {
@@ -55,21 +59,29 @@ fun PinCodeConfirmationScreen(
             .background(InTouchTheme.colors.input)
     ) {
         Image(
-            modifier = Modifier
-                .height(150.dp)
-                .padding(bottom = 70.dp),
+            modifier = Modifier.height(76.dp),
             painter = painterResource(id = R.drawable.head_background_small),
             contentDescription = "header",
             contentScale = ContentScale.FillBounds,
+        )
+        Icon(
+            modifier = Modifier
+                .padding(start = 28.dp, top = 12.dp)
+                .clickable { onBackClick() },
+            painter = painterResource(id = R.drawable.icon_arrow_left),
+            contentDescription = null,
+            tint = InTouchTheme.colors.mainGreen
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(top = 34.dp)
                 .focusRequester(focusRequester),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             Text(
                 text = stringResource(id = care.intouch.app.R.string.confirm_pin_title),
                 style = InTouchTheme.typography.bodyRegular,

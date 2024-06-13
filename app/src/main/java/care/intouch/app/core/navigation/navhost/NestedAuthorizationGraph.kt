@@ -73,7 +73,11 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
                         inclusive = true
                     }
                 }
-            })
+            }, onBackClick = {
+                navController.popBackStack()
+            }
+
+            )
         }
 
         composable(route = PinCodeEnter.route) {
