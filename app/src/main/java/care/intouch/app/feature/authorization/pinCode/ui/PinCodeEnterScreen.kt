@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,11 +33,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import care.intouch.app.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
+import care.intouch.uikit.ui.buttons.SecondaryButtonDark
 import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 
 @Preview
@@ -61,8 +63,7 @@ fun PinCodeEnterScreen(
         verticalArrangement = Arrangement.Top
     ) {
         Image(
-            modifier = Modifier
-                .height(76.dp),
+            modifier = Modifier.height(76.dp),
             painter = painterResource(id = care.intouch.uikit.R.drawable.head_background_small),
             contentDescription = "header",
             contentScale = ContentScale.FillBounds,
@@ -126,7 +127,7 @@ fun PinCodeEnterScreen(
             )
 
             Spacer(modifier = Modifier.height(2.dp))
-            PrimaryButtonWhite(
+            SecondaryButtonDark(
                 onClick = {
                     //viewModel.onEvent(PinCodeConfirmationEvent.Skip)
                     onSkipClick()
@@ -134,9 +135,8 @@ fun PinCodeEnterScreen(
                 textStyle = InTouchTheme.typography.bodySemibold,
                 modifier = Modifier,
                 text = stringResource(id = R.string.forgot_pin_title),
-                enableTextColor = InTouchTheme.colors.textGreen
             )
-           // Dialog(onDismissRequest = { }) {}
+            // Dialog(onDismissRequest = { }) {}
         }
     }
     LaunchedEffect(key1 = Unit) {
@@ -179,6 +179,25 @@ fun Dialog() {
                 )
                 Spacer(modifier = Modifier.height(28.dp))
 
+                IntouchButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 28.dp),
+                    text = stringResource(id = R.string.log_in_again),
+                    contentPadding = PaddingValues(
+                        horizontal = 78.dp, vertical = 14.dp
+                    ),
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                PrimaryButtonWhite(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 28.dp),
+                    text = stringResource(id = R.string.cancel_button),
+                    
+                )
             }
         }
 
