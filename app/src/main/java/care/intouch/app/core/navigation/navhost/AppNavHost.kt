@@ -1,6 +1,7 @@
 package care.intouch.app.core.navigation.navhost
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,12 +24,13 @@ import care.intouch.app.feature.profile.presentation.ui.ProfileScreen
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String,
-    authStartDestination: String?
+    authStartDestination: String?,
+    modifier: Modifier
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
-
+        modifier = modifier
         ) {
 
         composable(route = Home.route) {
