@@ -2,6 +2,7 @@ package care.intouch.uikit.ui.buttons
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import care.intouch.uikit.theme.InTouchTheme
@@ -12,6 +13,8 @@ fun SecondaryButtonDark(
     modifier: Modifier,
     text: String,
     textStyle: TextStyle = InTouchTheme.typography.subTitle,
+    enableTextColor: Color = InTouchTheme.colors.textGreen,
+    disableTextColor: Color = InTouchTheme.colors.unableElementDark,
     isEnabled: Boolean = true,
 ) {
     IntouchButton(
@@ -22,8 +25,8 @@ fun SecondaryButtonDark(
         isEnabled = isEnabled,
         enableBackgroundColor = InTouchTheme.colors.transparent,
         disableBackgroundColor = InTouchTheme.colors.transparent,
-        enableTextColor = InTouchTheme.colors.textGreen,
-        disableTextColor = InTouchTheme.colors.unableElementDark,
+        enableTextColor = enableTextColor,
+        disableTextColor = disableTextColor,
     )
 }
 
