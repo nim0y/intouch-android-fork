@@ -121,7 +121,7 @@ fun AuthenticationScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 85.dp, start = 69.5.dp, end = 69.5.dp),
-            isEnabled = true,
+            isEnabled = !loginText.isNullOrEmpty() and !passwordText.isNullOrEmpty(),
             text = "LOGIN",
         )
     }
