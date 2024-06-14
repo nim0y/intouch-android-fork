@@ -53,19 +53,17 @@ fun PinCodeInstallationScreen(
             .background(InTouchTheme.colors.input)
     ) {
         Image(
-            modifier = Modifier
-                .height(150.dp)
-                .padding(bottom = 70.dp),
+            modifier = Modifier.height(76.dp),
             painter = painterResource(id = R.drawable.head_background_small),
             contentDescription = "header",
             contentScale = ContentScale.FillBounds,
         )
 
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .padding(top = 70.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
