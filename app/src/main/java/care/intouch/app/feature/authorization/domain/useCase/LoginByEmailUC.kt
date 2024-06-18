@@ -7,31 +7,32 @@ import care.intouch.app.feature.common.Resource
 import care.intouch.app.feature.common.domain.errors.ErrorEntity
 import javax.inject.Inject
 
-interface GetTokenAuthentication {
+interface LoginByEmailUC {
     suspend operator fun invoke(username: String, password: String): Resource<String, ErrorEntity>
 
     class Base @Inject constructor(
         private val authenticationRepository: AuthenticationRepository,
         private val accountRepository: AccountStateRepository,
         private val userRepository: UserRepository,
-    ) : GetTokenAuthentication {
+    ) : LoginByEmailUC {
         override suspend fun invoke(
             username: String,
-            token: String,
+            password: String,
         ): Resource<String, ErrorEntity> {
             return when (
-                val result = authenticationRepository.getToken(username, token)) {
+                val result = authenticationRepository.getToken(username, password)) {
                 is Resource.Success -> {
-                    when (val result2 = userRepository.getUser()) {
+                    when (val userInformation = userRepository.getUser()) {
                         is Resource.Success -> {
                             accountRepository.createAccount(
-                                result2.data.id,
+                                userInformation.data.id,
                                 result.data.accessToken,
                                 result.data.refreshToken
                             )
                         }
 
                         is Resource.Error -> {
+                            return Resource.Error(userInformation.error)
                         }
                     }
                     Resource.Success("Success")

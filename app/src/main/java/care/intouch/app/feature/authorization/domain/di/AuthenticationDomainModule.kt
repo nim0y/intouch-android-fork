@@ -1,7 +1,7 @@
 package care.intouch.app.feature.authorization.domain.di
 
 import care.intouch.app.feature.authorization.domain.useCase.ConfirmEmailUseCase
-import care.intouch.app.feature.authorization.domain.useCase.GetTokenAuthentication
+import care.intouch.app.feature.authorization.domain.useCase.LoginByEmailUC
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +14,5 @@ interface AuthenticationDomainModule {
     fun bindGetConfirmEmailUseCase(impl: ConfirmEmailUseCase.Base): ConfirmEmailUseCase
 
     @Binds
-    fun bindGetTokenAuthentication(impl: GetTokenAuthentication.Base): GetTokenAuthentication
+    fun bindGetTokenAuthentication(impl: LoginByEmailUC.Base): LoginByEmailUC
 }
