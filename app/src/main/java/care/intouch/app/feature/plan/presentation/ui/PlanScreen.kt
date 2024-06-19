@@ -22,7 +22,7 @@ import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.cards.DropdownMenuItemsPlanCard
 import care.intouch.uikit.ui.cards.PlanCard
 import care.intouch.uikit.ui.screens.my_plan.my_plan.ChipsRow
-import care.intouch.uikit.ui.screens.my_plan.my_plan.Header
+import care.intouch.uikit.ui.screens.my_plan.my_plan.PlanHeader
 
 @Composable
 fun PlanScreen(
@@ -47,7 +47,8 @@ fun PlanScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(
+
+        PlanHeader(
             modifier = Modifier.padding(bottom = 24.dp),
             onBackArrowClick = {}
         )
@@ -73,9 +74,6 @@ fun PlanScreen(
                     onClickSetting = { onClickSetting = it },
                     dropdownMenuItemsList = menuItems,
                     isSettingsClicked = onClickSetting,
-                    onCardClick = {
-                        onTaskListItemClick.invoke()
-                    }
                 )
             }
         }
