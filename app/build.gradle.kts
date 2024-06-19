@@ -21,8 +21,8 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                val buildNumber = System.getenv("GITHUB_RUN_NUMBER") ?: "1"
-                val newApkName = "${variant.name}-${buildNumber}.apk"
+                val newApkName =  "${variant.applicationId}-${variant.versionName}" +
+                        "-${variant.versionCode}.apk"
                 output.outputFileName = newApkName
             }
     }
@@ -31,7 +31,7 @@ android {
         applicationId = "care.intouch.app"
         minSdk = 23
         targetSdk = 34
-        versionCode = 1
+        versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
