@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,6 +73,7 @@ fun CustomTopBar(
     onBackArrowClick: () -> Unit,
     onCloseButtonClick: () -> Unit,
     title: String = "",
+    titleStyle: TextStyle = InTouchTheme.typography.titleLarge,
     enabledArcButton: Boolean,
     addBackArrowButton: Boolean,
     addCloseButton: Boolean
@@ -78,8 +81,8 @@ fun CustomTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .background(InTouchTheme.colors.input),
+            .height(44.dp)
+            .background(InTouchTheme.colors.transparent),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -114,7 +117,7 @@ fun CustomTopBar(
 
         Text(
             text = title,
-            style = InTouchTheme.typography.titleLarge,
+            style = titleStyle,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = InTouchTheme.colors.textBlue,
