@@ -1,11 +1,14 @@
 package care.intouch.app.feature.home.presentation.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,8 +20,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.home.presentation.HomeViewModel
 import care.intouch.app.feature.home.presentation.models.DiaryEntry
+import care.intouch.app.feature.home.presentation.models.EventType
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.app.feature.home.presentation.models.Task
 import care.intouch.uikit.R
@@ -76,23 +80,37 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 Text(
                     modifier = Modifier
                         .padding(top = 24.dp),
-                    text = "HomeScreen",
+                    text = stringResource(id = AppR.string.hi_title, "Bob"),
                     style = InTouchTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = InTouchTheme.colors.textBlue
                 )
             }
+
             HomeScreenDataSegment(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
+                    .fillMaxHeight(0.55f)
                     .padding(top = 28.dp),
                 isSeeAllPlanClickable,
                 titleText = stringResource(id = AppR.string.my_plan_sub_title)
             ) {
-                MyPlanSegment(screenState = screenState.value) { isClickable ->
-                    isSeeAllPlanClickable = isClickable
-                }
+                MyPlanSegment(
+                    screenState = screenState.value,
+                    changeClickability = { isClickable ->
+                        isSeeAllPlanClickable = isClickable
+                    },
+                    onPlanSwitcherChange = { id, index, switcherState ->
+                        viewModel.executeEvent(
+                            EventType.ShearTask(
+                                id, index, switcherState
+                            )
+                        )
+                    },
+                    dropdownMenuDelete = {},
+                    dropdownMenuClear = {})
             }
+
             HomeScreenDataSegment(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,63 +145,91 @@ fun HomeScreenDataSegment(
 }
 
 @Composable
-fun MyPlanSegment(screenState: HomeUiState, changeClickability: (Boolean) -> Unit) {
-    when (screenState) {
-        is HomeUiState.PlansExists -> {
-            PlanPager(screenState.taskList)
-            changeClickability(true)
-        }
-
-        is HomeUiState.FilledScreen -> {
-            PlanPager(screenState.taskList)
-            changeClickability(true)
-        }
-
-        else -> {
-            PlanPlaceHolder()
-            changeClickability(false)
-        }
+fun MyPlanSegment(
+    screenState: HomeUiState,
+    changeClickability: (Boolean) -> Unit,
+    onPlanSwitcherChange: (Int, Int, Boolean) -> Unit,
+    dropdownMenuDelete: () -> Unit,
+    dropdownMenuClear: () -> Unit
+) {
+    if (screenState is HomeUiState.FilledScreen && screenState.taskList.isNotEmpty()) {
+        PlanPager(
+            screenState.taskList,
+            onSwitcherChange = onPlanSwitcherChange,
+            dropdownMenuDelete = dropdownMenuDelete,
+            dropdownMenuClear = dropdownMenuClear
+        )
+        changeClickability(true)
+    } else {
+        PlanPlaceHolder()
+        changeClickability(false)
     }
 }
 
 @Composable
 fun MyDiarySegment(screenState: HomeUiState, changeClickability: (Boolean) -> Unit) {
-    when (screenState) {
-        is HomeUiState.MyDiaryExists -> {
-            DiaryLayout(screenState.diaryList)
-            changeClickability(true)
-        }
+    if (screenState is HomeUiState.FilledScreen && screenState.diaryList.isNotEmpty()) {
+        DiaryLayout(screenState.diaryList)
+        changeClickability(true)
 
-        is HomeUiState.FilledScreen -> {
-            DiaryLayout(screenState.diaryList)
-            changeClickability(true)
-        }
-
-        else -> {
-            DiaryPlaceHolder()
-            changeClickability(false)
-        }
+    } else {
+        DiaryPlaceHolder()
+        changeClickability(false)
     }
+
 
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlanPager(taskList: ArrayList<Task>) {
-    val pagerState = rememberPagerState(pageCount = { taskList.size + 1 })
+fun PlanPager(
+    taskList: ArrayList<Task>,
+    onSwitcherChange: (Int, Int, Boolean) -> Unit,
+    dropdownMenuDelete: () -> Unit,
+    dropdownMenuClear: () -> Unit
+) {
+    val pagerState = rememberPagerState(pageCount = { taskList.size }, initialPage = 0)
     val menuItems: List<DropdownMenuItemsPlanCard> =
-        listOf(DropdownMenuItemsPlanCard("Duplicate", R.drawable.icon_duplicate) {},
-            DropdownMenuItemsPlanCard("Clear", R.drawable.icon_small_trash) {})
+        listOf(DropdownMenuItemsPlanCard(
+            stringResource(id = AppR.string.duplicate_item_menu),
+            R.drawable.icon_duplicate
+        ) { dropdownMenuDelete() },
+            DropdownMenuItemsPlanCard(
+                stringResource(id = AppR.string.clear_item_menu),
+                R.drawable.icon_small_trash
+            ) { dropdownMenuClear() })
 
-    HorizontalPager(state = pagerState) { page ->
-        PlanCard(
-            chipText = StringVO.Plain("Done"),
-            text = "Socratic dialogue Learning...\n" + "Lorem ipsum dolor sit amet ",
-            isSettingsClicked = true,
-            onClickSetting = {},
-            dropdownMenuItemsList = menuItems
-        ) {
+    HorizontalPager(
+        state = pagerState,
+        contentPadding = PaddingValues(start = 28.dp, end = 28.dp),
+        pageSpacing = 16.dp,
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .fillMaxSize()
+    ) { page ->
+        var toggleState by rememberSaveable {
+            mutableStateOf(taskList[page].sharedWithDoc)
         }
+        var dropDownMenu by rememberSaveable {
+            mutableStateOf(false)
+        }
+        PlanCard(
+            //Нет реализации класса статуса таска, за чем использовать StringVO?
+            chipText = StringVO.Plain(stringResource(id = taskList[page].status.stringId)),
+            text = taskList[page].description,
+            isSettingsClicked = dropDownMenu, //скорее всего можно убрать на уровень ниже
+            onClickSetting = { isClicked -> dropDownMenu = !dropDownMenu },
+            dropdownMenuItemsList = menuItems,
+            onClickToggle = {
+                onSwitcherChange(
+                    taskList[page].id,
+                    page,
+                    !toggleState
+                )
+                toggleState = !toggleState
+            },
+            toggleIsChecked = toggleState
+        )
     }
 }
 
@@ -195,28 +241,64 @@ fun DiaryLayout(diaryEntryList: ArrayList<DiaryEntry>) {
 
 @Composable
 fun PlanPlaceHolder() {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 28.dp, end = 28.dp, top = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = InTouchTheme.colors.mainBlue),
-        shape = RoundedCornerShape(20.dp)
+            .padding(start = 28.dp, end = 28.dp, top = 16.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(InTouchTheme.colors.mainBlue),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = stringResource(id = AppR.string.empty_plan),
+            style = InTouchTheme.typography.bodySemibold,
+            color = InTouchTheme.colors.textGreen,
+            modifier = Modifier.padding(horizontal = 35.dp, vertical = 22.dp)
+        )
+        Image(
+            modifier = Modifier
+                .padding(top = 7.dp, bottom = 28.dp)
+                .fillMaxWidth(0.5F),
+            painter = painterResource(id = R.drawable.illustration_empty),
+            contentDescription = "empty plan placeholder"
+        )
     }
-
 
 }
 
 @Composable
 fun DiaryPlaceHolder() {
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 28.dp, end = 28.dp, top = 16.dp, bottom = 50.dp),
-        colors = CardDefaults.cardColors(containerColor = InTouchTheme.colors.mainBlue),
-        shape = RoundedCornerShape(20.dp)
+            .padding(start = 28.dp, end = 28.dp, top = 16.dp)
     ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 50.dp),
+            color = InTouchTheme.colors.mainBlue, shape = RoundedCornerShape(20.dp)
+        ) { }
+
+        Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = stringResource(id = AppR.string.empty_diary),
+                style = InTouchTheme.typography.bodySemibold,
+                color = InTouchTheme.colors.textGreen,
+                modifier = Modifier.padding(horizontal = 35.dp, vertical = 22.dp)
+            )
+
+            Image(
+                modifier = Modifier
+                    .padding(start = 65.dp)
+                    .fillMaxHeight(),
+                painter = painterResource(id = R.drawable.pic_arrow_new_diary),
+                contentDescription = "the arrow that points on the creation icon"
+            )
+        }
     }
+
 }
 
 @Composable
@@ -228,15 +310,22 @@ fun SubTitleLine(titleText: String, isSubTextClickable: Boolean) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = titleText, style = InTouchTheme.typography.titleMedium)
         Text(
-            text = stringResource(id = AppR.string.see_all),
-            style = InTouchTheme.typography.subTitle,
-            modifier = Modifier
-                .alpha(0.5F)
-                .clickable(enabled = isSubTextClickable) {
-                }
+            text = titleText,
+            style = InTouchTheme.typography.titleMedium,
+            color = InTouchTheme.colors.textBlue
         )
+        AnimatedVisibility(visible = isSubTextClickable) {
+            Text(
+                text = stringResource(id = AppR.string.see_all),
+                style = InTouchTheme.typography.subTitle,
+                color = InTouchTheme.colors.textBlue,
+                modifier = Modifier
+                    .alpha(0.5F)
+                    .clickable(enabled = isSubTextClickable) {
+                    }
+            )
+        }
     }
 
 }
@@ -256,3 +345,4 @@ fun SubTitleLinePreview() {
         SubTitleLine(titleText = "My plan", isSubTextClickable = true)
     }
 }
+
