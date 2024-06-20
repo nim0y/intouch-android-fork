@@ -23,10 +23,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.html_url }}
         run: |
-#          PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
-#          PR_ISSUES=$(gh pr view ${{ github.event.pull_request.number }} --json body --jq '.body' | grep -oP '(?<=#)\d+')
-#          echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
-#          echo "PR_ISSUES=$PR_ISSUES" >> $GITHUB_ENV
+          PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
+          PR_ISSUES=$(gh pr view ${{ github.event.pull_request.number }} --json body --jq '.body' | grep -oP '(?<=#)\d+')
+          echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
+          echo "PR_ISSUES=$PR_ISSUES" >> $GITHUB_ENV
           gh issue comment $ISSUE --body "Thank you for opening this issue!"
           echo "Completed"
       - name: Build and send application stageQa to App Distribution
@@ -42,7 +42,7 @@ jobs:
           echo "buildNumber=${GITHUB_RUN_NUMBER}" >> ./app/src/stage/qa/releaseNotes.txt
           echo "Pull Request Title: $PR_TITLE" >> ./app/src/stage/qa/releaseNotes.txt
           echo "Issue Numbers: $PR_ISSUES" >> ./app/src/stage/qa/releaseNotes.txt
-#          ./gradlew appDistributionToQaStageQa
+          ./gradlew appDistributionToQaStageQa
 
       - name: Print release notes
         if: success()
