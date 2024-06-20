@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        Timber.tag("CheckBuild").d("Test 6")
     }
 
     override fun onResume() {
