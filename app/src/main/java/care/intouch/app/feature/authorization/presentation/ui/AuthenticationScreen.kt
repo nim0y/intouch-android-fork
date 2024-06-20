@@ -86,7 +86,7 @@ private fun AuthenticationScreen(
         Text(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 326.dp, start = 28.dp, end = 28.dp),
+                .padding(top = 328.dp, start = 28.dp, end = 28.dp),
             text = stringResource(care.intouch.app.R.string.sign_in_to_continue),
             style = InTouchTheme.typography.bodySemibold,
             color = InTouchTheme.colors.textGreen,
@@ -149,7 +149,7 @@ private fun AuthenticationScreen(
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 85.dp, start = 69.5.dp, end = 69.5.dp),
+                .padding(bottom = 84.dp),
             isEnabled = !state.login.isNullOrEmpty() and !state.password.isNullOrEmpty(),
             text = stringResource(care.intouch.app.R.string.login),
         )
