@@ -18,7 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import care.intouch.app.feature.authorization.presentation.ui.models.AuthScreenState
+import care.intouch.app.feature.authorization.presentation.ui.models.AuthenticationDataEvent
 import care.intouch.app.feature.authorization.presentation.ui.viewModel.AuthViewModule
 import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
@@ -32,13 +33,28 @@ import care.intouch.uikit.ui.textFields.PasswordTextField
 fun AuthenticationScreen(
     onForgotPasswordClick: () -> Unit,
     onLoginClick: () -> Unit,
+    viewModel: AuthViewModule,
+) {
+    val state by viewModel.uiState.collectAsState()
+    AuthenticationScreen(
+        onForgotPasswordClick = onForgotPasswordClick,
+        onLoginClick = onLoginClick,
+        state = state,
+        onEvent = { viewModel.onEvent(it) }
+    )
+}
+
+@Composable
+private fun AuthenticationScreen(
+    onForgotPasswordClick: () -> Unit,
+    onLoginClick: () -> Unit,
     headBackGround: ImageVO = ImageVO.Resource(R.drawable.head_background_small),
     headBackGroundTint: Color = InTouchTheme.colors.mainBlue,
     logoBackGroundTint: Color = InTouchTheme.colors.mainGreen,
     inTouchLogo: ImageVO = ImageVO.Resource(R.drawable.icon_intouch_logo),
-    viewModel: AuthViewModule = hiltViewModel(),
+    state: AuthScreenState,
+    onEvent: (AuthenticationDataEvent) -> Unit,
 ) {
-    val state by viewModel.uiState.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,14 +93,19 @@ fun AuthenticationScreen(
         )
         PasswordTextField(
             value = state.password,
-            onValueChange = { viewModel.savePassword(it) },
+            onValueChange =
+            {
+                onEvent(AuthenticationDataEvent.OnPasswordTextChanged(it))
+                onEvent(AuthenticationDataEvent.OnPasswordErrorChanged)
+                onEvent(AuthenticationDataEvent.OnPasswordValidationChecked)
+            },
             isPasswordVisible = state.isPasswordVisible,
             isPasswordVisibleIconVisible = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            error = viewModel.passwordErrorState(),
-            caption = viewModel.passwordValidation(),
+            error = state.isErrorPassword,
+            caption = state.passwordCaption,
             onPasswordVisibleIconClick = {
-                viewModel.onPasswordIconClick()
+                onEvent(AuthenticationDataEvent.OnPasswordIconClick)
             },
             hint = StringVO.Plain(stringResource(care.intouch.app.R.string.password)),
             modifier = Modifier
@@ -93,11 +114,16 @@ fun AuthenticationScreen(
         )
         PasswordTextField(
             value = state.login,
-            onValueChange = { viewModel.saveLogin(it) },
+            onValueChange =
+            {
+                onEvent(AuthenticationDataEvent.OnLoginTextChanged(it))
+                onEvent(AuthenticationDataEvent.OnLoginErrorChanged)
+                onEvent(AuthenticationDataEvent.OnLoginValidationChecked)
+            },
             isPasswordVisible = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            error = viewModel.loginErrorState(),
-            caption = viewModel.loginValidation(),
+            error = state.isErrorLogin,
+            caption = state.loginCaption,
             isPasswordVisibleIconVisible = false,
             onPasswordVisibleIconClick = {
             },
@@ -118,7 +144,7 @@ fun AuthenticationScreen(
         )
         PrimaryButtonGreen(
             onClick = {
-                viewModel.loginByEmail(state.login, state.password)
+                onEvent(AuthenticationDataEvent.OnLoginButtonClicked(state.login, state.password))
                 onLoginClick.invoke()
             },
             modifier = Modifier
@@ -133,10 +159,22 @@ fun AuthenticationScreen(
 @Composable
 @Preview(showBackground = true)
 fun AuthenticationScreenPreview() {
+    val state: AuthScreenState = AuthScreenState(
+        password = "",
+        login = "",
+        loginCaption = StringVO.Plain(""),
+        passwordCaption = StringVO.Plain(""),
+        isPasswordVisible = false,
+        isIconVisible = true,
+        isErrorLogin = false,
+        isErrorPassword = false,
+    )
     InTouchTheme {
         AuthenticationScreen(
             onForgotPasswordClick = {},
-            onLoginClick = {}
+            onLoginClick = {},
+            onEvent = {},
+            state = state
         )
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import care.intouch.app.feature.authorization.domain.useCase.GetAccountStateUC
 import care.intouch.app.feature.authorization.domain.useCase.LoginByEmailUC
 import care.intouch.app.feature.authorization.presentation.ui.models.AuthScreenState
+import care.intouch.app.feature.authorization.presentation.ui.models.AuthenticationDataEvent
 import care.intouch.app.ui.uiKitSamples.samples.BLANC_STRING
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,10 +20,13 @@ class AuthViewModule @Inject constructor(
     private val loginByEmailUC: LoginByEmailUC,
     private val getAccountStateUC: GetAccountStateUC,
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(
         AuthScreenState(
             password = "",
             login = "",
+            loginCaption = StringVO.Plain(""),
+            passwordCaption = StringVO.Plain(""),
             isPasswordVisible = false,
             isIconVisible = true,
             isErrorLogin = false,
@@ -31,7 +35,43 @@ class AuthViewModule @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
-    fun savePassword(password: String) {
+    fun onEvent(event: AuthenticationDataEvent) {
+        when (event) {
+            is AuthenticationDataEvent.OnLoginButtonClicked -> {
+                loginByEmail(event.username, event.password)
+            }
+
+            AuthenticationDataEvent.OnLoginErrorChanged -> {
+                loginErrorState()
+            }
+
+            is AuthenticationDataEvent.OnLoginTextChanged -> {
+                saveLogin(event.text)
+            }
+
+            AuthenticationDataEvent.OnLoginValidationChecked -> {
+                loginValidation()
+            }
+
+            AuthenticationDataEvent.OnPasswordErrorChanged -> {
+                passwordErrorState()
+            }
+
+            AuthenticationDataEvent.OnPasswordIconClick -> {
+                onPasswordIconClick()
+            }
+
+            is AuthenticationDataEvent.OnPasswordTextChanged -> {
+                savePassword(event.text)
+            }
+
+            AuthenticationDataEvent.OnPasswordValidationChecked -> {
+                passwordValidation()
+            }
+        }
+    }
+
+    private fun savePassword(password: String) {
         _uiState.update { state ->
             state.copy(
                 password = password
@@ -39,7 +79,7 @@ class AuthViewModule @Inject constructor(
         }
     }
 
-    fun onPasswordIconClick() {
+    private fun onPasswordIconClick() {
         _uiState.update { state ->
             state.copy(
                 isPasswordVisible = !uiState.value.isPasswordVisible
@@ -47,7 +87,7 @@ class AuthViewModule @Inject constructor(
         }
     }
 
-    fun saveLogin(login: String) {
+    private fun saveLogin(login: String) {
         _uiState.update { state ->
             state.copy(
                 login = login
@@ -55,38 +95,62 @@ class AuthViewModule @Inject constructor(
         }
     }
 
-    fun loginByEmail(username: String, password: String) {
+    private fun loginByEmail(username: String, password: String) {
         viewModelScope.launch {
             loginByEmailUC.invoke(username, password)
             getAccountStateUC()
         }
     }
 
-    fun passwordErrorState(): Boolean {
-        return uiState.value.isErrorPassword == isValidPassword(uiState.value.password)
-    }
-
-    fun loginErrorState(): Boolean {
-        return uiState.value.isErrorLogin == isValidEmail(uiState.value.login)
-    }
-
-    fun passwordValidation(): StringVO {
-        if (uiState.value.isErrorPassword == isValidPassword(uiState.value.password)) {
-            return StringVO.Plain("Incorrect. Please try again")
-        } else {
-            return StringVO.Plain(BLANC_STRING)
+    private fun passwordErrorState() {
+        _uiState.update { state ->
+            state.copy(
+                isErrorPassword = !isValidPassword(uiState.value.password)
+            )
         }
     }
 
-    fun loginValidation(): StringVO {
-        if (uiState.value.isErrorLogin == isValidEmail(uiState.value.login)) {
-            return StringVO.Plain("Not a valid e-mail address")
-        } else {
-            return StringVO.Plain(BLANC_STRING)
+    private fun loginErrorState() {
+        _uiState.update { state ->
+            state.copy(
+                isErrorLogin = !isValidEmail(uiState.value.login)
+            )
         }
     }
 
-    fun isValidEmail(email: String): Boolean {
+    private fun passwordValidation() {
+        if (!isValidPassword(uiState.value.password)) {
+            _uiState.update { state ->
+                state.copy(
+                    passwordCaption = StringVO.Plain("Incorrect. Please try again")
+                )
+            }
+        } else {
+            _uiState.update { state ->
+                state.copy(
+                    passwordCaption = StringVO.Plain(BLANC_STRING)
+                )
+            }
+        }
+    }
+
+    private fun loginValidation() {
+        if (!isValidEmail(uiState.value.login)) {
+            _uiState.update { state ->
+                state.copy(
+                    loginCaption = StringVO.Plain("Not a valid e-mail address")
+                )
+            }
+        } else {
+            _uiState.update { state ->
+                state.copy(
+                    loginCaption = StringVO.Plain(BLANC_STRING)
+                )
+            }
+        }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
         return if (email.isBlank()) {
             true
         } else {
@@ -94,7 +158,7 @@ class AuthViewModule @Inject constructor(
         }
     }
 
-    fun isValidPassword(password: String): Boolean {
+    private fun isValidPassword(password: String): Boolean {
         if (password.isBlank()) return true
         if (password.length < 8) return false
         if (password.firstOrNull { it.isDigit() } == null) return false

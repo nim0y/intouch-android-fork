@@ -1,14 +1,15 @@
 package care.intouch.app.core.navigation.navhost
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import care.intouch.app.core.navigation.AppNavScreen
 import care.intouch.app.core.navigation.Authentication
 import care.intouch.app.core.navigation.AuthorizationRouteBranch
-import care.intouch.app.core.navigation.MainNav
-import care.intouch.app.core.navigation.AppNavScreen
 import care.intouch.app.core.navigation.Home
+import care.intouch.app.core.navigation.MainNav
 import care.intouch.app.core.navigation.PasswordRecovery
 import care.intouch.app.core.navigation.PinCodeConfirmation
 import care.intouch.app.core.navigation.PinCodeEnter
@@ -96,7 +97,8 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
                 },
                 onLoginClick = {
                     navController.navigate(route = PinCodeInstallation.route)
-                }
+                },
+                viewModel = hiltViewModel()
             )
         }
 
