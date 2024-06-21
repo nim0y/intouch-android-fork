@@ -22,13 +22,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.uikit.R
+import care.intouch.uikit.common.ImageVO
+import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
@@ -54,7 +54,7 @@ fun PinCodeInstallationScreen(
     ) {
         Image(
             modifier = Modifier.height(76.dp),
-            painter = painterResource(id = R.drawable.head_background_small),
+            painter = ImageVO.Resource(R.drawable.head_background_small).painter(),
             contentDescription = "header",
             contentScale = ContentScale.FillBounds,
         )
@@ -68,7 +68,7 @@ fun PinCodeInstallationScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = stringResource(id = care.intouch.app.R.string.create_pin_title),
+                text = StringVO.Resource(care.intouch.app.R.string.create_pin_title).value(),
                 style = InTouchTheme.typography.bodyRegular,
                 textAlign = TextAlign.Center,
                 fontSize = 24.sp,
@@ -79,7 +79,7 @@ fun PinCodeInstallationScreen(
             Spacer(modifier = Modifier.height(18.dp))
             Text(
                 modifier = Modifier.height(42.dp),
-                text = stringResource(id = care.intouch.app.R.string.info_about_setup_pin),
+                text = StringVO.Resource(care.intouch.app.R.string.info_about_setup_pin).value(),
                 style = InTouchTheme.typography.bodySemibold,
                 textAlign = TextAlign.Center,
                 color = InTouchTheme.colors.textGreen
@@ -87,7 +87,7 @@ fun PinCodeInstallationScreen(
 
             Spacer(modifier = Modifier.height(28.dp))
             Text(
-                text = stringResource(id = care.intouch.app.R.string.enter_pin_sub_title),
+                text = StringVO.Resource(care.intouch.app.R.string.enter_pin_sub_title).value(),
                 style = InTouchTheme.typography.bodyRegular,
                 textAlign = TextAlign.Center,
                 color = InTouchTheme.colors.textBlue
@@ -101,7 +101,7 @@ fun PinCodeInstallationScreen(
             IntouchButton(
                 onClick = { onSaveClick(pinCode) },
                 modifier = Modifier,
-                text = stringResource(id = care.intouch.app.R.string.save_button),
+                text = StringVO.Resource(care.intouch.app.R.string.save_button).value(),
                 isEnabled = pinCode.length == 4
             )
 
@@ -112,7 +112,7 @@ fun PinCodeInstallationScreen(
                     onSkipClick()
                 },
                 modifier = Modifier,
-                text = stringResource(id = care.intouch.app.R.string.skip_button)
+                text = StringVO.Resource(care.intouch.app.R.string.skip_button).value()
             )
         }
     }

@@ -24,8 +24,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import care.intouch.uikit.R
+import care.intouch.uikit.common.ImageVO
+import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
@@ -41,10 +41,10 @@ import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 @Preview
 @Composable
 fun PinCodeConfirmationScreen(
+    modifier: Modifier = Modifier,
     onSaveClick: () -> Unit = {},
     onSkipClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     viewModel: PinCodeConfirmationViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -60,7 +60,7 @@ fun PinCodeConfirmationScreen(
     ) {
         Image(
             modifier = Modifier.height(76.dp),
-            painter = painterResource(id = R.drawable.head_background_small),
+            painter = ImageVO.Resource(R.drawable.head_background_small).painter(),
             contentDescription = "header",
             contentScale = ContentScale.FillBounds,
         )
@@ -68,7 +68,7 @@ fun PinCodeConfirmationScreen(
             modifier = Modifier
                 .padding(start = 28.dp, top = 12.dp)
                 .clickable { onBackClick() },
-            painter = painterResource(id = R.drawable.icon_arrow_left),
+            painter = ImageVO.Resource(R.drawable.icon_arrow_left).painter(),
             contentDescription = null,
             tint = InTouchTheme.colors.mainGreen
         )
@@ -83,7 +83,7 @@ fun PinCodeConfirmationScreen(
         ) {
 
             Text(
-                text = stringResource(id = care.intouch.app.R.string.confirm_pin_title),
+                text = StringVO.Resource(care.intouch.app.R.string.confirm_pin_title).value(),
                 style = InTouchTheme.typography.bodyRegular,
                 textAlign = TextAlign.Center,
                 fontSize = 24.sp,
@@ -93,7 +93,7 @@ fun PinCodeConfirmationScreen(
 
             Spacer(modifier = Modifier.height(88.dp))
             Text(
-                text = stringResource(id = care.intouch.app.R.string.enter_pin_sub_title),
+                text = StringVO.Resource(care.intouch.app.R.string.enter_pin_sub_title).value(),
                 style = InTouchTheme.typography.bodyRegular,
                 textAlign = TextAlign.Center,
                 color = InTouchTheme.colors.textBlue
@@ -119,7 +119,8 @@ fun PinCodeConfirmationScreen(
 
                         Text(
                             modifier = Modifier.height(21.dp),
-                            text = stringResource(id = care.intouch.app.R.string.passwords_do_not_match),
+                            text = StringVO.Resource(care.intouch.app.R.string.passwords_do_not_match)
+                                .value(),
                             style = InTouchTheme.typography.caption1Semibold,
                             textAlign = TextAlign.Start,
                             color = InTouchTheme.colors.errorRed
@@ -136,7 +137,7 @@ fun PinCodeConfirmationScreen(
                     pinCode = ""
                 },
                 modifier = Modifier,
-                text = stringResource(id = care.intouch.app.R.string.save_button),
+                text = StringVO.Resource(care.intouch.app.R.string.save_button).value(),
                 isEnabled = pinCode.length == 4
             )
 
@@ -147,7 +148,7 @@ fun PinCodeConfirmationScreen(
                     onSkipClick()
                 },
                 modifier = Modifier,
-                text = stringResource(id = care.intouch.app.R.string.skip_button)
+                text = StringVO.Resource(care.intouch.app.R.string.skip_button).value()
             )
         }
     }
