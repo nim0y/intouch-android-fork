@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import care.intouch.app.feature.pinCode.ui.IsFullPinCode.IS_FULL_PIN_CODE
 import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
@@ -47,6 +48,7 @@ fun PinCodeConfirmationScreen(
     onBackClick: () -> Unit = {},
     viewModel: PinCodeConfirmationViewModel = hiltViewModel(),
 ) {
+
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     var pinCode by rememberSaveable { mutableStateOf("") }
@@ -138,7 +140,7 @@ fun PinCodeConfirmationScreen(
                 },
                 modifier = Modifier,
                 text = StringVO.Resource(care.intouch.app.R.string.save_button).value(),
-                isEnabled = pinCode.length == 4
+                isEnabled = pinCode.length == IS_FULL_PIN_CODE
             )
 
             Spacer(modifier = Modifier.height(2.dp))

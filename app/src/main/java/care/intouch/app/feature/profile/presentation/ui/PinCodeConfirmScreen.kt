@@ -16,7 +16,7 @@ import care.intouch.uikit.theme.InTouchTheme
 @Composable
 fun PinCodeConfirmScreen(
     pinCodeConfirm: () -> Unit,
-    exit:() -> Unit
+    exit: () -> Unit
 ) {
 
     Box(
