@@ -19,7 +19,7 @@ class PinCodeConfirmationViewModel @Inject constructor(
     private val repository: PinCodeRepository
 ) : ViewModel() {
 
-    private val pinCodeInst: String = checkNotNull(savedStateHandle["pinCodeInst"])
+    private val pinCodeInst: String = savedStateHandle["pinCodeInst"] ?: ""
 
     init {
         onEvent(PinCodeConfirmationEvent.Init(pinCodeInst))
