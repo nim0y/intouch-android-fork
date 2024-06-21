@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -33,10 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import care.intouch.app.R
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
-import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
 import care.intouch.uikit.ui.buttons.SecondaryButtonDark
 import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 
@@ -145,61 +146,79 @@ fun PinCodeEnterScreen(
     }
 }
 
+@Composable
+fun DialogPinCode(onDismissRequest: () -> Unit) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Column(
+            modifier = Modifier
+                .height(304.dp)
+//                .width(334.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(InTouchTheme.colors.dialog),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 50.dp),
+                style = InTouchTheme.typography.bodyBold,
+                color = InTouchTheme.colors.textBlue,
+                text = stringResource(id = R.string.forgot_your_pin_title)
+            )
+            Spacer(modifier = Modifier.height(18.dp))
+            Text(
+                modifier = Modifier.padding(horizontal = 10.dp),
+                style = InTouchTheme.typography.bodySemibold,
+                color = InTouchTheme.colors.textGreen,
+                text = stringResource(id = R.string.create_new_pin_title),
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+
+            IntouchButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 28.dp)
+                ,
+                text = stringResource(id = R.string.log_in_again),
+                contentPadding = PaddingValues(
+                   // horizontal = 78.dp,
+                    vertical = 14.dp
+                )
+                ,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            IntouchButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 28.dp),
+                text = stringResource(id = R.string.cancel_button),
+                contentPadding = PaddingValues(
+                    horizontal = 78.dp, vertical = 14.dp
+                ),
+                enableBackgroundColor = Color.Transparent,
+                enableTextColor = InTouchTheme.colors.textBlue
+
+            )
+        }
+    }
+}
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun Dialog() {
+fun PreviewDialog() {
     InTouchTheme {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .height(304.dp)
-                    .width(334.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(InTouchTheme.colors.dialog),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier.padding(top = 50.dp),
-                    style = InTouchTheme.typography.bodyBold,
-                    color = InTouchTheme.colors.textBlue,
-                    text = stringResource(id = R.string.forgot_your_pin_title)
-                )
-                Spacer(modifier = Modifier.height(18.dp))
-                Text(
-                    modifier = Modifier.padding(horizontal = 25.dp),
-                    style = InTouchTheme.typography.bodySemibold,
-                    color = InTouchTheme.colors.textGreen,
-                    text = stringResource(id = R.string.create_new_pin_title),
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(28.dp))
+            DialogPinCode {
 
-                IntouchButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 28.dp),
-                    text = stringResource(id = R.string.log_in_again),
-                    contentPadding = PaddingValues(
-                        horizontal = 78.dp, vertical = 14.dp
-                    ),
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                PrimaryButtonWhite(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 28.dp),
-                    text = stringResource(id = R.string.cancel_button),
-                    
-                )
             }
         }
-
     }
 }
