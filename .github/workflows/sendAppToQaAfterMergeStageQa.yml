@@ -22,14 +22,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_ISSUES=$(gh pr view ${{ github.event.pull_request.number }} --json body --jq '.body')
           PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
-          PR_FULL=$(gh pr view ${{ github.event.pull_request.number }})
           echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
-          echo "PR_ISSUES=$PR_ISSUES" >> $GITHUB_ENV
           echo "PR_TITLE = $PR_TITLE"
-          echo "PR_ISSUES=$PR_ISSUES"
-          echo "PR_FULL=$PR_FULL"
       - name: Build and send application stageQa to App Distribution
         env:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
@@ -38,13 +33,12 @@ jobs:
           CREDENTIAL_FILE_CONTENT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           PR_TITLE: ${{ env.PR_TITLE }}
-          PR_ISSUES: ${{ env.PR_ISSUES }}
         run: |
           echo "$CREDENTIAL_FILE_CONTENT" > ./app/serviceCredentialsFile.json
           echo "App type: stageQa" >> ./app/src/stage/qa/releaseNotes.txt
           echo "buildNumber=${GITHUB_RUN_NUMBER}" >> ./app/src/stage/qa/releaseNotes.txt
           echo "Pull Request Title: $PR_TITLE" >> ./app/src/stage/qa/releaseNotes.txt
-          echo "Issue Numbers: $PR_ISSUES" >> ./app/src/stage/qa/releaseNotes.txt
+          ./gradlew appDistributionToQaStageQa
 
       - name: Print release notes
         if: success()
