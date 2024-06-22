@@ -4,7 +4,7 @@ on:
   pull_request:
     types:
       - closed
-    branches: [ "83-creating-app-builds" ]
+    branches: [ "dev" ]
 
   workflow_dispatch:
 
