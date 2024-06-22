@@ -26,6 +26,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.app.R
 import care.intouch.uikit.common.StringVO
@@ -193,3 +194,16 @@ private fun buildTermsAndCondition(): AnnotatedString =
         }
         pop()
     }
+
+@Preview(showBackground = true)
+@Composable
+fun SetPasswordScreenPreview() {
+    InTouchTheme {
+        SetPasswordScreen(
+            userName = "Test",
+            errorPassword = false,
+            errorPasswordText = "",
+            onEvent = {}
+        )
+    }
+}

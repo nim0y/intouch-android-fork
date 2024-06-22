@@ -23,7 +23,7 @@ class AuthorizationViewModel @Inject constructor(
     fun onEvent(event: AuthorizationEvent) {
         when (event) {
             is AuthorizationEvent.OnGetUserInfo -> {
-                getUserInfo(event.userId, event.token)
+                getUserInfo()
             }
 
             is AuthorizationEvent.OnSetPassword -> {
@@ -32,21 +32,19 @@ class AuthorizationViewModel @Inject constructor(
         }
     }
 
-    private fun getUserInfo(userId: String?, token: String?) {
+    private fun getUserInfo() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-//                val userInfo = getUserNameUseCase.invoke()
+                val userInfo = getUserNameUseCase.invoke()
 
-//                if(userInfo is Resource.Success) {
+                if (userInfo is Resource.Success) {
                     _state.update { registrationState ->
                         registrationState.copy(
                             uiState = AuthorizationUiState.SetPassword,
-                            userName = "UserName"
+                            userName = userInfo.data
                         )
                     }
-//                } else {
-//
-//                }
+                }
             }
         }
     }
@@ -65,6 +63,7 @@ class AuthorizationViewModel @Inject constructor(
                             )
                         }
                     }
+
                     else -> {
                         //TODO send password for save
                         _state.update { registrationState ->
@@ -78,5 +77,6 @@ class AuthorizationViewModel @Inject constructor(
         }
     }
 
-    private fun isPasswordsMatch(password: String, confirmPassword: String): Boolean = password.equals(confirmPassword)
+    private fun isPasswordsMatch(password: String, confirmPassword: String): Boolean =
+        password.equals(confirmPassword)
 }

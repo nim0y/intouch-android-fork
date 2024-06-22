@@ -81,11 +81,8 @@ object Authentication: IntouchDestination {
 object PasswordRecovery: IntouchDestination {
     override val route = "PASSWORD_RECOVERY"
 }
-object PinCodeConfirmation: IntouchDestination {
-    override val route = "PIN_CODE_CONFIRMATION"
-}
 object PinCodeInstallation: IntouchDestination {
-    override val route = "PIN_CODE_INSTALLATION"
+    override val route = "PIN_CODE_CONFIRMATION"
 }
 object PinCodeEnter: IntouchDestination {
     override val route = "PIN_CODE_ENTER"
