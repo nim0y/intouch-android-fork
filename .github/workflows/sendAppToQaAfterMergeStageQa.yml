@@ -23,7 +23,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_TITLE=$(gh pr view ${{ github.event.pull_request.number }} --json title --jq '.title')
-          PR_AUTHOR=$(gh pr view ${{ github.event.pull_request.number }} --json author --jq '.author')
+          PR_AUTHOR=$(gh pr view ${{ github.event.pull_request.number }} --json author --jq '.author.name')
           PR_URL=$(gh pr view ${{ github.event.pull_request.number }} --json url --jq '.url')
           echo "PR_TITLE=$PR_TITLE" >> $GITHUB_ENV
           echo "PR_AUTHOR=$PR_AUTHOR" >> $GITHUB_ENV
