@@ -54,6 +54,7 @@ fun PlanScreen(
         )
 
         ChipsRow(
+            modifier = Modifier.padding(horizontal = 16.dp),
             onFirstChipsClick = {},
             onSecondChipsClick = {},
             onThirdChipsClick = {},
