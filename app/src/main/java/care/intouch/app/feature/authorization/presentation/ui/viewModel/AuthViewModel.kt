@@ -154,7 +154,7 @@ class AuthViewModule @Inject constructor(
         return if (email.isBlank()) {
             true
         } else {
-            email.matches(emailRegex.toRegex())
+            email.matches(emailRegex)
         }
     }
 
@@ -170,4 +170,12 @@ class AuthViewModule @Inject constructor(
     }
 }
 
-const val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+val emailRegex = Regex(
+    "[a-zA-Z0-9\\.\\_\\-]{1,256}" +
+            "\\@" +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{1,64}" +
+            "(" +
+            "\\." +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{1,25}" +
+            ")+"
+)
