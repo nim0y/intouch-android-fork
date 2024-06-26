@@ -17,6 +17,7 @@ import care.intouch.app.core.navigation.PinCodeEnter
 import care.intouch.app.core.navigation.PinCodeInstallation
 import care.intouch.app.core.navigation.Registration
 import care.intouch.app.core.navigation.SendingNotification
+import care.intouch.app.feature.authorization.pinCode.ui.PinCodeEnterScreen
 import care.intouch.app.feature.authorization.presentation.AuthorizationScreen
 import care.intouch.app.feature.authorization.presentation.ui.AuthenticationScreen
 import care.intouch.app.feature.authorization.presentation.ui.EnterPinCodeScreen
@@ -78,7 +79,8 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
         }
 
         composable(route = PinCodeEnter.route) {
-            EnterPinCodeScreen(
+//            EnterPinCodeScreen(
+            PinCodeEnterScreen(
                 onNextClick = {
                     navController.navigate(route = MainNav.route) {
                         popUpTo(navController.graph.startDestinationId) {
