@@ -142,7 +142,7 @@ fun PinCodeEnterScreen(
             if (openDialogPinCode) {
                 DialogPinCode(
                     onDismissRequest = { openDialogPinCode = false },
-                    onForgotPicCodeClick = onForgotPicCodeClick
+                    onForgotPinCodeClick = onForgotPicCodeClick
                 )
             }
         }
@@ -157,7 +157,7 @@ fun PinCodeEnterScreen(
 @Composable
 fun DialogPinCode(
     onDismissRequest: () -> Unit,
-    onForgotPicCodeClick: () -> Unit
+    onForgotPinCodeClick: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -188,7 +188,7 @@ fun DialogPinCode(
             Spacer(modifier = Modifier.height(28.dp))
 
             IntouchButton(
-                onClick = { onForgotPicCodeClick() },
+                onClick = { onForgotPinCodeClick() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 28.dp),
@@ -227,7 +227,7 @@ fun PreviewDialog() {
         ) {
             DialogPinCode(
                 onDismissRequest = {},
-                onForgotPicCodeClick = {}
+                onForgotPinCodeClick = {}
             )
         }
     }

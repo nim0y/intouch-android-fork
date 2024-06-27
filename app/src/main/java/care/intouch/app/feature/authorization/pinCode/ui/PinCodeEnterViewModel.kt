@@ -26,23 +26,24 @@ class PinCodeEnterViewModel @Inject constructor(
     fun onEvent(pincode: String) {
         viewModelScope.launch {
             when (val result = repository.verifyPinCode(pincode)) {
-                is Resource.Error ->
-                    _state.update {
+                is Resource.Error -> _state.update {
                     Log.d("TAG", "Resource.Error")
-                    PinCodeEnterState.NotConfirmed }
-                is Resource.Success -> {
-                    if (result.data){
-                        _state.update {
-                            Log.d("TAG", "Resource.Success true")
-                            PinCodeEnterState.Confirmed }
-                    }else{
-                        _state.update {
-                            Log.d("TAG", "Resource.Success else")
-                            PinCodeEnterState.NotConfirmed }
-                    }
+                    PinCodeEnterState.NotConfirmed
                 }
 
-
+                is Resource.Success -> {
+                    if (result.data) {
+                        _state.update {
+                            Log.d("TAG", "Resource.Success true")
+                            PinCodeEnterState.Confirmed
+                        }
+                    } else {
+                        _state.update {
+                            Log.d("TAG", "Resource.Success else")
+                            PinCodeEnterState.NotConfirmed
+                        }
+                    }
+                }
             }
         }
     }
