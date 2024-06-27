@@ -3,9 +3,11 @@ package care.intouch.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -43,6 +45,7 @@ class MainActivity : ComponentActivity() {
         }
         super.onCreate(savedInstanceState)
 
+        enableEdgeToEdge()
         setContent {
             val snackBarHostState = remember { SnackbarHostState() }
             var isAuthenticate by remember { mutableStateOf(false) }
@@ -72,7 +75,9 @@ class MainActivity : ComponentActivity() {
 
             InTouchTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .navigationBarsPadding(),
                     color = InTouchTheme.colors.mainBlue
                 ) {
                     Column {
