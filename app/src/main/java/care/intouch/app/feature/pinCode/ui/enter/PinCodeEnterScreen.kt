@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.pinCode.ui
+package care.intouch.app.feature.pinCode.ui.enter
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,12 +42,11 @@ import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.SecondaryButtonDark
 import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 
-@Preview
 @Composable
 fun PinCodeEnterScreen(
     modifier: Modifier = Modifier,
-    onNextClick: () -> Unit = {},
-    onForgotPicCodeClick: () -> Unit = {},
+    onNextClick: () -> Unit,
+    onForgotPicCodeClick: () -> Unit,
     viewModel: PinCodeEnterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -55,6 +54,7 @@ fun PinCodeEnterScreen(
     var pinCode by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+    var isFullPinCode by rememberSaveable { mutableStateOf(false) }
 
     var openDialogPinCode by remember { mutableStateOf(false) }
 
@@ -98,6 +98,7 @@ fun PinCodeEnterScreen(
                 }
 
                 PinCodeEnterState.Default -> {
+                    isFullPinCode = false
                     Text(
                         text = StringVO.Resource(R.string.enter_pin_sub_title).value(),
                         style = InTouchTheme.typography.bodyRegular,
@@ -107,6 +108,7 @@ fun PinCodeEnterScreen(
                 }
 
                 PinCodeEnterState.NotConfirmed -> {
+                    isFullPinCode = false
                     Text(
                         text = StringVO.Resource(R.string.incorrect_error_pin).value(),
                         style = InTouchTheme.typography.bodyRegular,
@@ -114,20 +116,33 @@ fun PinCodeEnterScreen(
                         color = InTouchTheme.colors.errorRed
                     )
                 }
+
+                PinCodeEnterState.FullPinCode -> {
+                    isFullPinCode = true
+                    Text(
+                        text = StringVO.Resource(R.string.enter_pin_sub_title).value(),
+                        style = InTouchTheme.typography.bodyRegular,
+                        textAlign = TextAlign.Center,
+                        color = InTouchTheme.colors.textBlue
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(12.dp))
 
-            PinCodeInputField(value = pinCode, onValueChange = { pinCode = it })
+            PinCodeInputField(value = pinCode, onValueChange = {
+                pinCode = it
+                viewModel.onEvent(PinCodeEnterEvent.Entering(it))
+            })
             Spacer(modifier = Modifier.height(28.dp))
 
             IntouchButton(
                 onClick = {
-                      viewModel.onEvent(pinCode)
+                    viewModel.onEvent(PinCodeEnterEvent.Enter)
                     pinCode = ""
                 },
                 modifier = Modifier,
                 text = StringVO.Resource(R.string.next_button).value(),
-                isEnabled = pinCode.length == 4
+                isEnabled = isFullPinCode
             )
             Spacer(modifier = Modifier.height(2.dp))
 
@@ -156,8 +171,7 @@ fun PinCodeEnterScreen(
 
 @Composable
 fun DialogPinCode(
-    onDismissRequest: () -> Unit,
-    onForgotPinCodeClick: () -> Unit
+    onDismissRequest: () -> Unit, onForgotPinCodeClick: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -225,10 +239,7 @@ fun PreviewDialog() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            DialogPinCode(
-                onDismissRequest = {},
-                onForgotPinCodeClick = {}
-            )
+            DialogPinCode(onDismissRequest = {}, onForgotPinCodeClick = {})
         }
     }
 }

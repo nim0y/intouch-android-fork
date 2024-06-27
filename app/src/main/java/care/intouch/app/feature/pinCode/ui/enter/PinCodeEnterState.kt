@@ -1,4 +1,4 @@
-package care.intouch.app.feature.authorization.pinCode.ui
+package care.intouch.app.feature.pinCode.ui.enter
 
 import androidx.compose.runtime.Immutable
 
@@ -12,6 +12,9 @@ sealed interface PinCodeEnterState {
 
     @Immutable
     data object NotConfirmed : PinCodeEnterState
+
+    @Immutable
+    data object FullPinCode : PinCodeEnterState
 
     companion object {
         val Initial: PinCodeEnterState = Default

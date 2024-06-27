@@ -19,10 +19,9 @@ import care.intouch.app.core.navigation.PinCodeEnter
 import care.intouch.app.core.navigation.PinCodeInstallation
 import care.intouch.app.core.navigation.Registration
 import care.intouch.app.core.navigation.SendingNotification
-import care.intouch.app.feature.authorization.pinCode.ui.PinCodeEnterScreen
+import care.intouch.app.feature.pinCode.ui.enter.PinCodeEnterScreen
 import care.intouch.app.feature.authorization.presentation.AuthorizationScreen
 import care.intouch.app.feature.authorization.presentation.ui.AuthenticationScreen
-import care.intouch.app.feature.authorization.presentation.ui.EnterPinCodeScreen
 import care.intouch.app.feature.authorization.presentation.ui.PasswordRecoveryScreen
 import care.intouch.app.feature.authorization.presentation.ui.RegistrationScreen
 import care.intouch.app.feature.authorization.presentation.ui.SendingNotificationScreen
@@ -82,7 +81,6 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
         }
 
         composable(route = PinCodeEnter.route) {
-//            EnterPinCodeScreen(
             PinCodeEnterScreen(
                 onNextClick = {
                     navController.navigate(route = MainNav.route) {
@@ -92,7 +90,11 @@ fun NavGraphBuilder.addNestedAuthorizationGraph(
                     }
                 },
                 onForgotPicCodeClick = {
-                    navController.navigate(route = Authentication.route)
+                    navController.navigate(route = Authentication.route){
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
