@@ -3,8 +3,10 @@ package care.intouch.app.feature.authorization.presentation.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -67,92 +69,95 @@ private fun AuthenticationScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         )
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(modifier = Modifier.height(83.dp))
+            Icon(
+                painter = inTouchLogo.painter(), contentDescription = "", tint = logoBackGroundTint,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(75.dp))
+            Text(
+                text = StringVO.Resource(care.intouch.app.R.string.welcome_to_intouch).value(),
+                style = InTouchTheme.typography.titleMedium,
+                color = InTouchTheme.colors.textGreen,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(45.dp))
+            Text(
+                text = StringVO.Resource(care.intouch.app.R.string.sign_in_to_continue).value(),
+                style = InTouchTheme.typography.bodySemibold,
+                color = InTouchTheme.colors.textGreen,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            PasswordTextField(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                value = state.login,
+                onValueChange =
+                {
+                    onEvent(AuthenticationDataEvent.OnLoginTextChanged(it))
+                    onEvent(AuthenticationDataEvent.OnLoginErrorChanged)
+                    onEvent(AuthenticationDataEvent.OnLoginValidationChecked)
+                },
+                isPasswordVisible = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                error = state.isErrorLogin,
+                caption = state.loginCaption,
+                isPasswordVisibleIconVisible = false,
+                onPasswordVisibleIconClick = {
+                },
+                hint = StringVO.Resource(care.intouch.app.R.string.e_mail),
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            PasswordTextField(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                value = state.password,
+                onValueChange =
+                {
+                    onEvent(AuthenticationDataEvent.OnPasswordTextChanged(it))
+                    onEvent(AuthenticationDataEvent.OnPasswordErrorChanged)
+                    onEvent(AuthenticationDataEvent.OnPasswordValidationChecked)
+                },
+                isPasswordVisible = state.isPasswordVisible,
+                isPasswordVisibleIconVisible = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                error = state.isErrorPassword,
+                caption = state.passwordCaption,
+                onPasswordVisibleIconClick = {
+                    onEvent(AuthenticationDataEvent.OnPasswordIconClick)
+                },
+                hint = StringVO.Resource(care.intouch.app.R.string.password),
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            PrimaryButtonGreen(
+                onClick = {
+                    onEvent(
+                        AuthenticationDataEvent.OnLoginButtonClicked(
+                            state.login,
+                            state.password
+                        )
+                    )
+                    onLoginClick.invoke()
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                isEnabled =
+                state.login.isNotEmpty() and state.password.isNotEmpty() and !state.isErrorLogin and !state.isErrorPassword,
+                text = stringResource(care.intouch.app.R.string.login),
+            )
+            SecondaryButtonDark(
+                onClick = { onForgotPasswordClick.invoke() },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                textStyle = InTouchTheme.typography.bodyBold,
+                isEnabled = true,
+                text = stringResource(id = care.intouch.app.R.string.forgot_password),
+                enableTextColor = InTouchTheme.colors.textGreen
+            )
 
-        Icon(
-            painter = inTouchLogo.painter(), contentDescription = "", tint = logoBackGroundTint,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 83.dp)
-        )
-
-        Text(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 243.dp, start = 28.dp, end = 28.dp),
-            text = stringResource(care.intouch.app.R.string.welcome_to_intouch),
-            style = InTouchTheme.typography.titleMedium,
-            color = InTouchTheme.colors.textGreen
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 328.dp, start = 28.dp, end = 28.dp),
-            text = stringResource(care.intouch.app.R.string.sign_in_to_continue),
-            style = InTouchTheme.typography.bodySemibold,
-            color = InTouchTheme.colors.textGreen,
-        )
-        PasswordTextField(
-            value = state.password,
-            onValueChange =
-            {
-                onEvent(AuthenticationDataEvent.OnPasswordTextChanged(it))
-                onEvent(AuthenticationDataEvent.OnPasswordErrorChanged)
-                onEvent(AuthenticationDataEvent.OnPasswordValidationChecked)
-            },
-            isPasswordVisible = state.isPasswordVisible,
-            isPasswordVisibleIconVisible = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            error = state.isErrorPassword,
-            caption = state.passwordCaption,
-            onPasswordVisibleIconClick = {
-                onEvent(AuthenticationDataEvent.OnPasswordIconClick)
-            },
-            hint = StringVO.Plain(stringResource(care.intouch.app.R.string.password)),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 160.dp)
-        )
-        PasswordTextField(
-            value = state.login,
-            onValueChange =
-            {
-                onEvent(AuthenticationDataEvent.OnLoginTextChanged(it))
-                onEvent(AuthenticationDataEvent.OnLoginErrorChanged)
-                onEvent(AuthenticationDataEvent.OnLoginValidationChecked)
-            },
-            isPasswordVisible = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            error = state.isErrorLogin,
-            caption = state.loginCaption,
-            isPasswordVisibleIconVisible = false,
-            onPasswordVisibleIconClick = {
-            },
-            hint = StringVO.Plain(stringResource(care.intouch.app.R.string.e_mail)),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 236.dp)
-        )
-        SecondaryButtonDark(
-            onClick = { onForgotPasswordClick.invoke() },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 24.dp),
-            textStyle = InTouchTheme.typography.bodyBold,
-            isEnabled = true,
-            text = stringResource(id = care.intouch.app.R.string.forgot_password),
-            enableTextColor = InTouchTheme.colors.textGreen
-        )
-        PrimaryButtonGreen(
-            onClick = {
-                onEvent(AuthenticationDataEvent.OnLoginButtonClicked(state.login, state.password))
-                onLoginClick.invoke()
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 84.dp),
-            isEnabled = !state.login.isNullOrEmpty() and !state.password.isNullOrEmpty(),
-            text = stringResource(care.intouch.app.R.string.login),
-        )
+        }
     }
 }
 
