@@ -1,6 +1,5 @@
 package care.intouch.uikit.theme
 
-import android.app.Dialog
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 

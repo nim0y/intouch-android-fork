@@ -34,13 +34,13 @@ class PinCodeEnterViewModel @Inject constructor(
 
             PinCodeEnterEvent.Enter -> {
                 viewModelScope.launch {
-                    when (val result = repository.verifyPinCode(enteringPinCode)) {
+                    when (val isConfirmed = repository.verifyPinCode(enteringPinCode)) {
                         is Resource.Error -> _state.update {
                             PinCodeEnterState.NotConfirmed
                         }
 
                         is Resource.Success -> {
-                            if (result.data) {
+                            if (isConfirmed.data) {
                                 _state.update {
                                     PinCodeEnterState.Confirmed
                                 }
