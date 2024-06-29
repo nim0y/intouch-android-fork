@@ -38,7 +38,7 @@ class AuthViewModule @Inject constructor(
     fun onEvent(event: AuthenticationDataEvent) {
         when (event) {
             is AuthenticationDataEvent.OnLoginButtonClicked -> {
-                loginByEmail(event.username, event.password)
+                loginByEmail(_uiState.value.login, _uiState.value.password)
             }
 
             AuthenticationDataEvent.OnLoginErrorChanged -> {
@@ -47,6 +47,8 @@ class AuthViewModule @Inject constructor(
 
             is AuthenticationDataEvent.OnLoginTextChanged -> {
                 saveLogin(event.text)
+                loginErrorState()
+                loginValidation()
             }
 
             AuthenticationDataEvent.OnLoginValidationChecked -> {
@@ -63,6 +65,8 @@ class AuthViewModule @Inject constructor(
 
             is AuthenticationDataEvent.OnPasswordTextChanged -> {
                 savePassword(event.text)
+                passwordErrorState()
+                passwordValidation()
             }
 
             AuthenticationDataEvent.OnPasswordValidationChecked -> {
@@ -122,7 +126,7 @@ class AuthViewModule @Inject constructor(
         if (!isValidPassword(uiState.value.password)) {
             _uiState.update { state ->
                 state.copy(
-                    passwordCaption = StringVO.Plain("Incorrect. Please try again")
+                    passwordCaption = StringVO.Resource(care.intouch.app.R.string.incorrect_please_try_again)
                 )
             }
         } else {
@@ -138,7 +142,7 @@ class AuthViewModule @Inject constructor(
         if (!isValidEmail(uiState.value.login)) {
             _uiState.update { state ->
                 state.copy(
-                    loginCaption = StringVO.Plain("Not a valid e-mail address")
+                    loginCaption = StringVO.Resource(care.intouch.app.R.string.not_a_valid_e_mail_address)
                 )
             }
         } else {

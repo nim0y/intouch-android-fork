@@ -1,14 +1,16 @@
 package care.intouch.app.feature.authorization.presentation.ui
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -63,43 +65,40 @@ private fun AuthenticationScreen(
             .background(InTouchTheme.colors.input),
         contentAlignment = Alignment.Center
     ) {
-
-        Icon(
-            painter = headBackGround.painter(), contentDescription = "", tint = headBackGroundTint,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
+        Image(
+            painter = headBackGround.painter(), contentDescription = "",
+            modifier = Modifier.align(Alignment.TopCenter)
         )
+    }
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(83.dp))
-            Icon(
-                painter = inTouchLogo.painter(), contentDescription = "", tint = logoBackGroundTint,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+            Image(
+                painter = inTouchLogo.painter(), contentDescription = "",
             )
             Spacer(modifier = Modifier.height(75.dp))
             Text(
                 text = StringVO.Resource(care.intouch.app.R.string.welcome_to_intouch).value(),
                 style = InTouchTheme.typography.titleMedium,
                 color = InTouchTheme.colors.textGreen,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(45.dp))
             Text(
                 text = StringVO.Resource(care.intouch.app.R.string.sign_in_to_continue).value(),
                 style = InTouchTheme.typography.bodySemibold,
                 color = InTouchTheme.colors.textGreen,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(20.dp))
             PasswordTextField(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.fillMaxWidth(),
                 value = state.login,
                 onValueChange =
                 {
                     onEvent(AuthenticationDataEvent.OnLoginTextChanged(it))
-                    onEvent(AuthenticationDataEvent.OnLoginErrorChanged)
-                    onEvent(AuthenticationDataEvent.OnLoginValidationChecked)
                 },
                 isPasswordVisible = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -110,15 +109,13 @@ private fun AuthenticationScreen(
                 },
                 hint = StringVO.Resource(care.intouch.app.R.string.e_mail),
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.weight(1f))
             PasswordTextField(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.fillMaxWidth(),
                 value = state.password,
                 onValueChange =
                 {
                     onEvent(AuthenticationDataEvent.OnPasswordTextChanged(it))
-                    onEvent(AuthenticationDataEvent.OnPasswordErrorChanged)
-                    onEvent(AuthenticationDataEvent.OnPasswordValidationChecked)
                 },
                 isPasswordVisible = state.isPasswordVisible,
                 isPasswordVisibleIconVisible = true,
@@ -130,14 +127,11 @@ private fun AuthenticationScreen(
                 },
                 hint = StringVO.Resource(care.intouch.app.R.string.password),
             )
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.weight(1f))
             PrimaryButtonGreen(
                 onClick = {
                     onEvent(
-                        AuthenticationDataEvent.OnLoginButtonClicked(
-                            state.login,
-                            state.password
-                        )
+                        AuthenticationDataEvent.OnLoginButtonClicked
                     )
                     onLoginClick.invoke()
                 },
@@ -147,6 +141,7 @@ private fun AuthenticationScreen(
                 state.login.isNotEmpty() and state.password.isNotEmpty() and !state.isErrorLogin and !state.isErrorPassword,
                 text = stringResource(care.intouch.app.R.string.login),
             )
+            Spacer(modifier = Modifier.weight(1f))
             SecondaryButtonDark(
                 onClick = { onForgotPasswordClick.invoke() },
                 modifier = Modifier
@@ -156,10 +151,10 @@ private fun AuthenticationScreen(
                 text = stringResource(id = care.intouch.app.R.string.forgot_password),
                 enableTextColor = InTouchTheme.colors.textGreen
             )
-
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
-}
+
 
 @Composable
 @Preview(showBackground = true)

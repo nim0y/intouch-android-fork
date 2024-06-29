@@ -3,7 +3,7 @@ package care.intouch.app.feature.authorization.presentation.ui.models
 sealed class AuthenticationDataEvent {
     data class OnPasswordTextChanged(val text: String) : AuthenticationDataEvent()
     data class OnLoginTextChanged(val text: String) : AuthenticationDataEvent()
-    data class OnLoginButtonClicked(val username: String, val password: String) :
+    data object OnLoginButtonClicked :
         AuthenticationDataEvent()
 
     data object OnLoginValidationChecked : AuthenticationDataEvent()
