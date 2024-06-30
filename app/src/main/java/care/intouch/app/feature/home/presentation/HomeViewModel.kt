@@ -1,8 +1,10 @@
 package care.intouch.app.feature.home.presentation
 
 import androidx.lifecycle.ViewModel
+import care.intouch.app.feature.home.presentation.models.DiaryEntry
 import care.intouch.app.feature.home.presentation.models.EventType
 import care.intouch.app.feature.home.presentation.models.HomeUiState
+import care.intouch.app.feature.home.presentation.models.Mood
 import care.intouch.app.feature.home.presentation.models.Status
 import care.intouch.app.feature.home.presentation.models.Task
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,25 +32,56 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                     description = "aboba"
                 )
             ),
-            diaryList = arrayListOf()
+            diaryList = arrayListOf(
+                DiaryEntry(
+                    id = 1,
+                    data = "13, jul",
+                    note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                    moodList = listOf(Mood(name = "Bad")),
+                    sharedWithDoc = false
+                ),
+                DiaryEntry(
+                    id = 1,
+                    data = "13, jul",
+                    note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                    moodList = listOf(Mood(name = "Bad")),
+                    sharedWithDoc = false
+                )
+            )
         )
     }
 
     fun executeEvent(event: EventType) {
         when (event) {
             is EventType.DuplicateTask -> duplicateTask()
-            is EventType.DeleteTask -> deleteTask(event.taskId)
-            is EventType.ClearTask -> clearTask(event.taskId)
+            is EventType.DeleteTask -> deleteTask(event.taskId, event.index)
+            is EventType.ClearTask -> clearTask(event.taskId, event.index)
             is EventType.ShearTask -> shearTask(event.taskId, event.index, event.isShared)
+            is EventType.ShearDiaryEntry -> shearEntry(event.entryId, event.index, event.isShared)
+            is EventType.DeleteDiaryEntry-> deleteDiaryEntry(event.entryId, event.index)
         }
     }
 
-    private fun deleteTask(taskId: Int) {
-
+    private fun deleteTask(taskId: Int, index: Int) {
+        val newState = _homeState.value
+        if (newState is HomeUiState.FilledScreen) {
+        newState.taskList.removeAt(index)
+        }
+        _homeState.value = newState
     }
 
-    private fun clearTask(taskId: Int) {
-
+    private fun clearTask(taskId: Int, index: Int) {
+        val newState = _homeState.value
+        if (newState is HomeUiState.FilledScreen) {
+            val clearedTask = newState.taskList[index].copy(
+                status = Status.TO_DO,
+                sharedWithDoc = false,
+                description = ""
+            )
+            newState.taskList.removeAt(index)
+            newState.taskList.add(index = 0, clearedTask)
+        }
+        _homeState.value = newState
     }
 
     private fun shearTask(taskId: Int, index: Int, shareStatus: Boolean) {
@@ -62,8 +95,21 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     }
 
-    private fun deleteDiaryEntry(diaryId: Int) {
+    private fun shearEntry(entryId: Int, index: Int, shareStatus: Boolean) {
+        val newState = _homeState.value
+        if (newState is HomeUiState.FilledScreen) {
+            val entry = newState.diaryList[index].copy(sharedWithDoc = shareStatus)
+            newState.diaryList[index] = entry
+        }
 
+    }
+
+    private fun deleteDiaryEntry(diaryId: Int, index: Int) {
+        val newState = _homeState.value
+        if (newState is HomeUiState.FilledScreen) {
+            newState.diaryList.removeAt(index)
+        }
+        _homeState.value = newState
     }
 
     private fun duplicateTask() {
