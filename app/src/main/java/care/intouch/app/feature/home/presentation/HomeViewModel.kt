@@ -1,5 +1,8 @@
 package care.intouch.app.feature.home.presentation
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import care.intouch.app.feature.home.presentation.models.DiaryEntry
 import care.intouch.app.feature.home.presentation.models.EventType
@@ -7,18 +10,17 @@ import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.app.feature.home.presentation.models.Mood
 import care.intouch.app.feature.home.presentation.models.Status
 import care.intouch.app.feature.home.presentation.models.Task
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 //@HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    private val _homeState = MutableStateFlow<HomeUiState>(HomeUiState.Empty)
-    val homeState: StateFlow<HomeUiState> = _homeState
+    private var homeState = MutableLiveData(HomeUiState())
+    private val taskList = mutableStateListOf<Task>()
+    private val diaryList = mutableStateListOf<DiaryEntry>()
 
     init {
-        _homeState.value = HomeUiState.FilledScreen(
-            taskList = arrayListOf(
+        homeState.value = HomeUiState(
+            taskList = mutableStateListOf(
                 Task(
                     id = 1,
                     status = Status.TO_DO,
@@ -32,7 +34,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                     description = "aboba"
                 )
             ),
-            diaryList = arrayListOf(
+            diaryList = mutableStateListOf(
                 DiaryEntry(
                     id = 1,
                     data = "13, jul",
@@ -49,67 +51,55 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 )
             )
         )
+        taskList.addAll(homeState.value!!.taskList)
+        diaryList.addAll(homeState.value!!.diaryList)
     }
 
+    fun getState(): LiveData<HomeUiState> = homeState
+
+    private fun getCurrentStatus(): HomeUiState = homeState.value!!
     fun executeEvent(event: EventType) {
         when (event) {
             is EventType.DuplicateTask -> duplicateTask()
-            is EventType.DeleteTask -> deleteTask(event.taskId, event.index)
+            is EventType.ClereTask -> copyTask(event.taskId, event.index)
             is EventType.ClearTask -> clearTask(event.taskId, event.index)
             is EventType.ShearTask -> shearTask(event.taskId, event.index, event.isShared)
             is EventType.ShearDiaryEntry -> shearEntry(event.entryId, event.index, event.isShared)
-            is EventType.DeleteDiaryEntry-> deleteDiaryEntry(event.entryId, event.index)
+            is EventType.DeleteDiaryEntry -> deleteDiaryEntry(event.entryId, event.index)
         }
     }
 
-    private fun deleteTask(taskId: Int, index: Int) {
-        val newState = _homeState.value
-        if (newState is HomeUiState.FilledScreen) {
-        newState.taskList.removeAt(index)
-        }
-        _homeState.value = newState
+    private fun copyTask(taskId: Int, index: Int) {
+        val newItem = taskList[index]
+        taskList.add(newItem)
+        homeState.value = getCurrentStatus().copy(taskList = taskList)
     }
 
     private fun clearTask(taskId: Int, index: Int) {
-        val newState = _homeState.value
-        if (newState is HomeUiState.FilledScreen) {
-            val clearedTask = newState.taskList[index].copy(
-                status = Status.TO_DO,
-                sharedWithDoc = false,
-                description = ""
-            )
-            newState.taskList.removeAt(index)
-            newState.taskList.add(index = 0, clearedTask)
-        }
-        _homeState.value = newState
+        val clearedTask = taskList[index].copy(
+            status = Status.TO_DO,
+            sharedWithDoc = false,
+            description = ""
+        )
+        taskList.removeAt(index)
+        taskList.add(index = 0, clearedTask)
+        homeState.value = getCurrentStatus().copy(taskList = taskList)
     }
 
     private fun shearTask(taskId: Int, index: Int, shareStatus: Boolean) {
-        val newState = _homeState.value
-        if (newState is HomeUiState.FilledScreen) {
-            val task = newState.taskList[index].copy(sharedWithDoc = shareStatus)
-            newState.taskList[index] = task
-        }
-
-        _homeState.value = newState
+        taskList[index].sharedWithDoc = shareStatus
+        homeState.value = getCurrentStatus().copy(taskList = taskList)
 
     }
 
     private fun shearEntry(entryId: Int, index: Int, shareStatus: Boolean) {
-        val newState = _homeState.value
-        if (newState is HomeUiState.FilledScreen) {
-            val entry = newState.diaryList[index].copy(sharedWithDoc = shareStatus)
-            newState.diaryList[index] = entry
-        }
-
+        diaryList[index].sharedWithDoc = shareStatus
+        homeState.value = getCurrentStatus().copy(diaryList = diaryList)
     }
 
     private fun deleteDiaryEntry(diaryId: Int, index: Int) {
-        val newState = _homeState.value
-        if (newState is HomeUiState.FilledScreen) {
-            newState.diaryList.removeAt(index)
-        }
-        _homeState.value = newState
+        diaryList.removeAt(index)
+        homeState.value = getCurrentStatus().copy(diaryList = diaryList)
     }
 
     private fun duplicateTask() {

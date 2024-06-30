@@ -137,7 +137,7 @@ fun PlanCard(
                                 )
                             }, onClick = {
                                 selectedItemIndex = index
-                                dropdownMenuItemsPlanCard.onClick
+                                dropdownMenuItemsPlanCard.onClick()
                             }, contentPadding = PaddingValues(horizontal = 24.dp)
                         )
                     }

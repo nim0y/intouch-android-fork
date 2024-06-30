@@ -15,9 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,8 +24,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +51,7 @@ import care.intouch.app.feature.home.presentation.models.Task
 import care.intouch.uikit.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
+import care.intouch.uikit.ui.ConformationDialog
 import care.intouch.uikit.ui.cards.DropdownMenuItemsPlanCard
 import care.intouch.uikit.ui.cards.NoteCards
 import care.intouch.uikit.ui.cards.PlanCard
@@ -59,23 +60,29 @@ import care.intouch.app.R as AppR
 @Composable
 fun HomeScreen() {
     val viewModel: HomeViewModel = hiltViewModel()
-    val screenState = viewModel.homeState.collectAsState()
+    val screenState = viewModel.getState().observeAsState()
     HomeScreenWithState(screenState = screenState, viewModel)
 }
 
 @Composable
 fun HomeScreenWithState(
-    screenState: State<HomeUiState>,
+    screenState: State<HomeUiState?>,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    var isSeeAllPlanVisible by rememberSaveable {
+    var deleteDiaryEntryDialogState by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var clearTaskDialogState by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val isSeeAllPlanVisible by rememberSaveable {
         mutableStateOf(
-            screenState.value.isSeeAllPlanVisible
+            screenState.value!!.isSeeAllPlanVisible
         )
     }
-    var isSeeAllDiaryClickable by rememberSaveable {
+    val isSeeAllDiaryClickable by rememberSaveable {
         mutableStateOf(
-            screenState.value.isDiaryListEmpty
+            screenState.value!!.isDiaryListEmpty
         )
     }
     Box(
@@ -113,10 +120,10 @@ fun HomeScreenWithState(
                     .padding(top = 28.dp),
                 isSeeAllPlanVisible,
                 titleText = stringResource(id = AppR.string.my_plan_sub_title),
-                seeAllClicked = {}
+                seeAllClicked = { }
             ) {
                 MyPlanSegment(
-                    screenState = screenState.value,
+                    screenState = screenState.value!!,
                     onPlanSwitcherChange = { id, index, switcherState ->
                         viewModel.executeEvent(
                             EventType.ShearTask(
@@ -124,15 +131,18 @@ fun HomeScreenWithState(
                             )
                         )
                     },
-                    dropdownMenuDelete = { taskId, taskIndex ->
+                    dropdownMenuDuplicate = { taskId, taskIndex ->
                         viewModel.executeEvent(
-                            EventType.DeleteTask(
+                            EventType.ClereTask(
                                 taskId = taskId,
                                 index = taskIndex
                             )
                         )
+
                     },
                     dropdownMenuClear = { taskId, taskIndex ->
+                        clearTaskDialogState = !clearTaskDialogState
+
                         viewModel.executeEvent(
                             EventType.ClearTask(
                                 taskId = taskId,
@@ -152,7 +162,7 @@ fun HomeScreenWithState(
                 seeAllClicked = {}
             ) {
                 MyDiarySegment(
-                    screenState = screenState.value,
+                    screenState = screenState.value!!,
                     onDeleteButtonClicked = { itemId, itemIndex ->
                         viewModel.executeEvent(
                             EventType.DeleteDiaryEntry(
@@ -160,6 +170,7 @@ fun HomeScreenWithState(
                                 index = itemIndex
                             )
                         )
+                        deleteDiaryEntryDialogState = !deleteDiaryEntryDialogState
                     },
                     onDiarySwitchChanged = { id, index, switcherState ->
                         viewModel.executeEvent(
@@ -168,6 +179,34 @@ fun HomeScreenWithState(
                             )
                         )
                     })
+            }
+        }
+
+        when {
+            deleteDiaryEntryDialogState -> {
+                ConformationDialog(
+                    modifier = Modifier,
+                    onDismissRequest = {
+                        deleteDiaryEntryDialogState = !deleteDiaryEntryDialogState
+                    },
+                    onConfirmation = { },
+                    headerText = stringResource(id = AppR.string.info_delete_node_question),
+                    dialogText = stringResource(id = AppR.string.warning_delete),
+                    dismissButtonText = stringResource(id = AppR.string.cancel_button),
+                    confirmButtonText = stringResource(id = AppR.string.confirm_button)
+                )
+            }
+
+            clearTaskDialogState -> {
+                ConformationDialog(
+                    modifier = Modifier,
+                    onDismissRequest = { clearTaskDialogState = !clearTaskDialogState },
+                    onConfirmation = { /*TODO*/ },
+                    headerText = stringResource(id = AppR.string.info_delete_task_question),
+                    dialogText = stringResource(id = AppR.string.warning_delete),
+                    dismissButtonText = stringResource(id = AppR.string.cancel_button),
+                    confirmButtonText = stringResource(id = AppR.string.confirm_button)
+                )
             }
         }
     }
@@ -199,14 +238,14 @@ fun HomeScreenDataSegment(
 fun MyPlanSegment(
     screenState: HomeUiState,
     onPlanSwitcherChange: (Int, Int, Boolean) -> Unit,
-    dropdownMenuDelete: (itemId: Int, itemIndex: Int) -> Unit,
+    dropdownMenuDuplicate: (itemId: Int, itemIndex: Int) -> Unit,
     dropdownMenuClear: (itemId: Int, itemIndex: Int) -> Unit
 ) {
-    if (screenState is HomeUiState.FilledScreen && screenState.taskList.isNotEmpty()) {
+    if (screenState.taskList.isNotEmpty()) {
         PlanPager(
             screenState.taskList,
             onSwitcherChange = onPlanSwitcherChange,
-            dropdownMenuDelete = dropdownMenuDelete,
+            dropdownMenuDuplicate = dropdownMenuDuplicate,
             dropdownMenuClear = dropdownMenuClear
         )
     } else {
@@ -220,7 +259,7 @@ fun MyDiarySegment(
     onDiarySwitchChanged: (Int, Int, Boolean) -> Unit,
     onDeleteButtonClicked: (itemId: Int, itemIndex: Int) -> Unit
 ) {
-    if (screenState is HomeUiState.FilledScreen && screenState.diaryList.isNotEmpty()) {
+    if (screenState.diaryList.isNotEmpty()) {
         DiaryLayout(
             screenState.diaryList, onSwitcherChange = onDiarySwitchChanged,
             onDeleteButtonClicked = onDeleteButtonClicked
@@ -236,9 +275,9 @@ fun MyDiarySegment(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlanPager(
-    taskList: ArrayList<Task>,
+    taskList: List<Task>,
     onSwitcherChange: (Int, Int, Boolean) -> Unit,
-    dropdownMenuDelete: (itemId: Int, itemIndex: Int) -> Unit,
+    dropdownMenuDuplicate: (itemId: Int, itemIndex: Int) -> Unit,
     dropdownMenuClear: (itemId: Int, itemIndex: Int) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { taskList.size }, initialPage = 0)
@@ -257,7 +296,7 @@ fun PlanPager(
                 stringResource(id = AppR.string.duplicate_item_menu),
                 R.drawable.icon_duplicate
             ) {
-                dropdownMenuDelete(
+                dropdownMenuDuplicate(
                     taskList[page].id,
                     page
                 )
@@ -298,12 +337,11 @@ fun PlanPager(
 
 @Composable
 fun DiaryLayout(
-    diaryEntryList: ArrayList<DiaryEntry>,
+    diaryEntryList: List<DiaryEntry>,
     onDeleteButtonClicked: (itemId: Int, itemIndex: Int) -> Unit,
     onSwitcherChange: (Int, Int, Boolean) -> Unit
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(count = 1),
+    LazyColumn(
         modifier = Modifier
             .padding(horizontal = 28.dp)
             .fillMaxSize()
@@ -426,8 +464,8 @@ fun HomeScreenWithPlanPreview() {
     InTouchTheme {
         val screenState = rememberSaveable {
             mutableStateOf(
-                HomeUiState.FilledScreen(
-                    taskList = arrayListOf
+                HomeUiState(
+                    taskList = mutableStateListOf
                         (
                         Task(
                             id = 1,
@@ -442,7 +480,7 @@ fun HomeScreenWithPlanPreview() {
                             description = "aboba"
                         )
                     ),
-                    diaryList = arrayListOf(
+                    diaryList = mutableStateListOf(
                     )
                 )
             )
@@ -456,7 +494,7 @@ fun HomeScreenWithPlanPreview() {
 fun HomeScreenEmptyPreview() {
     InTouchTheme {
         val screenState = remember {
-            mutableStateOf(HomeUiState.Empty)
+            mutableStateOf(HomeUiState())
         }
         HomeScreenWithState(screenState = screenState)
     }
@@ -468,10 +506,10 @@ fun HomeScreenWithDiaryPreview() {
     InTouchTheme {
         val screenState = remember {
             mutableStateOf(
-                HomeUiState.FilledScreen(
-                    taskList = arrayListOf(
+                HomeUiState(
+                    taskList = mutableStateListOf(
                     ),
-                    diaryList = arrayListOf(
+                    diaryList = mutableStateListOf(
                         DiaryEntry(
                             id = 1,
                             data = "13, jul",
@@ -503,8 +541,8 @@ fun HomeScreenWithDiaryPreview() {
 fun HomeScreenFullPreview() {
     val screenState = remember {
         mutableStateOf(
-            HomeUiState.FilledScreen(
-                taskList = arrayListOf(
+            HomeUiState(
+                taskList = mutableStateListOf(
                     Task(
                         id = 1,
                         status = Status.TO_DO,
@@ -518,7 +556,7 @@ fun HomeScreenFullPreview() {
                         description = "aboba"
                     )
                 ),
-                diaryList = arrayListOf(
+                diaryList = mutableStateListOf(
                     DiaryEntry(
                         id = 1,
                         data = "13, jul",

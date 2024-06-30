@@ -1,20 +1,11 @@
 package care.intouch.app.feature.home.presentation.models
 
-sealed class HomeUiState(
-    val isSeeAllPlanVisible: Boolean,
-    val isDiaryListEmpty: Boolean
-) {
-    data object Empty : HomeUiState(
-        isSeeAllPlanVisible = false,
-        isDiaryListEmpty = false
-    )
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
-    data class FilledScreen(
-        val taskList: ArrayList<Task>,
-        val diaryList: ArrayList<DiaryEntry>,
-    ) :
-        HomeUiState(
-            isSeeAllPlanVisible = taskList.isNotEmpty(),
-            isDiaryListEmpty = diaryList.isNotEmpty()
-        )
-}
+data class HomeUiState(
+    val taskList: SnapshotStateList<Task> = mutableStateListOf(),
+    val diaryList: SnapshotStateList<DiaryEntry> = mutableStateListOf(),
+    val isSeeAllPlanVisible: Boolean = taskList.isNotEmpty(),
+    val isDiaryListEmpty: Boolean = diaryList.isNotEmpty()
+)
