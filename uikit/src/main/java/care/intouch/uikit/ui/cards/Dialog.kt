@@ -1,4 +1,4 @@
-package care.intouch.uikit.ui
+package care.intouch.uikit.ui.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

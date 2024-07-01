@@ -28,13 +28,19 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             taskList = mutableStateListOf(
                 Task(
                     id = 1,
-                    status = Status.TO_DO,
+                    status = Status.IN_PROGRESS,
                     sharedWithDoc = false,
-                    description = "abobaлфвыадловыалвоадаодылваоыдлваовыдлаоывлаодвыдалоывлаоывдалофывдлаоывдлаоывдлоаывлдаоывдлаоывдлаоывдлаоывфдлоафы"
+                    description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
                 ),
                 Task(
                     id = 1,
-                    status = Status.TO_DO,
+                    status = Status.IN_PROGRESS,
+                    sharedWithDoc = false,
+                    description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
+                ),
+                Task(
+                    id = 1,
+                    status = Status.IN_PROGRESS,
                     sharedWithDoc = false,
                     description = "aboba"
                 )

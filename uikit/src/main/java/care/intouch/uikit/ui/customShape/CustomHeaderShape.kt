@@ -1,6 +1,5 @@
-package care.intouch.app.feature.home.presentation.ui
+package care.intouch.uikit.ui.customShape
 
-import android.graphics.drawable.shapes.Shape
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline

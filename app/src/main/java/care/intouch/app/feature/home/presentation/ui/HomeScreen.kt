@@ -51,10 +51,11 @@ import care.intouch.app.feature.home.presentation.models.Task
 import care.intouch.uikit.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.ConformationDialog
+import care.intouch.uikit.ui.cards.ConformationDialog
 import care.intouch.uikit.ui.cards.DropdownMenuItemsPlanCard
 import care.intouch.uikit.ui.cards.NoteCards
 import care.intouch.uikit.ui.cards.PlanCard
+import care.intouch.uikit.ui.customShape.CustomHeaderShape
 import care.intouch.app.R as AppR
 
 @Composable
@@ -344,6 +345,16 @@ fun PlanPager(
         PlanCard(
             chipText = StringVO.Plain(stringResource(id = taskList[page].status.stringId)),
             text = taskList[page].description,
+            chipColors = when (taskList[page].status) {
+                Status.IN_PROGRESS -> InTouchTheme.colors.textBlue
+                Status.DONE -> InTouchTheme.colors.accentGreen
+                else -> InTouchTheme.colors.accentBeige
+            },
+            chipTextColor = when (taskList[page].status) {
+                Status.IN_PROGRESS -> InTouchTheme.colors.input.copy(alpha = 0.85f)
+                Status.DONE -> InTouchTheme.colors.input.copy(alpha = 0.85f)
+                else -> InTouchTheme.colors.textGreen.copy(alpha = 0.4f)
+            },
             isSettingsClicked = dropDownMenu,
             onClickSetting = { dropDownMenu = !dropDownMenu },
             dropdownMenuItemsList = menuItems,
@@ -579,9 +590,15 @@ fun HomeScreenFullPreview() {
                 taskList = mutableStateListOf(
                     Task(
                         id = 1,
-                        status = Status.TO_DO,
+                        status = Status.IN_PROGRESS,
                         sharedWithDoc = false,
-                        description = "abobaлфвыадловыалвоадаодылваоыдлваовыдлаоывлаодвыдалоывлаоывдалофывдлаоывдлаоывдлоаывлдаоывдлаоывдлаоывдлаоывфдлоафы"
+                        description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
+                    ),
+                    Task(
+                        id = 1,
+                        status = Status.IN_PROGRESS,
+                        sharedWithDoc = false,
+                        description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
                     ),
                     Task(
                         id = 1,
@@ -594,7 +611,7 @@ fun HomeScreenFullPreview() {
                     DiaryEntry(
                         id = 1,
                         data = "13, jul",
-                        note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                        note = "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ",
                         moodList = listOf(
                             Mood(name = "Bad"),
                             Mood(name = "Loneliness"),
@@ -605,7 +622,7 @@ fun HomeScreenFullPreview() {
                     DiaryEntry(
                         id = 1,
                         data = "13, jul",
-                        note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                        note = "Lorem Ipsum dolor sit amet Lorem IpsumНевероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ",
                         moodList = listOf(Mood(name = "Bad")),
                         sharedWithDoc = false
                     )
