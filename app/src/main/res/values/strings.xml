@@ -165,4 +165,5 @@
     <string name="satisfaction_clarifying_emotional">Satisfaction</string>
     <string name="self_love_clarifying_emotional">Self-love</string>
     <string name="euphoria_clarifying_emotional">Euphoria</string>
+    <string name="diary_introduction_text">"Dear  %1$s,\n​\nCapture your emotional experiences \nand thoughtfully analyze situations.\n\nJournal is designed to help you reflect on your emotional experiences and gain insights into your reactions to various situations. "</string>
 </resources>
