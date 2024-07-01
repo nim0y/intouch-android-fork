@@ -60,32 +60,43 @@ fun NoteCards(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            modifier = Modifier.padding(start = 17.dp, top = 21.dp)
-        ) {
-            Text(
-                text = dateText.substringBefore(dateTextDivider),
-                color = dateColor,
-                style = dateTextStyle
-            )
-            Text(
-                modifier = Modifier.padding(top = 2.dp),
-                text = dateText.substringAfter(dateTextDivider),
-                color = dateColor,
-                style = dateTextStyle
-            )
+        Column(modifier = Modifier.padding(start = 12.dp, top = 23.dp))
+        {
+            Box(
+                modifier = Modifier.width(42.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = dateText.substringBefore(dateTextDivider),
+                    color = dateColor,
+                    style = dateTextStyle
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .width(42.dp)
+                    .padding(top = 1.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = dateText.substringAfter(dateTextDivider),
+                    color = dateColor,
+                    style = dateTextStyle
+                )
+            }
         }
 
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(start = 19.dp, end = 12.dp),
+                .padding(start = 10.dp, end = 12.dp),
             horizontalAlignment = Alignment.Start
         ) {
 
             Row(
                 modifier = Modifier
                     .padding(top = 12.dp)
+                    .fillMaxWidth()
                     .weight(1f),
                 verticalAlignment = Alignment.Top
             ) {
