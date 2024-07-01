@@ -1,13 +1,10 @@
 package care.intouch.app.feature.home.presentation.models
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-
 data class HomeUiState(
-    val taskList: SnapshotStateList<Task> = mutableStateListOf(),
-    val diaryList: SnapshotStateList<DiaryEntry> = mutableStateListOf(),
+    val taskList: List<Task> = emptyList(),
+    val diaryList: List<DiaryEntry> = emptyList(),
     val isSeeAllPlanVisible: Boolean = taskList.isNotEmpty(),
+    val isSeeAllPlanEmpty: Boolean = taskList.isNotEmpty(),
+    val isDiaryListVisible: Boolean = diaryList.isNotEmpty(),
     val isDiaryListEmpty: Boolean = diaryList.isNotEmpty(),
-    val deleteDiaryEntryDialogState: Boolean=false,
-    val clearTaskDialogState: Boolean=false
 )

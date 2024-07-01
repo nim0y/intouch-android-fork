@@ -23,7 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -42,8 +42,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.home.presentation.HomeViewModel
+import care.intouch.app.feature.home.presentation.models.DialogState
 import care.intouch.app.feature.home.presentation.models.DiaryEntry
 import care.intouch.app.feature.home.presentation.models.EventType
+import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.app.feature.home.presentation.models.Mood
 import care.intouch.app.feature.home.presentation.models.Status
@@ -59,34 +61,57 @@ import care.intouch.uikit.ui.customShape.CustomHeaderShape
 import care.intouch.app.R as AppR
 
 @Composable
-fun HomeScreen(onSeeAllPlanClicked: () -> Unit, onSeeAllDiaryClicked: () -> Unit) {
+fun HomeScreen(
+    onSeeAllPlanClicked: () -> Unit,
+    onSeeAllDiaryClicked: () -> Unit
+) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val screenState = viewModel.getState().collectAsState()
-    HomeScreenWithState(
-        screenState = screenState,
-        viewModel = viewModel,
+    val screenState by viewModel.homeUIState.collectAsState()
+    var isDialogVisible by remember { mutableStateOf(false) }
+    var dialogState by remember { mutableStateOf(DialogState()) }
+
+    val sideEffect = viewModel.sideEffect
+
+    LaunchedEffect(key1 = sideEffect) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is HomeScreenSideEffect.ShowDialog -> {
+                    isDialogVisible = true
+                    dialogState = DialogState(
+                        title = effect.title,
+                        onConfirm = {
+                            effect.onConfirm()
+                            isDialogVisible = false
+                        },
+                        onDismiss = {
+                            effect.onConfirm()
+                            isDialogVisible = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    HomeScreen(
+        state = screenState,
+        onEvent = viewModel::executeEvent,
         onSeeAllPlanClicked = onSeeAllPlanClicked,
-        onSeeAllDiaryClicked = onSeeAllDiaryClicked
+        onSeeAllDiaryClicked = onSeeAllDiaryClicked,
+        isDialogVisible = isDialogVisible,
+        dialogState = dialogState
     )
 }
 
 @Composable
-fun HomeScreenWithState(
-    screenState: State<HomeUiState?>,
-    viewModel: HomeViewModel = hiltViewModel(),
+fun HomeScreen(
+    state: HomeUiState,
+    onEvent: (event: EventType) -> Unit,
     onSeeAllPlanClicked: () -> Unit,
-    onSeeAllDiaryClicked: () -> Unit
+    onSeeAllDiaryClicked: () -> Unit,
+    isDialogVisible: Boolean = false,
+    dialogState: DialogState = DialogState()
 ) {
-    val isSeeAllPlanVisible by rememberSaveable {
-        mutableStateOf(
-            screenState.value!!.isSeeAllPlanVisible
-        )
-    }
-    val isSeeAllDiaryClickable by rememberSaveable {
-        mutableStateOf(
-            screenState.value!!.isDiaryListEmpty
-        )
-    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -115,26 +140,26 @@ fun HomeScreenWithState(
                 )
             }
 
-            HomeScreenDataSegment(
+            HomeScreenSegment(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.55f)
                     .padding(top = 28.dp),
-                isSeeAllPlanVisible,
+                isSeeAllVisible = state.isSeeAllPlanVisible,
                 titleText = stringResource(id = AppR.string.my_plan_sub_title),
                 seeAllClicked = { onSeeAllPlanClicked() }
             ) {
-                MyPlanSegment(
-                    screenState = screenState.value!!,
+                MyPlanCards(
+                    screenState = state,
                     onPlanSwitcherChange = { id, index, switcherState ->
-                        viewModel.executeEvent(
-                            EventType.ShearTask(
+                        onEvent(
+                            EventType.ShareTask(
                                 taskId = id, index = index, isShared = switcherState
                             )
                         )
                     },
                     dropdownMenuDuplicate = { taskId, taskIndex ->
-                        viewModel.executeEvent(
+                        onEvent(
                             EventType.DuplicateTask(
                                 taskId = taskId,
                                 index = taskIndex
@@ -142,30 +167,29 @@ fun HomeScreenWithState(
                         )
                     },
                     dropdownMenuClear = { taskId, taskIndex ->
-                        viewModel.executeEvent(EventType.OpenCloseClearTaskDialog)
-                        viewModel.executeEvent(
+                        onEvent(
                             EventType.ClearTask(
                                 taskId = taskId,
                                 index = taskIndex
                             )
                         )
-                    })
+                    }
+                )
             }
 
-            HomeScreenDataSegment(
+            HomeScreenSegment(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(1f)
                     .padding(top = 28.dp),
-                isSeeAllDiaryClickable,
+                isSeeAllVisible = state.isDiaryListVisible,
                 titleText = stringResource(id = AppR.string.my_diary_sub_title),
                 seeAllClicked = { onSeeAllDiaryClicked() }
             ) {
-                MyDiarySegment(
-                    screenState = screenState.value!!,
+                MyDiaryCards(
+                    screenState = state,
                     onDeleteButtonClicked = { itemId, itemIndex ->
-                        viewModel.executeEvent(EventType.OpenCloseDeleteEntryDialog)
-                        viewModel.executeEvent(
+                        onEvent(
                             EventType.DeleteDiaryEntry(
                                 entryId = itemId,
                                 index = itemIndex
@@ -173,53 +197,33 @@ fun HomeScreenWithState(
                         )
                     },
                     onDiarySwitchChanged = { id, index, switcherState ->
-                        viewModel.executeEvent(
-                            EventType.ShearDiaryEntry(
-                                entryId = id, index = index, isShared = switcherState
+                        onEvent(
+                            EventType.ShareDiaryEntry(
+                                entryId = id,
+                                index = index,
+                                isShared = switcherState
                             )
                         )
-                    })
+                    }
+                )
             }
         }
 
-        when {
-            screenState.value!!.deleteDiaryEntryDialogState -> {
-                FoldingScreen()
-                ConformationDialog(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(horizontal = 28.dp),
-                    onDismissRequest = {
-                        viewModel.executeEvent(EventType.CancelJob)
-                        viewModel.executeEvent(EventType.OpenCloseDeleteEntryDialog)
-                    },
-                    onConfirmation = { viewModel.executeEvent(EventType.OpenCloseDeleteEntryDialog) },
-                    headerText = stringResource(id = AppR.string.info_delete_node_question),
-                    dialogText = stringResource(id = AppR.string.warning_delete),
-                    dismissButtonText = stringResource(id = AppR.string.cancel_button),
-                    confirmButtonText = stringResource(id = AppR.string.confirm_button)
-                )
-            }
-
-            screenState.value!!.clearTaskDialogState -> {
-                FoldingScreen()
-                ConformationDialog(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(horizontal = 28.dp),
-                    onDismissRequest = {
-                        viewModel.executeEvent(EventType.CancelJob)
-                        viewModel.executeEvent(EventType.OpenCloseClearTaskDialog)
-                    },
-                    onConfirmation = {
-                        viewModel.executeEvent(EventType.OpenCloseClearTaskDialog)
-                    },
-                    headerText = stringResource(id = AppR.string.info_delete_task_question),
-                    dialogText = stringResource(id = AppR.string.warning_delete),
-                    dismissButtonText = stringResource(id = AppR.string.cancel_button),
-                    confirmButtonText = stringResource(id = AppR.string.confirm_button)
-                )
-            }
+        if (isDialogVisible) {
+            FoldingScreen()
+            ConformationDialog(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 28.dp),
+                onDismissRequest = {
+                    dialogState.onDismiss()
+                },
+                onConfirmation = { dialogState.onConfirm() },
+                headerText = dialogState.title.value(),
+                dialogText = stringResource(id = AppR.string.warning_delete),
+                dismissButtonText = stringResource(id = AppR.string.cancel_button),
+                confirmButtonText = stringResource(id = AppR.string.confirm_button)
+            )
         }
     }
 }
@@ -235,12 +239,12 @@ fun FoldingScreen() {
 }
 
 @Composable
-fun HomeScreenDataSegment(
+fun HomeScreenSegment(
     modifier: Modifier,
-    isSeeAllClickable: Boolean,
+    isSeeAllVisible: Boolean,
     titleText: String,
     seeAllClicked: () -> Unit,
-    dataSegment: @Composable () -> Unit
+    content: @Composable () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -249,15 +253,15 @@ fun HomeScreenDataSegment(
     ) {
         SubTitleLine(
             titleText = titleText,
-            isSubTextClickable = isSeeAllClickable,
+            isSubTextEnabled = isSeeAllVisible,
             seeAllClicked = seeAllClicked
         )
-        dataSegment()
+        content()
     }
 }
 
 @Composable
-fun MyPlanSegment(
+fun MyPlanCards(
     screenState: HomeUiState,
     onPlanSwitcherChange: (Int, Int, Boolean) -> Unit,
     dropdownMenuDuplicate: (itemId: Int, itemIndex: Int) -> Unit,
@@ -276,7 +280,7 @@ fun MyPlanSegment(
 }
 
 @Composable
-fun MyDiarySegment(
+fun MyDiaryCards(
     screenState: HomeUiState,
     onDiarySwitchChanged: (Int, Int, Boolean) -> Unit,
     onDeleteButtonClicked: (itemId: Int, itemIndex: Int) -> Unit
@@ -290,8 +294,6 @@ fun MyDiarySegment(
     } else {
         DiaryPlaceHolder()
     }
-
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -303,7 +305,6 @@ fun PlanPager(
     dropdownMenuClear: (itemId: Int, itemIndex: Int) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { taskList.size }, initialPage = 0)
-
 
     HorizontalPager(
         state = pagerState,
@@ -338,7 +339,7 @@ fun PlanPager(
                     dropDownMenu = !dropDownMenu
                 })
         var toggleState by rememberSaveable {
-            mutableStateOf(taskList[page].sharedWithDoc)
+            mutableStateOf(taskList[page].isSharedWithDoctor)
         }
 
 
@@ -385,7 +386,7 @@ fun DiaryLayout(
     ) {
         itemsIndexed(diaryEntryList) { index, item ->
             var toggleState by rememberSaveable {
-                mutableStateOf(item.sharedWithDoc)
+                mutableStateOf(item.isSharedWithDoctor)
             }
             NoteCards(
                 modifier = Modifier.padding(top = 16.dp),
@@ -417,11 +418,11 @@ fun PlanPlaceHolder() {
             text = stringResource(id = AppR.string.empty_plan),
             style = InTouchTheme.typography.bodySemibold,
             color = InTouchTheme.colors.textGreen,
-            modifier = Modifier.padding(horizontal = 35.dp, vertical = 22.dp)
+            modifier = Modifier.padding(horizontal = 36.dp, vertical = 22.dp)
         )
         Image(
             modifier = Modifier
-                .padding(top = 7.dp, bottom = 28.dp)
+                .padding(top = 8.dp, bottom = 28.dp)
                 .fillMaxWidth(0.5F),
             painter = painterResource(id = R.drawable.illustration_empty),
             contentDescription = "empty plan placeholder"
@@ -461,11 +462,14 @@ fun DiaryPlaceHolder() {
             )
         }
     }
-
 }
 
 @Composable
-fun SubTitleLine(titleText: String, isSubTextClickable: Boolean, seeAllClicked: () -> Unit) {
+fun SubTitleLine(
+    titleText: String,
+    isSubTextEnabled: Boolean,
+    seeAllClicked: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -478,14 +482,14 @@ fun SubTitleLine(titleText: String, isSubTextClickable: Boolean, seeAllClicked: 
             style = InTouchTheme.typography.titleMedium,
             color = InTouchTheme.colors.textBlue
         )
-        AnimatedVisibility(visible = isSubTextClickable) {
+        AnimatedVisibility(visible = isSubTextEnabled) {
             Text(
                 text = stringResource(id = AppR.string.see_all),
                 style = InTouchTheme.typography.subTitle,
                 color = InTouchTheme.colors.textBlue,
                 modifier = Modifier
                     .alpha(0.5F)
-                    .clickable(enabled = isSubTextClickable) {
+                    .clickable(enabled = isSubTextEnabled) {
                         seeAllClicked()
                     }
             )
@@ -498,31 +502,29 @@ fun SubTitleLine(titleText: String, isSubTextClickable: Boolean, seeAllClicked: 
 @Preview(showBackground = true)
 fun HomeScreenWithPlanPreview() {
     InTouchTheme {
-        val screenState = rememberSaveable {
+        val screenState by remember {
             mutableStateOf(
                 HomeUiState(
-                    taskList = mutableStateListOf
-                        (
+                    taskList = listOf(
                         Task(
                             id = 1,
                             status = Status.TO_DO,
-                            sharedWithDoc = false,
+                            isSharedWithDoctor = false,
                             description = "aboba лфвыадловыалвоадаодылваоыдлваовыдлаоывлаодвыдалоывлаоывдалофывдлаоывдлаоывдлоаывлдаоывдлаоывдлаоывдлаоывфдлоафы"
                         ),
                         Task(
                             id = 1,
                             status = Status.TO_DO,
-                            sharedWithDoc = false,
+                            isSharedWithDoctor = false,
                             description = "aboba"
                         )
                     ),
-                    diaryList = mutableStateListOf(
-                    )
                 )
             )
         }
-        HomeScreenWithState(
-            screenState = screenState,
+        HomeScreen(
+            state = screenState,
+            onEvent = { },
             onSeeAllPlanClicked = {},
             onSeeAllDiaryClicked = {})
     }
@@ -532,11 +534,9 @@ fun HomeScreenWithPlanPreview() {
 @Preview(showBackground = true)
 fun HomeScreenEmptyPreview() {
     InTouchTheme {
-        val screenState = remember {
-            mutableStateOf(HomeUiState())
-        }
-        HomeScreenWithState(
-            screenState = screenState,
+        HomeScreen(
+            state = HomeUiState(),
+            onEvent = { },
             onSeeAllPlanClicked = {},
             onSeeAllDiaryClicked = {})
     }
@@ -546,12 +546,10 @@ fun HomeScreenEmptyPreview() {
 @Preview(showBackground = true)
 fun HomeScreenWithDiaryPreview() {
     InTouchTheme {
-        val screenState = remember {
+        val screenState by remember {
             mutableStateOf(
                 HomeUiState(
-                    taskList = mutableStateListOf(
-                    ),
-                    diaryList = mutableStateListOf(
+                    diaryList = listOf(
                         DiaryEntry(
                             id = 1,
                             data = "13, jul",
@@ -561,21 +559,22 @@ fun HomeScreenWithDiaryPreview() {
                                 Mood(name = "Loneliness"),
                                 Mood(name = "Loneliness")
                             ),
-                            sharedWithDoc = false
+                            isSharedWithDoctor = false
                         ),
                         DiaryEntry(
                             id = 1,
                             data = "13, jul",
                             note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
                             moodList = listOf(Mood(name = "Bad")),
-                            sharedWithDoc = false
+                            isSharedWithDoctor = false
                         )
                     )
                 )
             )
         }
-        HomeScreenWithState(
-            screenState = screenState,
+        HomeScreen(
+            state = screenState,
+            onEvent = { },
             onSeeAllPlanClicked = {},
             onSeeAllDiaryClicked = {})
     }
@@ -584,26 +583,26 @@ fun HomeScreenWithDiaryPreview() {
 @Composable
 @Preview(showBackground = true)
 fun HomeScreenFullPreview() {
-    val screenState = remember {
+    val screenState by remember {
         mutableStateOf(
             HomeUiState(
                 taskList = mutableStateListOf(
                     Task(
                         id = 1,
                         status = Status.IN_PROGRESS,
-                        sharedWithDoc = false,
+                        isSharedWithDoctor = false,
                         description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
                     ),
                     Task(
                         id = 1,
                         status = Status.IN_PROGRESS,
-                        sharedWithDoc = false,
+                        isSharedWithDoctor = false,
                         description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
                     ),
                     Task(
                         id = 1,
                         status = Status.IN_PROGRESS,
-                        sharedWithDoc = false,
+                        isSharedWithDoctor = false,
                         description = "aboba"
                     )
                 ),
@@ -617,14 +616,14 @@ fun HomeScreenFullPreview() {
                             Mood(name = "Loneliness"),
                             Mood(name = "Loneliness")
                         ),
-                        sharedWithDoc = false
+                        isSharedWithDoctor = false
                     ),
                     DiaryEntry(
                         id = 1,
                         data = "13, jul",
                         note = "Lorem Ipsum dolor sit amet Lorem IpsumНевероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ",
                         moodList = listOf(Mood(name = "Bad")),
-                        sharedWithDoc = false
+                        isSharedWithDoctor = false
                     )
                 )
             )
@@ -632,11 +631,10 @@ fun HomeScreenFullPreview() {
     }
 
     InTouchTheme {
-        HomeScreenWithState(
-            screenState = screenState,
+        HomeScreen(
+            state = screenState,
+            onEvent = { },
             onSeeAllPlanClicked = {},
             onSeeAllDiaryClicked = {})
     }
-
-
 }

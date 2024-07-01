@@ -9,5 +9,5 @@ data class DiaryEntry(
     val data: String,
     val note: String,
     val moodList: List<Mood>,
-    var sharedWithDoc: Boolean
+    val isSharedWithDoctor: Boolean
 ): Parcelable

@@ -1,151 +1,236 @@
 package care.intouch.app.feature.home.presentation
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import care.intouch.app.R
 import care.intouch.app.feature.home.presentation.models.DiaryEntry
 import care.intouch.app.feature.home.presentation.models.EventType
+import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
+import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.app.feature.home.presentation.models.Mood
 import care.intouch.app.feature.home.presentation.models.Status
 import care.intouch.app.feature.home.presentation.models.Task
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import care.intouch.uikit.common.StringVO
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@HiltViewModel
+@HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    private var homeState = MutableStateFlow(HomeUiState())
-    private val taskList = mutableStateListOf<Task>()
-    private val diaryList = mutableStateListOf<DiaryEntry>()
-    private var dialogEventJob: Job? = null
+
+    private val _stateScreen = MutableStateFlow(HomeScreenState())
+    private val stateScreen: StateFlow<HomeScreenState> = _stateScreen.asStateFlow()
+
+    private val _homeUIState = MutableStateFlow(HomeUiState())
+    val homeUIState: StateFlow<HomeUiState> = _homeUIState.asStateFlow()
+
+    private val _sideEffect = MutableSharedFlow<HomeScreenSideEffect>()
+    val sideEffect: SharedFlow<HomeScreenSideEffect> = _sideEffect.asSharedFlow()
 
     init {
-        homeState.value = HomeUiState(
-            taskList = mutableStateListOf(
-                Task(
-                    id = 1,
-                    status = Status.IN_PROGRESS,
-                    sharedWithDoc = false,
-                    description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
-                ),
-                Task(
-                    id = 1,
-                    status = Status.IN_PROGRESS,
-                    sharedWithDoc = false,
-                    description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
-                ),
-                Task(
-                    id = 1,
-                    status = Status.IN_PROGRESS,
-                    sharedWithDoc = false,
-                    description = "aboba"
-                )
-            ),
-            diaryList = mutableStateListOf(
-                DiaryEntry(
-                    id = 1,
-                    data = "13, jul",
-                    note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-                    moodList = listOf(Mood(name = "Bad")),
-                    sharedWithDoc = false
-                ),
-                DiaryEntry(
-                    id = 1,
-                    data = "13, jul",
-                    note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-                    moodList = listOf(Mood(name = "Bad")),
-                    sharedWithDoc = false
-                )
-            )
-        )
-        taskList.addAll(homeState.value.taskList)
-        diaryList.addAll(homeState.value.diaryList)
+        fetchTasks()
+        fetchDiary()
+
+        viewModelScope.launch {
+            stateScreen.collect { state ->
+                _homeUIState.update {
+                    it.copy(
+                        taskList = state.taskList,
+                        diaryList = state.diaryList
+                    )
+                }
+            }
+        }
     }
 
-    fun getState(): StateFlow<HomeUiState> = homeState
+    private fun getState(): HomeScreenState = _stateScreen.value
 
-    private fun getCurrentStatus(): HomeUiState = homeState.value
     fun executeEvent(event: EventType) {
         when (event) {
-            is EventType.DuplicateTask -> duplicateTask(event.taskId, event.index)
-            is EventType.ClearTask -> clearTask(event.taskId, event.index)
-            is EventType.ShearTask -> shearTask(event.taskId, event.index, event.isShared)
-            is EventType.ShearDiaryEntry -> shearEntry(event.entryId, event.index, event.isShared)
-            is EventType.DeleteDiaryEntry -> deleteDiaryEntry(event.entryId, event.index)
-            is EventType.OpenCloseDeleteEntryDialog -> openCloseDeleteEntryDialog()
-            is EventType.OpenCloseClearTaskDialog -> openCloseClearTaskDialog()
-            is EventType.CancelJob -> cancelJob()
+            is EventType.DuplicateTask -> {
+                duplicateTask(
+                    taskId = event.taskId,
+                    index = event.index
+                )
+            }
+
+            is EventType.ClearTask -> {
+                clearTask(
+                    taskId = event.taskId,
+                    index = event.index
+                )
+            }
+
+            is EventType.ShareTask -> {
+                shareTask(
+                    taskId = event.taskId,
+                    index = event.index, event.isShared
+                )
+            }
+
+            is EventType.ShareDiaryEntry -> {
+                shareDiaryEntry(
+                    diaryEntryId = event.entryId,
+                    index = event.index,
+                    isShared = event.isShared
+                )
+            }
+
+            is EventType.DeleteDiaryEntry -> {
+                deleteDiaryEntry(
+                    diaryId = event.entryId,
+                    index = event.index
+                )
+            }
         }
     }
 
     private fun duplicateTask(taskId: Int, index: Int) {
-        val newItem = taskList[index]
-        taskList.add(newItem)
-        homeState.value = getCurrentStatus().copy(taskList = taskList)
+        val newItem = getState().taskList[index]
+        val newTaskList = getState().taskList.toMutableList()
+        newTaskList.add(newItem)
+        _stateScreen.update {
+            it.copy(taskList = newTaskList)
+        }
     }
 
     private fun clearTask(taskId: Int, index: Int) {
-        dialogEventJob = viewModelScope.launch {
-            while (true) {
-                if (!homeState.value.clearTaskDialogState) {
-                    val clearedTask = taskList[index].copy(
-                        status = Status.TO_DO,
-                        sharedWithDoc = false,
-                        description = ""
-                    )
-                    taskList.removeAt(index)
-                    taskList.add(index = 0, clearedTask)
-                    homeState.value = getCurrentStatus().copy(taskList = taskList)
-                    break
-                }
-                delay(100L)
+        showDialog(
+            title = StringVO.Resource(R.string.info_delete_task_question),
+            onConfirm = {
+                handleClearTask(taskId, index)
+            },
+            onDismiss = {}
+        )
+    }
 
-            }
+    private fun handleClearTask(taskId: Int, index: Int) {
+        val newTaskList = getState().taskList.toMutableList()
+        newTaskList[index] = newTaskList[index]
+            .copy(
+                isSharedWithDoctor = false,
+                status = Status.TO_DO,
+                description = ""
+            )
+        _stateScreen.update {
+            it.copy(taskList = newTaskList)
         }
-
     }
 
-    private fun shearTask(taskId: Int, index: Int, shareStatus: Boolean) {
-        taskList[index].sharedWithDoc = shareStatus
-        homeState.value = getCurrentStatus().copy(taskList = taskList)
+    private fun shareTask(taskId: Int, index: Int, shareStatus: Boolean) {
+        val sharedTask = getState()
+            .taskList[index]
+            .copy(isSharedWithDoctor = shareStatus)
 
+        val taskList = getState().taskList.toMutableList()
+        taskList[index] = sharedTask
+
+        _stateScreen.update { state ->
+            state.copy(taskList = taskList)
+        }
     }
 
-    private fun shearEntry(entryId: Int, index: Int, shareStatus: Boolean) {
-        diaryList[index].sharedWithDoc = shareStatus
-        homeState.value = getCurrentStatus().copy(diaryList = diaryList)
+    private fun shareDiaryEntry(diaryEntryId: Int, index: Int, isShared: Boolean) {
+        val sharedTask = getState()
+            .diaryList[index]
+            .copy(isSharedWithDoctor = isShared)
+
+        val diaryList = getState().diaryList.toMutableList()
+        diaryList[index] = sharedTask
+
+        _stateScreen.update { state ->
+            state.copy(diaryList = diaryList)
+        }
     }
 
     private fun deleteDiaryEntry(diaryId: Int, index: Int) {
-        dialogEventJob = viewModelScope.launch {
-            while (true) {
-                if (!homeState.value.deleteDiaryEntryDialogState) {
-                    diaryList.removeAt(index)
-                    homeState.value = getCurrentStatus().copy(diaryList = diaryList)
-                    break
-                }
-                delay(100L)
-            }
+        showDialog(
+            title = StringVO.Resource(R.string.info_delete_node_question),
+            onConfirm = {
+                handleDeleteDiaryEntry(diaryId, index)
+            },
+            onDismiss = {}
+        )
+    }
+
+    private fun handleDeleteDiaryEntry(diaryId: Int, index: Int) {
+        val newDiaryList = getState().diaryList.toMutableList()
+        newDiaryList.removeAt(index)
+        _stateScreen.update {
+            it.copy(diaryList = newDiaryList)
         }
     }
 
-    private fun cancelJob() {
-        dialogEventJob?.cancel()
+    private fun fetchTasks() {
+        val taskList = listOf(
+            Task(
+                id = 1,
+                status = Status.IN_PROGRESS,
+                isSharedWithDoctor = false,
+                description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
+            ),
+            Task(
+                id = 1,
+                status = Status.IN_PROGRESS,
+                isSharedWithDoctor = false,
+                description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
+            ),
+            Task(
+                id = 1,
+                status = Status.IN_PROGRESS,
+                isSharedWithDoctor = false,
+                description = "aboba"
+            )
+        )
+        _stateScreen.update {
+            it.copy(taskList = taskList)
+        }
     }
 
-    private fun openCloseDeleteEntryDialog() {
-        homeState.value =
-            getCurrentStatus().copy(deleteDiaryEntryDialogState = !homeState.value.deleteDiaryEntryDialogState)
+    private fun fetchDiary() {
+        val diaryList = listOf(
+            DiaryEntry(
+                id = 1,
+                data = "13, jul",
+                note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                moodList = listOf(Mood(name = "Bad")),
+                isSharedWithDoctor = false
+            ),
+            DiaryEntry(
+                id = 1,
+                data = "13, jul",
+                note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                moodList = listOf(Mood(name = "Bad")),
+                isSharedWithDoctor = false
+            )
+        )
+        _stateScreen.update {
+            it.copy(diaryList = diaryList)
+        }
     }
 
-    private fun openCloseClearTaskDialog() {
-        homeState.value =
-            getCurrentStatus().copy(clearTaskDialogState = !homeState.value.clearTaskDialogState)
+    private fun showDialog(title: StringVO, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+        viewModelScope.launch {
+            _sideEffect.emit(
+                HomeScreenSideEffect.ShowDialog(
+                    title = title,
+                    onConfirm = onConfirm,
+                    onDismiss = onDismiss
+                )
+            )
+        }
     }
 }
+
+
+
 
 
