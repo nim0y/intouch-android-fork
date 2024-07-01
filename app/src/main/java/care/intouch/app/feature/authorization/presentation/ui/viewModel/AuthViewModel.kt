@@ -103,7 +103,7 @@ class AuthViewModule @Inject constructor(
 
     private fun loginByEmail(username: String, password: String) {
         viewModelScope.launch {
-            var message = when (val result = loginByEmailUC.invoke(username, password)) {
+            val message = when (val result = loginByEmailUC.invoke(username, password)) {
                 is Resource.Error -> result.error.message
                 is Resource.Success -> "Success"
             }

@@ -25,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -160,7 +159,7 @@ private fun AuthenticationScreen(
                     .align(Alignment.CenterHorizontally),
                 isEnabled =
                 state.login.isNotEmpty() and state.password.isNotEmpty() and !state.isErrorLogin and !state.isErrorPassword,
-                text = stringResource(care.intouch.app.R.string.login),
+                text = StringVO.Resource(care.intouch.app.R.string.login),
             )
             Spacer(modifier = Modifier.weight(1f))
             SecondaryButtonDark(
@@ -169,7 +168,7 @@ private fun AuthenticationScreen(
                     .align(Alignment.CenterHorizontally),
                 textStyle = InTouchTheme.typography.bodyBold,
                 isEnabled = true,
-                text = stringResource(id = care.intouch.app.R.string.forgot_password),
+                text = StringVO.Resource(care.intouch.app.R.string.forgot_password),
                 enableTextColor = InTouchTheme.colors.textGreen
             )
             SnackbarHost(snackbarHostState)
