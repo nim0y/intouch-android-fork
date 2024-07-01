@@ -3,6 +3,7 @@ package care.intouch.app.feature.authorization.presentation.ui.models
 import care.intouch.uikit.common.StringVO
 
 data class AuthScreenState(
+    val result: String = "",
     val password: String = "",
     val login: String = "",
     val loginCaption: StringVO = StringVO.Plain(""),

@@ -14,10 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,7 @@ import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
 import care.intouch.uikit.ui.buttons.SecondaryButtonDark
 import care.intouch.uikit.ui.textFields.PasswordTextField
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthenticationScreen(
@@ -62,6 +67,8 @@ private fun AuthenticationScreen(
     state: AuthScreenState,
     onEvent: (AuthenticationDataEvent) -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -140,10 +147,14 @@ private fun AuthenticationScreen(
             Spacer(modifier = Modifier.height(74.dp))
             PrimaryButtonGreen(
                 onClick = {
-                    onEvent(
-                        AuthenticationDataEvent.OnLoginButtonClicked
-                    )
-                    onLoginClick.invoke()
+                    onEvent(AuthenticationDataEvent.OnLoginButtonClicked)
+                    if (state.result == "Success") {
+                        onLoginClick.invoke()
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(state.result)
+                        }
+                    }
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
@@ -161,6 +172,7 @@ private fun AuthenticationScreen(
                 text = stringResource(id = care.intouch.app.R.string.forgot_password),
                 enableTextColor = InTouchTheme.colors.textGreen
             )
+            SnackbarHost(snackbarHostState)
             Spacer(modifier = Modifier.height(20.dp))
         }
     }

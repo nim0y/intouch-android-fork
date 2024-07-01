@@ -6,6 +6,7 @@ import care.intouch.app.feature.authorization.domain.useCase.GetAccountStateUC
 import care.intouch.app.feature.authorization.domain.useCase.LoginByEmailUC
 import care.intouch.app.feature.authorization.presentation.ui.models.AuthScreenState
 import care.intouch.app.feature.authorization.presentation.ui.models.AuthenticationDataEvent
+import care.intouch.app.feature.common.Resource
 import care.intouch.app.ui.uiKitSamples.samples.BLANC_STRING
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,7 @@ class AuthViewModule @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         AuthScreenState(
+            result = "",
             password = "",
             login = "",
             loginCaption = StringVO.Plain(""),
@@ -101,8 +103,15 @@ class AuthViewModule @Inject constructor(
 
     private fun loginByEmail(username: String, password: String) {
         viewModelScope.launch {
-            loginByEmailUC.invoke(username, password)
-            getAccountStateUC()
+            var message = when (val result = loginByEmailUC.invoke(username, password)) {
+                is Resource.Error -> result.error.message
+                is Resource.Success -> "Success"
+            }
+            _uiState.update { state ->
+                state.copy(
+                    result = message
+                )
+            }
         }
     }
 
@@ -168,7 +177,6 @@ class AuthViewModule @Inject constructor(
         if (password.firstOrNull { it.isDigit() } == null) return false
         if (password.filter { it.isLetter() }.firstOrNull { it.isUpperCase() } == null) return false
         if (password.filter { it.isLetter() }.firstOrNull { it.isLowerCase() } == null) return false
-        if (password.firstOrNull { !it.isLetterOrDigit() } == null) return false
 
         return true
     }

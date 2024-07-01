@@ -24,6 +24,7 @@ interface LoginByEmailUC {
                 is Resource.Success -> {
                     when (val userInformation = userRepository.getUser()) {
                         is Resource.Success -> {
+                            accountRepository.clearAccount()
                             accountRepository.createAccount(
                                 userInformation.data.id,
                                 result.data.accessToken,
