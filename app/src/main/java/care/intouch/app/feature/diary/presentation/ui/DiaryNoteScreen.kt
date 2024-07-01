@@ -11,11 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import care.intouch.app.R
 import care.intouch.app.feature.diary.DiaryViewModel
 import care.intouch.app.feature.diary.presentation.ui.models.DiaryChangeEvent
 import care.intouch.app.feature.diary.presentation.ui.models.DiaryDataState
@@ -65,7 +63,7 @@ private fun DiaryNoteScreen(
         PrimaryButtonGreen(
             onClick = { onMakeNoteClick.invoke() },
             modifier = Modifier.padding(bottom = 28.dp),
-            text = stringResource(id = R.string.make_note_button)
+            text = StringVO.Resource(care.intouch.app.R.string.make_note_button)
         )
 
         if (state.diaryDataState.noteList.isEmpty()) {

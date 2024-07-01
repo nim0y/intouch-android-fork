@@ -72,12 +72,12 @@ fun ConfirmDeleteDialog(
                         PrimaryButtonGreen(
                             modifier = Modifier,
                             onClick = { onConfirm() },
-                            text = confirmButtonText.value()
+                            text = confirmButtonText
                         )
                         SecondaryButtonDark(
                             modifier = Modifier,
                             onClick = { onCancel() },
-                            text = cancelButtonText.value()
+                            text = cancelButtonText
                         )
                     }
                 }

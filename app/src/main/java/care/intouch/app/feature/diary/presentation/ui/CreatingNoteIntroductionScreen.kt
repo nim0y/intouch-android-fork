@@ -63,7 +63,7 @@ fun CreatingNoteIntroductionScreen(
                 modifier = Modifier.padding(top = 30.dp),
                 onClick = { onNextClick.invoke() },
                 isEnabled = true,
-                text = nextButtonText.value()
+                text = nextButtonText
             )
         }
     }
