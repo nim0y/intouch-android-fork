@@ -25,20 +25,6 @@ import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
 import care.intouch.uikit.ui.buttons.SecondaryButtonDark
 
 @Composable
-fun DialogText(text: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.padding(4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            textAlign = TextAlign.Center,
-            style = InTouchTheme.typography.bodySemibold,
-            text = text
-        )
-    }
-}
-
-@Composable
 fun ConfirmDeleteDialog(
     modifier: Modifier = Modifier,
     onConfirm: () -> Unit,
@@ -67,8 +53,17 @@ fun ConfirmDeleteDialog(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    DialogText(deleteQuestion.value())
-                    DialogText(deleteWarning.value())
+                    Text(
+                        textAlign = TextAlign.Center,
+                        style = InTouchTheme.typography.bodySemibold,
+                        text = deleteQuestion.value()
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        textAlign = TextAlign.Center,
+                        style = InTouchTheme.typography.bodySemibold,
+                        text = deleteWarning.value()
+                    )
                     Spacer(modifier = Modifier.height(48.dp))
                     Column(
                         verticalArrangement = Arrangement.Center,
