@@ -11,6 +11,7 @@ import care.intouch.app.core.navigation.DiaryRouteBranch
 import care.intouch.app.core.navigation.Home
 import care.intouch.app.core.navigation.PasswordChange
 import care.intouch.app.core.navigation.Plan
+import care.intouch.app.core.navigation.PlanBottomNav
 import care.intouch.app.core.navigation.PlanRouteBranch
 import care.intouch.app.core.navigation.Profile
 import care.intouch.app.core.navigation.ProfileRouteBranch
@@ -31,10 +32,16 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
-        ) {
-
+    ) {
         composable(route = Home.route) {
-            HomeScreen()
+            HomeScreen(
+                onSeeAllPlanClicked = {
+                    navController.navigate(route = PlanBottomNav.route)
+                },
+                onSeeAllDiaryClicked = {
+                    navController.navigate(route = Diary.route)
+                }
+            )
         }
 
         composable(route = Plan.route) {

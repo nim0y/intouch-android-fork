@@ -3,7 +3,6 @@ package care.intouch.uikit.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,20 +35,23 @@ fun ConformationDialog(
 ) {
     Column(
         modifier = modifier
-            .background(backgroundColor)
-            .wrapContentSize()
-            .clip(RoundedCornerShape(20.dp)),
+            .clip(RoundedCornerShape(20.dp))
+            .background(backgroundColor),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            modifier = Modifier.padding(top = 48.dp),
+            modifier = Modifier
+                .padding(top = 48.dp)
+                .padding(horizontal = 28.dp),
             text = headerText,
             textAlign = TextAlign.Center,
             style = headerTextStyle,
             color = InTouchTheme.colors.textBlue
         )
         Text(
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .padding(horizontal = 28.dp),
             text = dialogText,
             textAlign = TextAlign.Center,
             style = dialogTextStyle,
@@ -58,8 +60,7 @@ fun ConformationDialog(
         IntouchButton(
             onClick = onConfirmation,
             modifier = Modifier
-                .padding(top = 48.dp)
-                .padding(horizontal = 50.dp),
+                .padding(top = 48.dp),
             text = confirmButtonText,
             textStyle = confirmButtonTextStyle
         )
@@ -78,7 +79,7 @@ fun ConformationDialog(
 fun ConformationDialogPreview() {
     InTouchTheme {
         ConformationDialog(
-            modifier = Modifier,
+            modifier = Modifier.padding(horizontal = 28.dp),
             onDismissRequest = { },
             onConfirmation = {},
             headerText = "Are you sure you want \n" +

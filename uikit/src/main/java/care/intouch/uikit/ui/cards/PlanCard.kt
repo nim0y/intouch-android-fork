@@ -99,15 +99,22 @@ fun PlanCard(
                 var selectedItemIndex by remember {
                     mutableIntStateOf(-1)
                 }
-                DropdownMenu(modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
-                    .background(InTouchTheme.colors.input),
+
+
+
+                DropdownMenu(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(InTouchTheme.colors.input),
                     offset = DpOffset(x = -(8.dp), y = -(28.dp)),
                     expanded = isSettingsClicked,
                     onDismissRequest = { onClickSetting.invoke(!isSettingsClicked) }) {
+
                     dropdownMenuItemsList.forEachIndexed { index, dropdownMenuItemsPlanCard ->
+
                         val interactionSource = remember { MutableInteractionSource() }
                         val isPressed by interactionSource.collectIsPressedAsState()
+
                         DropdownMenuItem(modifier = Modifier
                             .height(40.dp)
                             .width(144.dp)

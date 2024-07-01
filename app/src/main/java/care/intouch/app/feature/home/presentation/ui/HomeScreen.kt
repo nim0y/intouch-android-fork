@@ -24,8 +24,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,23 +58,24 @@ import care.intouch.uikit.ui.cards.PlanCard
 import care.intouch.app.R as AppR
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onSeeAllPlanClicked: () -> Unit, onSeeAllDiaryClicked: () -> Unit) {
     val viewModel: HomeViewModel = hiltViewModel()
-    val screenState = viewModel.getState().observeAsState()
-    HomeScreenWithState(screenState = screenState, viewModel)
+    val screenState = viewModel.getState().collectAsState()
+    HomeScreenWithState(
+        screenState = screenState,
+        viewModel = viewModel,
+        onSeeAllPlanClicked = onSeeAllPlanClicked,
+        onSeeAllDiaryClicked = onSeeAllDiaryClicked
+    )
 }
 
 @Composable
 fun HomeScreenWithState(
     screenState: State<HomeUiState?>,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onSeeAllPlanClicked: () -> Unit,
+    onSeeAllDiaryClicked: () -> Unit
 ) {
-    var deleteDiaryEntryDialogState by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var clearTaskDialogState by rememberSaveable {
-        mutableStateOf(false)
-    }
     val isSeeAllPlanVisible by rememberSaveable {
         mutableStateOf(
             screenState.value!!.isSeeAllPlanVisible
@@ -120,7 +121,7 @@ fun HomeScreenWithState(
                     .padding(top = 28.dp),
                 isSeeAllPlanVisible,
                 titleText = stringResource(id = AppR.string.my_plan_sub_title),
-                seeAllClicked = { }
+                seeAllClicked = { onSeeAllPlanClicked() }
             ) {
                 MyPlanSegment(
                     screenState = screenState.value!!,
@@ -133,16 +134,14 @@ fun HomeScreenWithState(
                     },
                     dropdownMenuDuplicate = { taskId, taskIndex ->
                         viewModel.executeEvent(
-                            EventType.ClereTask(
+                            EventType.DuplicateTask(
                                 taskId = taskId,
                                 index = taskIndex
                             )
                         )
-
                     },
                     dropdownMenuClear = { taskId, taskIndex ->
-                        clearTaskDialogState = !clearTaskDialogState
-
+                        viewModel.executeEvent(EventType.OpenCloseClearTaskDialog)
                         viewModel.executeEvent(
                             EventType.ClearTask(
                                 taskId = taskId,
@@ -159,18 +158,18 @@ fun HomeScreenWithState(
                     .padding(top = 28.dp),
                 isSeeAllDiaryClickable,
                 titleText = stringResource(id = AppR.string.my_diary_sub_title),
-                seeAllClicked = {}
+                seeAllClicked = { onSeeAllDiaryClicked() }
             ) {
                 MyDiarySegment(
                     screenState = screenState.value!!,
                     onDeleteButtonClicked = { itemId, itemIndex ->
+                        viewModel.executeEvent(EventType.OpenCloseDeleteEntryDialog)
                         viewModel.executeEvent(
                             EventType.DeleteDiaryEntry(
                                 entryId = itemId,
                                 index = itemIndex
                             )
                         )
-                        deleteDiaryEntryDialogState = !deleteDiaryEntryDialogState
                     },
                     onDiarySwitchChanged = { id, index, switcherState ->
                         viewModel.executeEvent(
@@ -183,13 +182,17 @@ fun HomeScreenWithState(
         }
 
         when {
-            deleteDiaryEntryDialogState -> {
+            screenState.value!!.deleteDiaryEntryDialogState -> {
+                FoldingScreen()
                 ConformationDialog(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 28.dp),
                     onDismissRequest = {
-                        deleteDiaryEntryDialogState = !deleteDiaryEntryDialogState
+                        viewModel.executeEvent(EventType.CancelJob)
+                        viewModel.executeEvent(EventType.OpenCloseDeleteEntryDialog)
                     },
-                    onConfirmation = { },
+                    onConfirmation = { viewModel.executeEvent(EventType.OpenCloseDeleteEntryDialog) },
                     headerText = stringResource(id = AppR.string.info_delete_node_question),
                     dialogText = stringResource(id = AppR.string.warning_delete),
                     dismissButtonText = stringResource(id = AppR.string.cancel_button),
@@ -197,11 +200,19 @@ fun HomeScreenWithState(
                 )
             }
 
-            clearTaskDialogState -> {
+            screenState.value!!.clearTaskDialogState -> {
+                FoldingScreen()
                 ConformationDialog(
-                    modifier = Modifier,
-                    onDismissRequest = { clearTaskDialogState = !clearTaskDialogState },
-                    onConfirmation = { /*TODO*/ },
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 28.dp),
+                    onDismissRequest = {
+                        viewModel.executeEvent(EventType.CancelJob)
+                        viewModel.executeEvent(EventType.OpenCloseClearTaskDialog)
+                    },
+                    onConfirmation = {
+                        viewModel.executeEvent(EventType.OpenCloseClearTaskDialog)
+                    },
                     headerText = stringResource(id = AppR.string.info_delete_task_question),
                     dialogText = stringResource(id = AppR.string.warning_delete),
                     dismissButtonText = stringResource(id = AppR.string.cancel_button),
@@ -209,6 +220,16 @@ fun HomeScreenWithState(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun FoldingScreen() {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .alpha(0.5F), color = InTouchTheme.colors.white
+    ) {
     }
 }
 
@@ -291,6 +312,9 @@ fun PlanPager(
             .padding(top = 16.dp)
             .fillMaxSize()
     ) { page ->
+        var dropDownMenu by rememberSaveable {
+            mutableStateOf(false)
+        }
         val menuItems: List<DropdownMenuItemsPlanCard> =
             listOf(DropdownMenuItemsPlanCard(
                 stringResource(id = AppR.string.duplicate_item_menu),
@@ -300,6 +324,7 @@ fun PlanPager(
                     taskList[page].id,
                     page
                 )
+                dropDownMenu = !dropDownMenu
             },
                 DropdownMenuItemsPlanCard(
                     stringResource(id = AppR.string.clear_item_menu),
@@ -309,18 +334,18 @@ fun PlanPager(
                         taskList[page].id,
                         page,
                     )
+                    dropDownMenu = !dropDownMenu
                 })
         var toggleState by rememberSaveable {
             mutableStateOf(taskList[page].sharedWithDoc)
         }
-        var dropDownMenu by rememberSaveable {
-            mutableStateOf(false)
-        }
+
+
         PlanCard(
             chipText = StringVO.Plain(stringResource(id = taskList[page].status.stringId)),
             text = taskList[page].description,
             isSettingsClicked = dropDownMenu,
-            onClickSetting = { isClicked -> dropDownMenu = !dropDownMenu },
+            onClickSetting = { dropDownMenu = !dropDownMenu },
             dropdownMenuItemsList = menuItems,
             onClickToggle = {
                 toggleState = !toggleState
@@ -485,7 +510,10 @@ fun HomeScreenWithPlanPreview() {
                 )
             )
         }
-        HomeScreenWithState(screenState = screenState)
+        HomeScreenWithState(
+            screenState = screenState,
+            onSeeAllPlanClicked = {},
+            onSeeAllDiaryClicked = {})
     }
 }
 
@@ -496,7 +524,10 @@ fun HomeScreenEmptyPreview() {
         val screenState = remember {
             mutableStateOf(HomeUiState())
         }
-        HomeScreenWithState(screenState = screenState)
+        HomeScreenWithState(
+            screenState = screenState,
+            onSeeAllPlanClicked = {},
+            onSeeAllDiaryClicked = {})
     }
 }
 
@@ -532,7 +563,10 @@ fun HomeScreenWithDiaryPreview() {
                 )
             )
         }
-        HomeScreenWithState(screenState = screenState)
+        HomeScreenWithState(
+            screenState = screenState,
+            onSeeAllPlanClicked = {},
+            onSeeAllDiaryClicked = {})
     }
 }
 
@@ -581,7 +615,10 @@ fun HomeScreenFullPreview() {
     }
 
     InTouchTheme {
-        HomeScreenWithState(screenState = screenState)
+        HomeScreenWithState(
+            screenState = screenState,
+            onSeeAllPlanClicked = {},
+            onSeeAllDiaryClicked = {})
     }
 
 
