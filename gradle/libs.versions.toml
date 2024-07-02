@@ -36,7 +36,7 @@ securityCrypto = "1.1.0-alpha06"
 navigationRuntimeKtx = "2.7.7"
 androidXCoreVersion = "1.13.1"
 androidXCoreSplashVersion = "1.0.1"
-runtimeLivedata = "1.6.8"
+
 
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
@@ -82,7 +82,6 @@ androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navig
 security-crypto = {group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto"}
 androidXCore = { module = "androidx.core:core", version.ref = "androidXCoreVersion" }
 androidXCoreSplash = { module = "androidx.core:core-splashscreen", version.ref = "androidXCoreSplashVersion" }
-androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

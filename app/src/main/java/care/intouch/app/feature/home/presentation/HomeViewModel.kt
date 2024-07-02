@@ -25,13 +25,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-
     private val _stateScreen = MutableStateFlow(HomeScreenState())
     private val stateScreen: StateFlow<HomeScreenState> = _stateScreen.asStateFlow()
-
     private val _homeUIState = MutableStateFlow(HomeUiState())
     val homeUIState: StateFlow<HomeUiState> = _homeUIState.asStateFlow()
-
     private val _sideEffect = MutableSharedFlow<HomeScreenSideEffect>()
     val sideEffect: SharedFlow<HomeScreenSideEffect> = _sideEffect.asSharedFlow()
 
@@ -105,6 +102,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun clearTask(taskId: Int, index: Int) {
         showDialog(
             title = StringVO.Resource(R.string.info_delete_task_question),
+            massage = StringVO.Resource(R.string.warning_delete),
+            onConfirmButtonText = StringVO.Resource(R.string.cancel_button),
+            onDismissButtonText = StringVO.Resource(R.string.confirm_button),
             onConfirm = {
                 handleClearTask(taskId, index)
             },
@@ -129,7 +129,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         val sharedTask = getState()
             .taskList[index]
             .copy(isSharedWithDoctor = shareStatus)
-
         val taskList = getState().taskList.toMutableList()
         taskList[index] = sharedTask
 
@@ -142,7 +141,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         val sharedTask = getState()
             .diaryList[index]
             .copy(isSharedWithDoctor = isShared)
-
         val diaryList = getState().diaryList.toMutableList()
         diaryList[index] = sharedTask
 
@@ -154,6 +152,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private fun deleteDiaryEntry(diaryId: Int, index: Int) {
         showDialog(
             title = StringVO.Resource(R.string.info_delete_node_question),
+            massage = StringVO.Resource(R.string.warning_delete),
+            onConfirmButtonText = StringVO.Resource(R.string.cancel_button),
+            onDismissButtonText = StringVO.Resource(R.string.confirm_button),
             onConfirm = {
                 handleDeleteDiaryEntry(diaryId, index)
             },
@@ -217,11 +218,21 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun showDialog(title: StringVO, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    private fun showDialog(
+        title: StringVO,
+        massage: StringVO,
+        onConfirmButtonText: StringVO,
+        onDismissButtonText: StringVO,
+        onConfirm: () -> Unit,
+        onDismiss: () -> Unit
+    ) {
         viewModelScope.launch {
             _sideEffect.emit(
                 HomeScreenSideEffect.ShowDialog(
                     title = title,
+                    massage = massage,
+                    onConfirmButtonText = onConfirmButtonText,
+                    onDismissButtonText = onDismissButtonText,
                     onConfirm = onConfirm,
                     onDismiss = onDismiss
                 )
