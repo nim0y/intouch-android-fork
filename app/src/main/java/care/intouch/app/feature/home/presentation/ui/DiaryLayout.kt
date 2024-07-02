@@ -31,21 +31,21 @@ fun DiaryLayout(
             .fillMaxSize()
             .fillMaxHeight(),
     ) {
-        itemsIndexed(diaryEntryList) { index, item ->
+        itemsIndexed(diaryEntryList) { index, diaryEntry ->
             var toggleState by rememberSaveable {
-                mutableStateOf(item.isSharedWithDoctor)
+                mutableStateOf(diaryEntry.isSharedWithDoctor)
             }
             NoteCards(
                 modifier = Modifier.padding(top = 16.dp),
-                dateText = item.data,
-                noteText = item.note,
-                moodChipsList = item.moodList.map { StringVO.Plain(it.name) },
+                dateText = diaryEntry.data,
+                noteText = diaryEntry.note,
+                moodChipsList = diaryEntry.moodList.map { StringVO.Plain(it.name) },
                 toggleIsChecked = toggleState,
                 onClickToggle = {
                     toggleState = !toggleState
-                    onSwitcherChange(item.id, index, toggleState)
+                    onSwitcherChange(diaryEntry.id, index, toggleState)
                 },
-                onClickTrash = { onDeleteButtonClicked(item.id, index) })
+                onClickTrash = { onDeleteButtonClicked(diaryEntry.id, index) })
         }
     }
 }

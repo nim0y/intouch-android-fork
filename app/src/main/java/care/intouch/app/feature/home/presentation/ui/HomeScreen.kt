@@ -37,6 +37,7 @@ import care.intouch.app.feature.home.presentation.models.Status
 import care.intouch.app.feature.home.presentation.models.Task
 import care.intouch.app.models.DialogState
 import care.intouch.uikit.theme.InTouchTheme
+import care.intouch.uikit.ui.LoadingContainer
 import care.intouch.uikit.ui.cards.ConformationDialog
 import care.intouch.uikit.ui.customShape.CustomHeaderShape
 import care.intouch.app.R as AppR
@@ -75,15 +76,19 @@ fun HomeScreen(
             }
         }
     }
+    LoadingContainer(
+        isLoading = screenState.isLoading,
+    ) {
+        HomeScreen(
+            state = screenState,
+            onEvent = viewModel::executeEvent,
+            onSeeAllPlanClicked = onSeeAllPlanClicked,
+            onSeeAllDiaryClicked = onSeeAllDiaryClicked,
+            isDialogVisible = isDialogVisible,
+            dialogState = dialogState
+        )
+    }
 
-    HomeScreen(
-        state = screenState,
-        onEvent = viewModel::executeEvent,
-        onSeeAllPlanClicked = onSeeAllPlanClicked,
-        onSeeAllDiaryClicked = onSeeAllDiaryClicked,
-        isDialogVisible = isDialogVisible,
-        dialogState = dialogState
-    )
 }
 
 @Composable
@@ -137,7 +142,9 @@ fun HomeScreen(
                     onPlanSwitcherChange = { id, index, switcherState ->
                         onEvent(
                             EventType.ShareTask(
-                                taskId = id, index = index, isShared = switcherState
+                                taskId = id,
+                                index = index,
+                                isSharedWithDoctor = switcherState
                             )
                         )
                     },
@@ -174,17 +181,17 @@ fun HomeScreen(
                     onDeleteButtonClicked = { itemId, itemIndex ->
                         onEvent(
                             EventType.DeleteDiaryEntry(
-                                entryId = itemId,
+                                diaryEntryId = itemId,
                                 index = itemIndex
                             )
                         )
                     },
-                    onDiarySwitchChanged = { id, index, switcherState ->
+                    onDiarySwitchChanged = { diaryEntryId, index, switcherState ->
                         onEvent(
                             EventType.ShareDiaryEntry(
-                                entryId = id,
+                                diaryEntryId = diaryEntryId,
                                 index = index,
-                                isShared = switcherState
+                                isSharedWithDoctor = switcherState
                             )
                         )
                     }
@@ -216,45 +223,9 @@ fun FoldingScreen() {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .alpha(0.5F), color = InTouchTheme.colors.white
-    ) {
-    }
-}
-
-@Composable
-fun MyPlanCards(
-    screenState: HomeUiState,
-    onPlanSwitcherChange: (Int, Int, Boolean) -> Unit,
-    dropdownMenuDuplicate: (itemId: Int, itemIndex: Int) -> Unit,
-    dropdownMenuClear: (itemId: Int, itemIndex: Int) -> Unit
-) {
-    if (screenState.taskList.isNotEmpty()) {
-        PlanPager(
-            screenState.taskList,
-            onSwitcherChange = onPlanSwitcherChange,
-            dropdownMenuDuplicate = dropdownMenuDuplicate,
-            dropdownMenuClear = dropdownMenuClear
-        )
-    } else {
-        PlanPlaceHolder()
-    }
-}
-
-@Composable
-fun MyDiaryCards(
-    screenState: HomeUiState,
-    onDiarySwitchChanged: (Int, Int, Boolean) -> Unit,
-    onDeleteButtonClicked: (itemId: Int, itemIndex: Int) -> Unit
-) {
-    if (screenState.diaryList.isNotEmpty()) {
-        DiaryLayout(
-            screenState.diaryList, onSwitcherChange = onDiarySwitchChanged,
-            onDeleteButtonClicked = onDeleteButtonClicked
-        )
-
-    } else {
-        DiaryPlaceHolder()
-    }
+            .alpha(0.5F), color = InTouchTheme.colors.white,
+        content = {}
+    )
 }
 
 @Composable
@@ -392,6 +363,18 @@ fun HomeScreenFullPreview() {
     InTouchTheme {
         HomeScreen(
             state = screenState,
+            onEvent = { },
+            onSeeAllPlanClicked = {},
+            onSeeAllDiaryClicked = {})
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HomeScreenLoadingPreview() {
+    InTouchTheme {
+        HomeScreen(
+            state = HomeUiState().copy(isLoading = true),
             onEvent = { },
             onSeeAllPlanClicked = {},
             onSeeAllDiaryClicked = {})

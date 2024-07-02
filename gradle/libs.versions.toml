@@ -37,7 +37,6 @@ navigationRuntimeKtx = "2.7.7"
 androidXCoreVersion = "1.13.1"
 androidXCoreSplashVersion = "1.0.1"
 
-
 [libraries]
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

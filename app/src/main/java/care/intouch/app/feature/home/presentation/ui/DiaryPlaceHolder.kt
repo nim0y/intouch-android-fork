@@ -24,7 +24,11 @@ fun DiaryPlaceHolder() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 28.dp, end = 28.dp, top = 16.dp)
+            .padding(
+                start = 28.dp,
+                end = 28.dp,
+                top = 16.dp
+            )
     ) {
         Surface(
             modifier = Modifier
@@ -62,5 +66,4 @@ fun DiaryPlaceHolderPreview() {
         DiaryPlaceHolder(
         )
     }
-
 }

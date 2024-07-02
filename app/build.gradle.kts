@@ -166,7 +166,6 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
-
     annotationProcessor(libs.androidx.room.room.compiler)
     ksp(libs.androidx.room.room.compiler)
     implementation(libs.androidx.room.ktx)

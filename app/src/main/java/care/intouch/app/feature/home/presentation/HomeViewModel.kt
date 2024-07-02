@@ -69,21 +69,21 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             is EventType.ShareTask -> {
                 shareTask(
                     taskId = event.taskId,
-                    index = event.index, event.isShared
+                    index = event.index, event.isSharedWithDoctor
                 )
             }
 
             is EventType.ShareDiaryEntry -> {
                 shareDiaryEntry(
-                    diaryEntryId = event.entryId,
+                    diaryEntryId = event.diaryEntryId,
                     index = event.index,
-                    isShared = event.isShared
+                    isShared = event.isSharedWithDoctor
                 )
             }
 
             is EventType.DeleteDiaryEntry -> {
                 deleteDiaryEntry(
-                    diaryId = event.entryId,
+                    diaryId = event.diaryEntryId,
                     index = event.index
                 )
             }

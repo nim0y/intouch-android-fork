@@ -31,7 +31,10 @@ fun PlanPager(
     dropdownMenuDuplicate: (itemId: Int, itemIndex: Int) -> Unit,
     dropdownMenuClear: (itemId: Int, itemIndex: Int) -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { taskList.size }, initialPage = 0)
+    val pagerState = rememberPagerState(
+        pageCount = { taskList.size },
+        initialPage = 0
+    )
 
     HorizontalPager(
         state = pagerState,
@@ -115,7 +118,7 @@ fun PlanPagerPreview() {
     InTouchTheme {
         PlanPager(
             taskList = taskList,
-            onSwitcherChange = { _, _, _ ->  },
+            onSwitcherChange = { _, _, _ -> },
             dropdownMenuDuplicate = { _, _ -> },
             dropdownMenuClear = { _, _ -> }
         )

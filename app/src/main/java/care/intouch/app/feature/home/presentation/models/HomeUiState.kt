@@ -7,4 +7,5 @@ data class HomeUiState(
     val isSeeAllPlanEmpty: Boolean = taskList.isNotEmpty(),
     val isDiaryListVisible: Boolean = diaryList.isNotEmpty(),
     val isDiaryListEmpty: Boolean = diaryList.isNotEmpty(),
+    val isLoading: Boolean = false
 )

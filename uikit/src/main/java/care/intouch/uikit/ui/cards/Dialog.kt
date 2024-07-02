@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.SecondaryButtonDark
@@ -61,13 +62,13 @@ fun ConformationDialog(
             onClick = onConfirmation,
             modifier = Modifier
                 .padding(top = 48.dp),
-            text = confirmButtonText,
+            text = StringVO.Plain(confirmButtonText),
             textStyle = confirmButtonTextStyle
         )
         SecondaryButtonDark(
             onClick = onDismissRequest,
             modifier = Modifier.padding(top = 4.dp, bottom = 34.dp),
-            text = dismissButtonText,
+            text = StringVO.Plain(dismissButtonText),
             textStyle = dismissButtonTextStyle,
             isEnabled = true,
         )
@@ -82,9 +83,14 @@ fun ConformationDialogPreview() {
             modifier = Modifier.padding(horizontal = 28.dp),
             onDismissRequest = { },
             onConfirmation = {},
-            headerText = "Are you sure you want \n" +
-                    "to delete this task?\n",
-            dialogText = "All your entered data will be\n" + "permanently removed.",
+            headerText = buildString {
+                append("Are you sure you want \n")
+                append("to delete this task?\n")
+            },
+            dialogText = buildString {
+                append("All your entered data will be\n")
+                append("permanently removed.")
+            },
             dismissButtonText = "Cancel",
             confirmButtonText = "Yes, delete"
         )
