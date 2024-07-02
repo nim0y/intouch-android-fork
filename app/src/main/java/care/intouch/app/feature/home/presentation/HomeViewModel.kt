@@ -103,8 +103,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         showDialog(
             title = StringVO.Resource(R.string.info_delete_task_question),
             massage = StringVO.Resource(R.string.warning_delete),
-            onConfirmButtonText = StringVO.Resource(R.string.cancel_button),
-            onDismissButtonText = StringVO.Resource(R.string.confirm_button),
+            onConfirmButtonText = StringVO.Resource(R.string.confirm_button),
+            onDismissButtonText = StringVO.Resource(R.string.cancel_button),
             onConfirm = {
                 handleClearTask(taskId, index)
             },
@@ -153,8 +153,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         showDialog(
             title = StringVO.Resource(R.string.info_delete_node_question),
             massage = StringVO.Resource(R.string.warning_delete),
-            onConfirmButtonText = StringVO.Resource(R.string.cancel_button),
-            onDismissButtonText = StringVO.Resource(R.string.confirm_button),
+            onConfirmButtonText = StringVO.Resource(R.string.confirm_button),
+            onDismissButtonText = StringVO.Resource(R.string.cancel_button),
             onConfirm = {
                 handleDeleteDiaryEntry(diaryId, index)
             },
