@@ -37,7 +37,9 @@ fun HomeScreenSegmentPreview() {
         HomeScreenSegment(
             modifier = Modifier,
             isSeeAllVisible = true,
-            titleText = "Title",
+            titleText = buildString {
+                append("Title")
+            },
             seeAllClicked = {}) {}
     }
 }

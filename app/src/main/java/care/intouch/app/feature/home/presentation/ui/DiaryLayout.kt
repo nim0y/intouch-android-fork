@@ -59,20 +59,46 @@ fun DiaryLayoutPreview() {
     val diaryEntryList = listOf(
         DiaryEntry(
             id = 1,
-            data = "13, jul",
-            note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+            data = buildString {
+                append("13, jul")
+            },
+            note = buildString {
+                append("Lorem Ipsum dolor sit amet Lorem Ipsum... ")
+            },
             moodList = listOf(
-                Mood(name = "Bad"),
-                Mood(name = "Loneliness"),
-                Mood(name = "Loneliness")
+                Mood(
+                    name = buildString {
+                        append("Bad")
+                    }
+                ),
+                Mood(
+                    name = buildString {
+                        append("Loneliness")
+                    }
+                ),
+                Mood(
+                    name = buildString {
+                        append("Loneliness")
+                    }
+                )
             ),
             isSharedWithDoctor = false
         ),
         DiaryEntry(
             id = 1,
-            data = "13, jul",
-            note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-            moodList = listOf(Mood(name = "Bad")),
+            data = buildString {
+                append("13, jul")
+            },
+            note = buildString {
+                append("Lorem Ipsum dolor sit amet Lorem Ipsum... ")
+            },
+            moodList = listOf(
+                Mood(
+                    name = buildString {
+                        append("Bad")
+                    }
+                )
+            ),
             isSharedWithDoctor = false
         )
     )

@@ -105,14 +105,16 @@ fun PlanPagerPreview() {
             id = 1,
             status = Status.TO_DO,
             isSharedWithDoctor = false,
-            description = "aboba лфвыадловыалвоадаодылваоыдлваовыдлаоывлаодвыдалоывлаоывдалофывдлаоывдлаоывдлоаывлдаоывдлаоывдлаоывдлаоывфдлоафы"
-        ),
+            description = buildString {
+                append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+            }        ),
         Task(
             id = 1,
             status = Status.TO_DO,
             isSharedWithDoctor = false,
-            description = "aboba"
-        )
+            description = buildString {
+                append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+            }        )
     )
 
     InTouchTheme {

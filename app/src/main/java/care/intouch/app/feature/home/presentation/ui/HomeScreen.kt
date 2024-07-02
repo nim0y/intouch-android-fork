@@ -240,13 +240,17 @@ fun HomeScreenWithPlanPreview() {
                             id = 1,
                             status = Status.TO_DO,
                             isSharedWithDoctor = false,
-                            description = "aboba лфвыадловыалвоадаодылваоыдлваовыдлаоывлаодвыдалоывлаоывдалофывдлаоывдлаоывдлоаывлдаоывдлаоывдлаоывдлаоывфдлоафы"
+                            description = buildString {
+                                append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                            }
                         ),
                         Task(
                             id = 1,
                             status = Status.TO_DO,
                             isSharedWithDoctor = false,
-                            description = "aboba"
+                            description = buildString {
+                                append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                            }
                         )
                     ),
                 )
@@ -282,8 +286,14 @@ fun HomeScreenWithDiaryPreview() {
                     diaryList = listOf(
                         DiaryEntry(
                             id = 1,
-                            data = "13, jul",
-                            note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                            data = buildString {
+                                append("13, jul")
+                            },
+                            note = buildString {
+                                append(
+                                    "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески "
+                                )
+                            },
                             moodList = listOf(
                                 Mood(name = "Bad"),
                                 Mood(name = "Loneliness"),
@@ -293,8 +303,14 @@ fun HomeScreenWithDiaryPreview() {
                         ),
                         DiaryEntry(
                             id = 1,
-                            data = "13, jul",
-                            note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
+                            data = buildString {
+                                append("13, jul")
+                            },
+                            note = buildString {
+                                append(
+                                    "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески "
+                                )
+                            },
                             moodList = listOf(Mood(name = "Bad")),
                             isSharedWithDoctor = false
                         )
@@ -321,38 +337,72 @@ fun HomeScreenFullPreview() {
                         id = 1,
                         status = Status.IN_PROGRESS,
                         isSharedWithDoctor = false,
-                        description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
+                        description = buildString {
+                            append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                        }
                     ),
                     Task(
                         id = 1,
                         status = Status.IN_PROGRESS,
                         isSharedWithDoctor = false,
-                        description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
+                        description = buildString {
+                            append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                        }
                     ),
                     Task(
                         id = 1,
                         status = Status.IN_PROGRESS,
                         isSharedWithDoctor = false,
-                        description = "aboba"
+                        description = buildString {
+                            append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                        }
                     )
                 ),
                 diaryList = mutableStateListOf(
                     DiaryEntry(
                         id = 1,
-                        data = "13, jul",
-                        note = "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ",
+                        data = buildString {
+                            append("13, jul")
+                        },
+                        note = buildString {
+                            append(
+                                "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески "
+                            )
+                        },
                         moodList = listOf(
-                            Mood(name = "Bad"),
-                            Mood(name = "Loneliness"),
-                            Mood(name = "Loneliness")
+                            Mood(
+                                name = buildString {
+                                    append("Bad")
+                                }
+                            ),
+                            Mood(
+                                name = buildString {
+                                    append("Loneliness")
+                                }
+                            ),
+                            Mood(
+                                name = buildString {
+                                    append("Loneliness")
+                                }
+                            )
                         ),
                         isSharedWithDoctor = false
                     ),
                     DiaryEntry(
                         id = 1,
-                        data = "13, jul",
-                        note = "Lorem Ipsum dolor sit amet Lorem IpsumНевероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ",
-                        moodList = listOf(Mood(name = "Bad")),
+                        data = buildString {
+                            append("13, jul")
+                        },
+                        note = buildString {
+                            append("Lorem Ipsum dolor sit amet Lorem IpsumНевероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ")
+                        },
+                        moodList = listOf(
+                            Mood(
+                                name = buildString {
+                                    append("Bad")
+                                }
+                            )
+                        ),
                         isSharedWithDoctor = false
                     )
                 )
@@ -373,10 +423,14 @@ fun HomeScreenFullPreview() {
 @Preview(showBackground = true)
 fun HomeScreenLoadingPreview() {
     InTouchTheme {
-        HomeScreen(
-            state = HomeUiState().copy(isLoading = true),
-            onEvent = { },
-            onSeeAllPlanClicked = {},
-            onSeeAllDiaryClicked = {})
+        LoadingContainer(
+            isLoading = true,
+        ) {
+            HomeScreen(
+                state = HomeUiState().copy(isLoading = true),
+                onEvent = { },
+                onSeeAllPlanClicked = {},
+                onSeeAllDiaryClicked = {})
+        }
     }
 }

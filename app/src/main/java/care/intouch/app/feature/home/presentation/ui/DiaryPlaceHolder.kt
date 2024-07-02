@@ -39,7 +39,9 @@ fun DiaryPlaceHolder() {
 
         Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxSize()) {
             Text(
-                text = stringResource(id = R.string.empty_diary),
+                text = stringResource(
+                    id = R.string.empty_diary
+                ),
                 style = InTouchTheme.typography.bodySemibold,
                 color = InTouchTheme.colors.textGreen,
                 modifier = Modifier.padding(horizontal = 35.dp, vertical = 22.dp)
@@ -49,7 +51,9 @@ fun DiaryPlaceHolder() {
                 modifier = Modifier
                     .padding(start = 65.dp)
                     .fillMaxHeight(),
-                painter = painterResource(id = care.intouch.uikit.R.drawable.pic_arrow_new_diary),
+                painter = painterResource(
+                    id = care.intouch.uikit.R.drawable.pic_arrow_new_diary
+                ),
                 contentDescription = "the arrow that points on the creation icon"
             )
         }

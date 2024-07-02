@@ -55,7 +55,9 @@ fun SegmentHeadLine(
 fun SegmentHeadLinePreview() {
     InTouchTheme {
         SegmentHeadLine(
-            titleText = "Segment Title",
+            titleText = buildString {
+                append("Segment Title")
+            },
             isSubTextEnabled = true,
             seeAllClicked = {}
         )
