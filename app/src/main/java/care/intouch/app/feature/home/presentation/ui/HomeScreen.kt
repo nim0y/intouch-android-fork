@@ -241,7 +241,9 @@ fun HomeScreenWithPlanPreview() {
                             status = Status.TO_DO,
                             isSharedWithDoctor = false,
                             description = buildString {
-                                append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                                append("Невероятно длинный текст,")
+                                append("который не должен поместиться на экране,")
+                                append("а в конце должны быть точески")
                             }
                         ),
                         Task(
@@ -249,7 +251,9 @@ fun HomeScreenWithPlanPreview() {
                             status = Status.TO_DO,
                             isSharedWithDoctor = false,
                             description = buildString {
-                                append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                                append("Невероятно длинный текст,")
+                                append("который не должен поместиться на экране,")
+                                append("а в конце должны быть точески")
                             }
                         )
                     ),
@@ -290,9 +294,9 @@ fun HomeScreenWithDiaryPreview() {
                                 append("13, jul")
                             },
                             note = buildString {
-                                append(
-                                    "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески "
-                                )
+                                append("Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно")
+                                append("длинный текст, который не должен поместиться на экране,")
+                                append("а в конце должны быть точески ")
                             },
                             moodList = listOf(
                                 Mood(name = "Bad"),
@@ -307,9 +311,9 @@ fun HomeScreenWithDiaryPreview() {
                                 append("13, jul")
                             },
                             note = buildString {
-                                append(
-                                    "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески "
-                                )
+                                append("Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно")
+                                append("длинный текст, который не должен поместиться на экране,")
+                                append("а в конце должны быть точески ")
                             },
                             moodList = listOf(Mood(name = "Bad")),
                             isSharedWithDoctor = false
@@ -338,7 +342,9 @@ fun HomeScreenFullPreview() {
                         status = Status.IN_PROGRESS,
                         isSharedWithDoctor = false,
                         description = buildString {
-                            append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                            append("Невероятно длинный текст,")
+                            append("который не должен поместиться на экране,")
+                            append("а в конце должны быть точески")
                         }
                     ),
                     Task(
@@ -346,7 +352,9 @@ fun HomeScreenFullPreview() {
                         status = Status.IN_PROGRESS,
                         isSharedWithDoctor = false,
                         description = buildString {
-                            append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                            append("Невероятно длинный текст,")
+                            append("который не должен поместиться на экране,")
+                            append("а в конце должны быть точески")
                         }
                     ),
                     Task(
@@ -354,7 +362,9 @@ fun HomeScreenFullPreview() {
                         status = Status.IN_PROGRESS,
                         isSharedWithDoctor = false,
                         description = buildString {
-                            append("Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески")
+                            append("Невероятно длинный текст,")
+                            append("который не должен поместиться на экране,")
+                            append("а в конце должны быть точески")
                         }
                     )
                 ),
@@ -365,9 +375,9 @@ fun HomeScreenFullPreview() {
                             append("13, jul")
                         },
                         note = buildString {
-                            append(
-                                "Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески "
-                            )
+                            append("Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно")
+                            append("длинный текст, который не должен поместиться на экране,")
+                            append("а в конце должны быть точески ")
                         },
                         moodList = listOf(
                             Mood(
@@ -394,7 +404,9 @@ fun HomeScreenFullPreview() {
                             append("13, jul")
                         },
                         note = buildString {
-                            append("Lorem Ipsum dolor sit amet Lorem IpsumНевероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески ")
+                            append("Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно")
+                            append("длинный текст, который не должен поместиться на экране,")
+                            append("а в конце должны быть точески ")
                         },
                         moodList = listOf(
                             Mood(
