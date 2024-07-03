@@ -141,7 +141,7 @@ fun PinCodeEnterScreen(
                     pinCode = ""
                 },
                 modifier = Modifier,
-                text = StringVO.Resource(R.string.next_button).value(),
+                text = StringVO.Resource(R.string.next_button),
                 isEnabled = isFullPinCode
             )
             Spacer(modifier = Modifier.height(2.dp))
@@ -152,7 +152,7 @@ fun PinCodeEnterScreen(
                 },
                 textStyle = InTouchTheme.typography.bodySemibold,
                 modifier = Modifier,
-                text = StringVO.Resource(R.string.forgot_pin_title).value(),
+                text = StringVO.Resource(R.string.forgot_pin_title),
             )
             if (openDialogPinCode) {
                 DialogPinCode(
@@ -206,7 +206,7 @@ fun DialogPinCode(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 28.dp),
-                text = StringVO.Resource(R.string.log_in_again).value(),
+                text = StringVO.Resource(R.string.log_in_again),
                 contentPadding = PaddingValues(
                     vertical = 14.dp
                 )
@@ -218,7 +218,7 @@ fun DialogPinCode(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 28.dp),
-                text = StringVO.Resource(R.string.cancel_button).value(),
+                text = StringVO.Resource(R.string.cancel_button),
                 contentPadding = PaddingValues(
                     horizontal = 78.dp, vertical = 14.dp
                 ),
