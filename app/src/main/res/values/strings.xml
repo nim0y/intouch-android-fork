@@ -169,5 +169,6 @@
     <string name="self_love_clarifying_emotional">Self-love</string>
     <string name="euphoria_clarifying_emotional">Euphoria</string>
     
-    <string name="socratic_dialogue">Socratic Dialogue</string>
+    <string name="name_task_mock">Socratic Dialogue</string>
+    <string name="description_task_mock">Dear Benjamin,\n\nThis exercise uses a technique called Socratic Dialogue, which will help you to determine how accurate and helpful certain thoughts may be.\n\nSpecifically, this is done by exploring how you came to have those thoughts, and evaluating the evidence regarding those and other possible thoughts.</string>
 </resources>
