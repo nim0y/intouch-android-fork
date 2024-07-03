@@ -9,11 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.R
+import care.intouch.app.feature.diary.DiaryViewModel
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
@@ -23,10 +28,11 @@ import care.intouch.uikit.ui.navigation.CustomTopBar
 @Composable
 fun CreatingNoteIntroductionScreen(
     onNextClick: () -> Unit,
-    title: StringVO = StringVO.Resource(R.string.emotional_title),
-    text: StringVO = StringVO.Resource(care.intouch.app.R.string.diary_introduction_text),
-    nextButtonText: StringVO = StringVO.Resource(care.intouch.app.R.string.next_button)
+    onBackButtonClick: () -> Unit
 ) {
+    val viewModel: DiaryViewModel = hiltViewModel()
+    val screenState by viewModel.diaryUIState.collectAsState()
+    val userName = screenState.userName
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -35,14 +41,14 @@ fun CreatingNoteIntroductionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 8.dp),
+                .padding(top = 48.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CustomTopBar(
-                title = title.value(),
+                title = stringResource(id = R.string.emotional_title),
                 titleStyle = InTouchTheme.typography.titleMedium,
-                onBackArrowClick = {},
+                onBackArrowClick = { onBackButtonClick.invoke() },
                 onCloseButtonClick = { },
                 enabledArcButton = false,
                 addBackArrowButton = true,
@@ -52,7 +58,10 @@ fun CreatingNoteIntroductionScreen(
                 modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp),
                 style = InTouchTheme.typography.bodySemibold,
                 color = InTouchTheme.colors.textGreen,
-                text = text.value()
+                text = String.format(
+                    stringResource(id = R.string.diary_introduction_text),
+                    userName
+                )
             )
 
             Image(
@@ -63,7 +72,7 @@ fun CreatingNoteIntroductionScreen(
                 modifier = Modifier.padding(top = 30.dp),
                 onClick = { onNextClick.invoke() },
                 isEnabled = true,
-                text = nextButtonText
+                text = StringVO.Resource(R.string.next_button)
             )
         }
     }
@@ -75,6 +84,7 @@ fun CreatingNoteIntroductionScreenPreview() {
     InTouchTheme {
         CreatingNoteIntroductionScreen(
             onNextClick = {},
+            onBackButtonClick = {}
         )
     }
 }

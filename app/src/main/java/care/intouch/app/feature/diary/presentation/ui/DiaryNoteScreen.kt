@@ -2,55 +2,94 @@ package care.intouch.app.feature.diary.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.diary.DiaryViewModel
+import care.intouch.app.feature.diary.presentation.ui.models.DialogState
 import care.intouch.app.feature.diary.presentation.ui.models.DiaryChangeEvent
-import care.intouch.app.feature.diary.presentation.ui.models.DiaryDataState
+import care.intouch.app.feature.diary.presentation.ui.models.DiaryEntry
+import care.intouch.app.feature.diary.presentation.ui.models.DiaryPopUp
 import care.intouch.app.feature.diary.presentation.ui.models.DiaryUiState
-import care.intouch.app.feature.diary.presentation.ui.models.ViewsComponentsState
+import care.intouch.app.feature.diary.presentation.ui.models.Mood
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
+import care.intouch.uikit.ui.LoadingContainer
 import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
-import care.intouch.uikit.ui.cards.NoteCards
 import care.intouch.uikit.ui.diary.ConfirmDeleteDialog
 import care.intouch.uikit.ui.diary.DiaryHeader
-import care.intouch.uikit.ui.diary.EmptyDiaryPlaceHolder
 
 @Composable
 fun DiaryNoteScreen(
     onMakeNoteClick: () -> Unit,
     onBackButtonClick: () -> Unit,
-    viewModel: DiaryViewModel = hiltViewModel()
 ) {
-    val state by viewModel.diaryState.collectAsState()
-    DiaryNoteScreen(
-        onMakeNoteClick = { onMakeNoteClick.invoke() },
-        onBackButtonClick = { onBackButtonClick() },
-        onEvent = { viewModel.onEvent(it) },
-        state = state
-    )
+    val viewModel: DiaryViewModel = hiltViewModel()
+    val screenState by viewModel.diaryUIState.collectAsState()
+    var isDialogVisible by remember { mutableStateOf(false) }
+    var dialogState by remember { mutableStateOf(DialogState()) }
+    val popUp = viewModel.popUp
+
+    LaunchedEffect(key1 = popUp) {
+        viewModel.popUp.collect { effect ->
+            when (effect) {
+                is DiaryPopUp.ShowPopUp -> {
+                    isDialogVisible = true
+                    dialogState = DialogState(
+                        title = effect.title,
+                        massage = effect.massage,
+                        onConfirmButtonText = effect.onConfirmButtonText,
+                        onDismissButtonText = effect.onDismissButtonText,
+                        onConfirm = {
+                            effect.onConfirm()
+                            isDialogVisible = false
+                        },
+                        onDismiss = {
+                            effect.onDismiss()
+                            isDialogVisible = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+    LoadingContainer(
+        isLoading = screenState.isLoading
+    ) {
+        DiaryNoteScreen(
+            onMakeNoteClick = { onMakeNoteClick.invoke() },
+            onBackButtonClick = { onBackButtonClick.invoke() },
+            onEvent = viewModel::onEvent,
+            state = screenState,
+            isDialogVisible = isDialogVisible,
+            dialogState = dialogState
+        )
+    }
 }
+
 
 @Composable
 private fun DiaryNoteScreen(
     onMakeNoteClick: () -> Unit,
     onBackButtonClick: () -> Unit,
-    onEvent: (DiaryChangeEvent) -> Unit,
-    state: DiaryUiState
+    onEvent: (event: DiaryChangeEvent) -> Unit,
+    state: DiaryUiState,
+    isDialogVisible: Boolean = false,
+    dialogState: DialogState = DialogState()
 ) {
     Column(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -62,61 +101,127 @@ private fun DiaryNoteScreen(
 
         PrimaryButtonGreen(
             onClick = { onMakeNoteClick.invoke() },
-            modifier = Modifier.padding(bottom = 28.dp),
+            modifier = Modifier.padding(bottom = 14.dp),
             text = StringVO.Resource(care.intouch.app.R.string.make_note_button)
         )
 
-        if (state.diaryDataState.noteList.isEmpty()) {
-            EmptyDiaryPlaceHolder(
-                title = StringVO.Resource(care.intouch.app.R.string.my_diary_sub_title),
-                text = StringVO.Resource(care.intouch.app.R.string.empty_diary)
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(bottom = 60.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                items(state.diaryDataState.noteList) { diaryNote ->
-                    NoteCards(
-                        dateText = diaryNote.data,
-                        noteText = diaryNote.note,
-                        moodChipsList = diaryNote.moodList.map { StringVO.Plain(it.name) },
-                        toggleIsChecked = diaryNote.sharedWithDoc,
-                        onClickTrash = {
-                            onEvent(DiaryChangeEvent.IntentionToDelete(diaryNote.id))
-                        },
-                        onClickToggle = { onEvent(DiaryChangeEvent.OnShareWithDoc(diaryNote.id)) },
+        DiaryLayout(
+            diaryEntryList = state.diaryList,
+            onDeleteButtonClicked = { itemId, itemIndex ->
+                onEvent(
+                    DiaryChangeEvent.IntentionToDelete(
+                        idToDelete = itemId,
+                        index = itemIndex
                     )
-                    if (state.viewsComponentsState.noteDeletePopup) {
-                        ConfirmDeleteDialog(
-                            deleteWarning = StringVO.Resource(care.intouch.app.R.string.warning_delete),
-                            deleteQuestion = StringVO.Resource(care.intouch.app.R.string.info_delete_node_question),
-                            confirmButtonText = StringVO.Resource(care.intouch.app.R.string.confirm_button),
-                            cancelButtonText = StringVO.Resource(care.intouch.app.R.string.cancel_button),
-                            onConfirm = {
-                                onEvent(DiaryChangeEvent.ConfirmDelete(diaryNote.id))
-                            },
-                            onCancel = { onEvent(DiaryChangeEvent.deleteCancel) })
-                    }
-                }
+                )
+            },
+            onSwitcherChange = { idToShare, index, shareWithDoc ->
+                onEvent(
+                    DiaryChangeEvent.OnShareWithDoc(
+                        idToShare = idToShare,
+                        index = index,
+                        sharedWithDoctor = shareWithDoc
+                    )
+                )
             }
+        )
+        if (isDialogVisible) {
+            ConfirmDeleteDialog(
+                onConfirm = { dialogState.onConfirm.invoke() },
+                onCancel = { dialogState.onDismiss.invoke() },
+                deleteQuestion = dialogState.title,
+                deleteWarning = dialogState.massage,
+                confirmButtonText = dialogState.onConfirmButtonText,
+                cancelButtonText = dialogState.onDismissButtonText
+            )
         }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun DiaryNoteScreenPreview() {
-    val test: DiaryDataState = DiaryDataState(emptyList())
-    val state = DiaryUiState(test, ViewsComponentsState())
+fun DiaryNoteScreenLoadingPreview() {
+    InTouchTheme {
+        LoadingContainer(
+            isLoading = true,
+        ) {
+            DiaryNoteScreen(
+                onMakeNoteClick = { },
+                onBackButtonClick = { },
+                onEvent = {},
+                state = DiaryUiState().copy(isLoading = true),
+                isDialogVisible = false,
+                dialogState = DialogState()
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun DiaryNoteScreenEmpty() {
     InTouchTheme {
         DiaryNoteScreen(
-            onMakeNoteClick = {},
+            onMakeNoteClick = { },
+            onBackButtonClick = { },
             onEvent = {},
-            state = state,
-            onBackButtonClick = {}
+            state = DiaryUiState().copy(diaryList = emptyList()),
+            isDialogVisible = false,
+            dialogState = DialogState()
+        )
+    }
+}
+
+
+@Composable
+@Preview(showBackground = true)
+fun HomeScreenWithDiaryPreview() {
+    InTouchTheme {
+        val screenState by remember {
+            mutableStateOf(
+                DiaryUiState(
+                    diaryList = listOf(
+                        DiaryEntry(
+                            id = 1,
+                            data = buildString {
+                                append("13, mar")
+                            },
+                            note = buildString {
+                                append("Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно")
+                                append("длинный текст, который не должен поместиться на экране,")
+                                append("а в конце должны быть точески ")
+                            },
+                            moodList = listOf(
+                                Mood(name = "Bad"),
+                                Mood(name = "Loneliness"),
+                                Mood(name = "Loneliness")
+                            ),
+                            sharedWithDoc = false
+                        ),
+                        DiaryEntry(
+                            id = 1,
+                            data = buildString {
+                                append("13, jul")
+                            },
+                            note = buildString {
+                                append("Lorem Ipsum dolor sit amet Lorem Ipsum Невероятно")
+                                append("длинный текст, который не должен поместиться на экране,")
+                                append("а в конце должны быть точески ")
+                            },
+                            moodList = listOf(Mood(name = "Bad")),
+                            sharedWithDoc = false
+                        )
+                    )
+                )
+            )
+        }
+        DiaryNoteScreen(
+            onMakeNoteClick = { },
+            onBackButtonClick = { },
+            onEvent = {},
+            state = screenState,
+            isDialogVisible = false,
+            dialogState = DialogState()
         )
     }
 }

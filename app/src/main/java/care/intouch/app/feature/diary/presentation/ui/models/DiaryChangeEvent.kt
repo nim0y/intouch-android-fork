@@ -1,8 +1,7 @@
 package care.intouch.app.feature.diary.presentation.ui.models
 
-sealed class DiaryChangeEvent {
-    object deleteCancel : DiaryChangeEvent()
-    data class ConfirmDelete(val idToDelete: Int) : DiaryChangeEvent()
-    data class IntentionToDelete(val idToDelete: Int) : DiaryChangeEvent()
-    data class OnShareWithDoc(val idToShare: Int) : DiaryChangeEvent()
+sealed interface DiaryChangeEvent {
+    data class IntentionToDelete(val idToDelete: Int, val index: Int) : DiaryChangeEvent
+    data class OnShareWithDoc(val idToShare: Int, val index: Int, val sharedWithDoctor: Boolean) :
+        DiaryChangeEvent
 }
