@@ -10,7 +10,9 @@ import care.intouch.app.feature.common.Resource
 import care.intouch.app.ui.uiKitSamples.samples.BLANC_STRING
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,7 +26,6 @@ class AuthViewModule @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         AuthScreenState(
-            result = "",
             password = "",
             login = "",
             loginCaption = StringVO.Plain(""),
@@ -36,6 +37,8 @@ class AuthViewModule @Inject constructor(
         )
     )
     val uiState = _uiState.asStateFlow()
+    private val _sharedUiState = MutableSharedFlow<String>()
+    val sharedUiState = _sharedUiState.asSharedFlow()
 
     fun onEvent(event: AuthenticationDataEvent) {
         when (event) {
@@ -107,11 +110,7 @@ class AuthViewModule @Inject constructor(
                 is Resource.Error -> result.error.message
                 is Resource.Success -> "Success"
             }
-            _uiState.update { state ->
-                state.copy(
-                    result = message
-                )
-            }
+            _sharedUiState.emit(message)
         }
     }
 

@@ -18,6 +18,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -47,10 +48,12 @@ fun AuthenticationScreen(
     viewModel: AuthViewModule,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val sharedState by viewModel.sharedUiState.collectAsState("")
     AuthenticationScreen(
         onForgotPasswordClick = onForgotPasswordClick,
         onLoginClick = onLoginClick,
         state = state,
+        sharedState = sharedState,
         onEvent = { viewModel.onEvent(it) }
     )
 }
@@ -64,6 +67,7 @@ private fun AuthenticationScreen(
     logoBackGroundTint: Color = InTouchTheme.colors.mainGreen,
     inTouchLogo: ImageVO = ImageVO.Resource(R.drawable.icon_intouch_logo),
     state: AuthScreenState,
+    sharedState: String,
     onEvent: (AuthenticationDataEvent) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -147,13 +151,6 @@ private fun AuthenticationScreen(
             PrimaryButtonGreen(
                 onClick = {
                     onEvent(AuthenticationDataEvent.OnLoginButtonClicked)
-                    if (state.result == "Success") {
-                        onLoginClick.invoke()
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(state.result)
-                        }
-                    }
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally),
@@ -161,6 +158,15 @@ private fun AuthenticationScreen(
                 state.login.isNotEmpty() and state.password.isNotEmpty() and !state.isErrorLogin and !state.isErrorPassword,
                 text = StringVO.Resource(care.intouch.app.R.string.login),
             )
+            LaunchedEffect(key1 = sharedState) {
+                if (sharedState == "Success") {
+                    onLoginClick.invoke()
+                } else {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(sharedState)
+                    }
+                }
+            }
             Spacer(modifier = Modifier.weight(1f))
             SecondaryButtonDark(
                 onClick = { onForgotPasswordClick.invoke() },
@@ -195,7 +201,8 @@ fun AuthenticationScreenPreview() {
             onForgotPasswordClick = {},
             onLoginClick = {},
             onEvent = {},
-            state = state
+            state = state,
+            sharedState = ""
         )
     }
 }
