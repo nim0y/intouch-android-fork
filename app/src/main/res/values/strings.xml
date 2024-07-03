@@ -26,6 +26,9 @@
     <string name="my_plan_sub_title">My plan</string>
     <string name="set_password_sub_title">Set Your Password To Proceed</string>
     <string name="enter_pin_sub_title">Enter your PIN code</string>
+    <string name="enter_old_pin_sub_title">Enter your old PIN code</string>
+    <string name="enter_new_pin_sub_title">Enter your new PIN code</string>
+    <string name="confirm_new_pin_sub_title">Confirm your new PIN code</string>
     <string name="sign_in_sub_title">Sign in to continue</string>
     <string name="email_for_recovery_sub_title">Enter your email for password recovery</string>
 
