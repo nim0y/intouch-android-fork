@@ -33,7 +33,7 @@ fun DiaryLayout(
     } else {
         LazyColumn(
             modifier = Modifier
-                .padding(bottom = 60.dp),
+                .padding(bottom = 60.dp, start = 28.dp, end = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {

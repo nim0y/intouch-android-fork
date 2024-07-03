@@ -31,12 +31,12 @@ fun EmptyDiaryPlaceHolder(
 ) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 28.dp, vertical = 16.dp)
+            .padding(horizontal = 28.dp)
             .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(
-            modifier = Modifier.padding(bottom = 50.dp),
+            modifier = Modifier.padding(bottom = 0.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.Start,
         ) {
