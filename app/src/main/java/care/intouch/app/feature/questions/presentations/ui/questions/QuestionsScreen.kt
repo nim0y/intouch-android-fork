@@ -17,6 +17,7 @@ import care.intouch.app.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.navigation.TopBarArcButton
+import care.intouch.uikit.ui.questions.TextFieldWithCheckbox
 import care.intouch.uikit.ui.textFields.MultilineTextField
 
 @Composable
@@ -46,9 +47,16 @@ private fun QuestionsScreen() {
                 onValueChange = { },
                 isError = false,
                 enabled = true)
+            Spacer(modifier = Modifier.height(40.dp))
+            TextFieldWithCheckbox(
+                modifier = Modifier.fillMaxWidth(),
+                subtitleText = StringVO.Resource(R.string.skills_question),
+                checkboxText = StringVO.Resource(R.string.skills_leadership_answer),
+                secondCheckboxText = StringVO.Resource(R.string.skills_communication_answer),
+                thirdCheckboxText = StringVO.Resource(R.string.skills_problem_solving_answer),
+                fourthCheckboxText = StringVO.Resource(R.string.skills_technical_expertise_answer)
+            )
         }
-        Spacer(modifier = Modifier.height(40.dp))
-
     }
 }
 

@@ -175,4 +175,8 @@
     <string name="inscribe_motivates_question">Please share insights into the motivations and factors that inspire your choice of the current professional journey. </string>
     <string name="write_your_answer_here">Write your answer here...</string>
     <string name="skills_question">Which of the following skills do you believe is most crucial for success in your current role?</string>
+    <string name="skills_leadership_answer">Leadership</string>
+    <string name="skills_communication_answer">Communication</string>
+    <string name="skills_problem_solving_answer">Problem-solving</string>
+    <string name="skills_technical_expertise_answer">Technical expertise</string>
 </resources>
