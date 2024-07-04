@@ -64,18 +64,14 @@ fun DiaryNoteScreen(
             }
         }
     }
-    LoadingContainer(
-        isLoading = screenState.isLoading
-    ) {
-        DiaryNoteScreen(
-            onMakeNoteClick = { onMakeNoteClick.invoke() },
-            onBackButtonClick = { onBackButtonClick.invoke() },
-            onEvent = viewModel::onEvent,
-            state = screenState,
-            isDialogVisible = isDialogVisible,
-            dialogState = dialogState
-        )
-    }
+    DiaryNoteScreen(
+        onMakeNoteClick = { onMakeNoteClick.invoke() },
+        onBackButtonClick = { onBackButtonClick.invoke() },
+        onEvent = viewModel::onEvent,
+        state = screenState,
+        isDialogVisible = isDialogVisible,
+        dialogState = dialogState
+    )
 }
 
 @Composable
@@ -93,46 +89,52 @@ private fun DiaryNoteScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         DiaryHeader(
-            modifier = Modifier.padding(bottom = 16.dp),
+            modifier = Modifier,
             onBackArrowClick = { onBackButtonClick.invoke() },
             title = StringVO.Resource(care.intouch.app.R.string.diary_title)
         )
+        if (state.isLoading) {
+            LoadingContainer(
+                modifier = Modifier.fillMaxSize(),
+                isLoading = true
+            ) {}
+        } else {
+            PrimaryButtonGreen(
+                onClick = { onMakeNoteClick.invoke() },
+                modifier = Modifier.padding(bottom = 14.dp, top = 16.dp),
+                text = StringVO.Resource(care.intouch.app.R.string.make_note_button)
+            )
 
-        PrimaryButtonGreen(
-            onClick = { onMakeNoteClick.invoke() },
-            modifier = Modifier.padding(bottom = 14.dp),
-            text = StringVO.Resource(care.intouch.app.R.string.make_note_button)
-        )
-
-        DiaryLayout(
-            diaryEntryList = state.diaryList,
-            onDeleteButtonClicked = { itemId, itemIndex ->
-                onEvent(
-                    DiaryChangeEvent.IntentionToDelete(
-                        idToDelete = itemId,
-                        index = itemIndex
+            DiaryLayout(
+                diaryEntryList = state.diaryList,
+                onDeleteButtonClicked = { itemId, itemIndex ->
+                    onEvent(
+                        DiaryChangeEvent.IntentionToDelete(
+                            idToDelete = itemId,
+                            index = itemIndex
+                        )
                     )
-                )
-            },
-            onSwitcherChange = { idToShare, index, shareWithDoc ->
-                onEvent(
-                    DiaryChangeEvent.OnShareWithDoc(
-                        idToShare = idToShare,
-                        index = index,
-                        sharedWithDoctor = shareWithDoc
+                },
+                onSwitcherChange = { idToShare, index, shareWithDoc ->
+                    onEvent(
+                        DiaryChangeEvent.OnShareWithDoc(
+                            idToShare = idToShare,
+                            index = index,
+                            sharedWithDoctor = shareWithDoc
+                        )
                     )
+                }
+            )
+            if (isDialogVisible) {
+                ConfirmDeleteDialog(
+                    onConfirm = { dialogState.onConfirm.invoke() },
+                    onCancel = { dialogState.onDismiss.invoke() },
+                    deleteQuestion = dialogState.title,
+                    deleteWarning = dialogState.massage,
+                    confirmButtonText = dialogState.onConfirmButtonText,
+                    cancelButtonText = dialogState.onDismissButtonText
                 )
             }
-        )
-        if (isDialogVisible) {
-            ConfirmDeleteDialog(
-                onConfirm = { dialogState.onConfirm.invoke() },
-                onCancel = { dialogState.onDismiss.invoke() },
-                deleteQuestion = dialogState.title,
-                deleteWarning = dialogState.massage,
-                confirmButtonText = dialogState.onConfirmButtonText,
-                cancelButtonText = dialogState.onDismissButtonText
-            )
         }
     }
 }
@@ -141,18 +143,14 @@ private fun DiaryNoteScreen(
 @Preview(showBackground = true)
 fun DiaryNoteScreenLoadingPreview() {
     InTouchTheme {
-        LoadingContainer(
-            isLoading = true,
-        ) {
-            DiaryNoteScreen(
-                onMakeNoteClick = { },
-                onBackButtonClick = { },
-                onEvent = {},
-                state = DiaryUiState().copy(isLoading = true),
-                isDialogVisible = false,
-                dialogState = DialogState()
-            )
-        }
+        DiaryNoteScreen(
+            onMakeNoteClick = { },
+            onBackButtonClick = { },
+            onEvent = {},
+            state = DiaryUiState().copy(isLoading = true),
+            isDialogVisible = false,
+            dialogState = DialogState()
+        )
     }
 }
 
