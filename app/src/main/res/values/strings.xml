@@ -171,4 +171,8 @@
     
     <string name="name_task_mock">Socratic Dialogue</string>
     <string name="description_task_mock">Dear Benjamin,\n\nThis exercise uses a technique called Socratic Dialogue, which will help you to determine how accurate and helpful certain thoughts may be.\n\nSpecifically, this is done by exploring how you came to have those thoughts, and evaluating the evidence regarding those and other possible thoughts.</string>
+    <string name="motivates_question">What motivates you to pursue your current career path?</string>
+    <string name="inscribe_motivates_question">Please share insights into the motivations and factors that inspire your choice of the current professional journey. </string>
+    <string name="write_your_answer_here">Write your answer here...</string>
+    <string name="skills_question">Which of the following skills do you believe is most crucial for success in your current role?</string>
 </resources>
