@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -44,12 +45,14 @@ fun ConfirmDeleteDialog(
         ) {
             Box(
                 modifier = modifier
-                    .padding(16.dp)
+                    .padding(horizontal = 28.dp)
                     .wrapContentSize()
                     .background(backgroundColor, RoundedCornerShape(20.dp))
             ) {
                 Column(
-                    modifier = modifier.padding(horizontal = 50.dp, vertical = 36.dp),
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 28.dp, vertical = 36.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -70,7 +73,7 @@ fun ConfirmDeleteDialog(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         PrimaryButtonGreen(
-                            modifier = Modifier,
+                            modifier = modifier,
                             onClick = { onConfirm() },
                             text = confirmButtonText
                         )
@@ -92,8 +95,8 @@ fun ConfirmDeleteDialogPreview() {
     ConfirmDeleteDialog(
         onConfirm = {},
         onCancel = {},
-        deleteQuestion = StringVO.Plain("Are you sure you want to delete this note?"),
-        deleteWarning = StringVO.Plain("All your entered data will be permanently removed."),
+        deleteQuestion = StringVO.Plain("Are you sure you want\n to delete this note?"),
+        deleteWarning = StringVO.Plain("All your entered data will be\n permanently removed."),
         confirmButtonText = StringVO.Plain("Yes, delete"),
         cancelButtonText = StringVO.Plain("Cancel")
 

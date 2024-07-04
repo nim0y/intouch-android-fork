@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
 import javax.inject.Inject
 
 
@@ -29,8 +28,8 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
     val diaryUIState: StateFlow<DiaryUiState> = _diaryUIState.asStateFlow()
     private val _diaryDataState = MutableStateFlow(DiaryDataState())
     val diaryDataState: StateFlow<DiaryDataState> = _diaryDataState.asStateFlow()
-    private val _popUp = MutableSharedFlow<DiaryPopUp>()
-    val popUp: SharedFlow<DiaryPopUp> = _popUp.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<DiaryPopUp>()
+    val sideEffect: SharedFlow<DiaryPopUp> = _sideEffect.asSharedFlow()
 
     init {
         loadDiaryData()
@@ -110,7 +109,7 @@ class DiaryViewModel @Inject constructor() : ViewModel() {
         onDismiss: () -> Unit
     ) {
         viewModelScope.launch {
-            _popUp.emit(
+            _sideEffect.emit(
                 DiaryPopUp.ShowPopUp(
                     title = title,
                     massage = massage,

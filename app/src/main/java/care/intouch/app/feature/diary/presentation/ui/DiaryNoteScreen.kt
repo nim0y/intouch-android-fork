@@ -39,10 +39,10 @@ fun DiaryNoteScreen(
     val screenState by viewModel.diaryUIState.collectAsState()
     var isDialogVisible by remember { mutableStateOf(false) }
     var dialogState by remember { mutableStateOf(DialogState()) }
-    val popUp = viewModel.popUp
+    val sideEffect = viewModel.sideEffect
 
-    LaunchedEffect(key1 = popUp) {
-        viewModel.popUp.collect { effect ->
+    LaunchedEffect(key1 = sideEffect) {
+        viewModel.sideEffect.collect { effect ->
             when (effect) {
                 is DiaryPopUp.ShowPopUp -> {
                     isDialogVisible = true
@@ -77,7 +77,6 @@ fun DiaryNoteScreen(
         )
     }
 }
-
 
 @Composable
 private fun DiaryNoteScreen(

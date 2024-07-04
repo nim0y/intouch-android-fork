@@ -2,13 +2,14 @@ package care.intouch.uikit.ui.diary
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
@@ -28,8 +29,8 @@ fun DiaryHeader(
         contentAlignment = Alignment.Center,
     ) {
         Image(
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop,
+            modifier = Modifier.height(118.dp),
+            contentScale = ContentScale.FillBounds,
             painter = backgroundImage.painter(),
             contentDescription = null
         )
