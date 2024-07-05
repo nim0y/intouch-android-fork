@@ -16,26 +16,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.Checkbox
+import care.intouch.uikit.ui.checkmark.CheckmarkWithText
 import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults
 import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults.BLANC_STRING
-import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults.TextPadding
 
 @Composable
-fun TextFieldWithCheckbox(
+fun TextFieldWithCheckmars(
     modifier: Modifier = Modifier,
     titleText: StringVO = StringVO.Plain(BLANC_STRING),
     subtitleText: StringVO = StringVO.Plain(BLANC_STRING),
     captionText: StringVO = StringVO.Plain(BLANC_STRING),
-    checkboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    secondCheckboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    thirdCheckboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    fourthCheckboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    textPadding: Dp = TextPadding,
+    checkmarkText: StringVO = StringVO.Plain(BLANC_STRING),
+    secondCheckmarkText: StringVO = StringVO.Plain(BLANC_STRING),
+    thirdCheckmarkText: StringVO = StringVO.Plain(BLANC_STRING),
+    fourthCheckmarkText: StringVO = StringVO.Plain(BLANC_STRING),
     backgroundColor: Color = InTouchTheme.colors.input85,
 ) {
     Column(
@@ -45,7 +42,7 @@ fun TextFieldWithCheckbox(
             || subtitleText.value().isNotBlank()
             || captionText.value().isNotBlank()
         ) {
-            Column(modifier = Modifier.padding(bottom = textPadding)) {
+            Column(modifier = Modifier.padding(bottom = 8.dp)) {
                 if (titleText.value().isNotBlank()) {
                     Text(
                         text = titleText.value(),
@@ -91,36 +88,36 @@ fun TextFieldWithCheckbox(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
-                Checkbox(
+                CheckmarkWithText(
                     isChecked = false,
-                    text = checkboxText.value(),
+                    text = checkmarkText.value(),
                     modifier = Modifier.padding(start = 24.dp, end = 22.dp)
                 )
                 {
 
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Checkbox(
+                CheckmarkWithText(
                     isChecked = false,
-                    text = secondCheckboxText.value(),
+                    text = secondCheckmarkText.value(),
                     modifier = Modifier.padding(start = 24.dp, end = 22.dp)
                 )
                 {
 
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Checkbox(
+                CheckmarkWithText(
                     isChecked = false,
-                    text = thirdCheckboxText.value(),
+                    text = thirdCheckmarkText.value(),
                     modifier = Modifier.padding(start = 24.dp, end = 22.dp)
                 )
                 {
 
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Checkbox(
+                CheckmarkWithText(
                     isChecked = false,
-                    text = fourthCheckboxText.value(),
+                    text = fourthCheckmarkText.value(),
                     modifier = Modifier.padding(start = 24.dp, end = 22.dp)
                 )
                 {
@@ -128,22 +125,23 @@ fun TextFieldWithCheckbox(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }
-        }
+
         }
     }
+}
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun TextFieldWithCheckboxPreview() {
+fun TextFieldWithCheckmarksPreview() {
     InTouchTheme {
-        TextFieldWithCheckbox(
+        TextFieldWithCheckmars(
             titleText = StringVO.Plain("Title small "),
             subtitleText = StringVO.Plain("Body semi bold "),
             captionText = StringVO.Plain("Caption "),
-            checkboxText = StringVO.Plain("First variant"),
-            secondCheckboxText = StringVO.Plain("Second variant"),
-            thirdCheckboxText = StringVO.Plain("Third variant"),
-            fourthCheckboxText = StringVO.Plain("Fourth variant"),
+            checkmarkText = StringVO.Plain("First variant"),
+            secondCheckmarkText = StringVO.Plain("Second variant"),
+            thirdCheckmarkText = StringVO.Plain("Third variant"),
+            fourthCheckmarkText = StringVO.Plain("Fourth variant"),
             modifier = Modifier.padding(45.dp)
         )
     }
