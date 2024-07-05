@@ -180,9 +180,10 @@
     <string name="skills_problem_solving_answer">Problem-solving</string>
     <string name="skills_technical_expertise_answer">Technical expertise</string>
     <string name="professional_development_question">Which of the following professional development activities have you actively engaged in?</string>
-    <string name="inscribe_professional_development_question">Select all that apply.\nMore than one answer possible.</string>
+    <string name="inscribe_professional_development_question">Select all that apply. More than one answer possible.</string>
     <string name="professional_development_attending_workshops_or_conferences_answer">Attending workshops or conferences</string>
     <string name="professional_development_pursuing_further_education_or_certifications">Pursuing further education or certifications</string>
     <string name="professional_development_participating_in_mentorship_programs">Participating in mentorship programs</string>
     <string name="professional_development_joining_industry_related_associations">Joining industry-related associations</string>
+    <string name="scale_questions">On a scale of 1 to 10, how satisfied are you with your current work-life balance?</string>
 </resources>

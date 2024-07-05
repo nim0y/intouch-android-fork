@@ -21,6 +21,7 @@ import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.navigation.TopBarArcButton
 import care.intouch.uikit.ui.questions.TextFieldWithCheckbox
 import care.intouch.uikit.ui.questions.TextFieldWithCheckmars
+import care.intouch.uikit.ui.questions.TextFieldWithSliderAndDigits
 import care.intouch.uikit.ui.textFields.MultilineTextField
 
 @Composable
@@ -70,13 +71,17 @@ private fun QuestionsScreen() {
                 secondCheckmarkText = StringVO.Resource(R.string.professional_development_pursuing_further_education_or_certifications),
                 thirdCheckmarkText = StringVO.Resource(R.string.professional_development_participating_in_mentorship_programs),
                 fourthCheckmarkText = StringVO.Resource(R.string.professional_development_joining_industry_related_associations)
-
+            )
+            Spacer(modifier = Modifier.height(40.dp))
+            TextFieldWithSliderAndDigits(
+                subtitleText = StringVO.Resource(R.string.scale_questions),
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 1920)
 @Composable
 fun QuestionsScreenPreview() {
     InTouchTheme {
