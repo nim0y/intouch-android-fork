@@ -109,23 +109,23 @@ fun PlanScreen(
                         onDuplicateMenuItemClick = {
                             Toast.makeText(
                                 context,
-                                "Dublicate index: $index",
+                                "Duplicate operation. Assignment index: $index",
                                 Toast.LENGTH_SHORT
                             ).show()
                         },
                         onClearMenuItemClick = {
                             Toast.makeText(
                                 context,
-                                "Clean index: $index",
+                                "Clean operation. Assignment index: $index",
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            onEvent(PlanScreenEvent.SetDialogueIsVisibleEvent(isVisible = true))
+                            onEvent(PlanScreenEvent.SetDialogueVisibilityEvent(isVisible = true))
                         },
                         onClickToggle = { toggleValue ->
                             Toast.makeText(
                                 context,
-                                "Toggle action with $toggleValue and index: $index",
+                                "Toggle action with '$toggleValue' and assignment index: $index",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -142,11 +142,11 @@ fun PlanScreen(
                     .padding(horizontal = 28.dp),
                 onDismissRequest = {
                     Toast.makeText(context, "On dismiss dialogue", Toast.LENGTH_SHORT).show()
-                    onEvent(PlanScreenEvent.SetDialogueIsVisibleEvent(isVisible = false))
+                    onEvent(PlanScreenEvent.SetDialogueVisibilityEvent(isVisible = false))
                 },
                 onConfirmation = {
                     Toast.makeText(context, "On confirm dialogue", Toast.LENGTH_SHORT).show()
-                    onEvent(PlanScreenEvent.SetDialogueIsVisibleEvent(isVisible = false))
+                    onEvent(PlanScreenEvent.SetDialogueVisibilityEvent(isVisible = false))
                 },
                 headerText = buildString {
                     append("Are you sure you want \n")

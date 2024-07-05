@@ -31,7 +31,7 @@ class PlanScreenViewModel @Inject constructor(
                 getAssignments()
             }
 
-            is PlanScreenEvent.SetDialogueIsVisibleEvent -> {
+            is PlanScreenEvent.SetDialogueVisibilityEvent -> {
                 setDialogueIsVisible(planScreenEvent.isVisible)
             }
 
