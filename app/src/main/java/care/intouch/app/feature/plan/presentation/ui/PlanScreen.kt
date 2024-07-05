@@ -7,43 +7,55 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.home.presentation.ui.FoldingScreen
+import care.intouch.app.feature.plan.domain.models.AssignmentStatus
+import care.intouch.app.feature.plan.domain.useCase.mockAssignments
+import care.intouch.app.feature.plan.presentation.models.PlanScreenEvent
+import care.intouch.app.feature.plan.presentation.models.PlanScreenState
 import care.intouch.app.feature.plan.presentation.viewmodel.PlanScreenViewModel
-import care.intouch.uikit.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.cards.ConformationDialog
-import care.intouch.uikit.ui.cards.DropdownMenuItemsPlanCard
-import care.intouch.uikit.ui.cards.PlanCard
 import care.intouch.uikit.ui.screens.my_plan.my_plan.CardHolder
 import care.intouch.uikit.ui.screens.my_plan.my_plan.ChipsRow
 import care.intouch.uikit.ui.screens.my_plan.my_plan.PlanHeader
 
 @Composable
 fun PlanScreen(
-    onTaskListItemClick: () -> Unit
+    onTaskListItemClick: () -> Unit,
+    onBackArrowClick: () -> Unit
+) {
+    val viewModel: PlanScreenViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsState()
+
+    PlanScreen(
+        state = state,
+        onEvent = { planScreenEvent ->
+            viewModel.onEvent(planScreenEvent)
+        },
+        onTaskListItemClick = onTaskListItemClick,
+        onBackArrowClick = onBackArrowClick
+    )
+}
+
+@Composable
+fun PlanScreen(
+    state: PlanScreenState,
+    onEvent: (PlanScreenEvent) -> Unit,
+    onTaskListItemClick: () -> Unit,
+    onBackArrowClick: () -> Unit
 ) {
     val context = LocalContext.current
-
-    val viewModel = PlanScreenViewModel()
-
-    val assignments = viewModel.getAssignments()
-
-    var isDialogueIsVisible by remember {
-        mutableStateOf(false)
-    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -56,22 +68,40 @@ fun PlanScreen(
 
             PlanHeader(
                 modifier = Modifier.padding(bottom = 24.dp),
-                onBackArrowClick = {}
+                onBackArrowClick = {
+                    onBackArrowClick.invoke()
+                }
             )
 
             ChipsRow(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                onFirstChipsClick = {},
-                onSecondChipsClick = {},
-                onThirdChipsClick = {},
-                onFourthChipsClick = {}
+                modifier = Modifier.padding(horizontal = 28.dp),
+                onFirstChipsClick = {
+                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                        assignmentStatus = AssignmentStatus.SHOW_ALL
+                    ))
+                },
+                onSecondChipsClick = {
+                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                        assignmentStatus = AssignmentStatus.TO_DO
+                    ))
+                },
+                onThirdChipsClick = {
+                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                        assignmentStatus = AssignmentStatus.IN_PROGRESS
+                    ))
+                },
+                onFourthChipsClick = {
+                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                        assignmentStatus = AssignmentStatus.DONE
+                    ))
+                }
             )
 
             LazyColumn(
-                modifier = Modifier.padding(top = 28.dp, start = 16.dp, end = 16.dp),
+                modifier = Modifier.padding(top = 28.dp, start = 28.dp, end = 28.dp),
                 verticalArrangement = Arrangement.spacedBy(28.dp)
             ) {
-                itemsIndexed(assignments) { index, assignment ->
+                itemsIndexed(state.filteredAssignments) { index, assignment ->
                     CardHolder(
                         chipText = StringVO.Plain(assignment.status.value),
                         text = assignment.title,
@@ -90,7 +120,7 @@ fun PlanScreen(
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            isDialogueIsVisible = true
+                            onEvent(PlanScreenEvent.SetDialogueIsVisibleEvent(isVisible = true))
                         },
                         onClickToggle = { toggleValue ->
                             Toast.makeText(
@@ -104,7 +134,7 @@ fun PlanScreen(
             }
         }
 
-        if (isDialogueIsVisible) {
+        if (state.isDialogueVisible) {
             FoldingScreen()
             ConformationDialog(
                 modifier = Modifier
@@ -112,11 +142,11 @@ fun PlanScreen(
                     .padding(horizontal = 28.dp),
                 onDismissRequest = {
                     Toast.makeText(context, "On dismiss dialogue", Toast.LENGTH_SHORT).show()
-                    isDialogueIsVisible = !isDialogueIsVisible
+                    onEvent(PlanScreenEvent.SetDialogueIsVisibleEvent(isVisible = false))
                 },
                 onConfirmation = {
                     Toast.makeText(context, "On confirm dialogue", Toast.LENGTH_SHORT).show()
-                    isDialogueIsVisible = !isDialogueIsVisible
+                    onEvent(PlanScreenEvent.SetDialogueIsVisibleEvent(isVisible = false))
                 },
                 headerText = buildString {
                     append("Are you sure you want \n")
@@ -138,7 +168,12 @@ fun PlanScreen(
 fun PlanScreenPreview() {
     InTouchTheme {
         PlanScreen(
-            onTaskListItemClick = {}
+            state = PlanScreenState(
+                filteredAssignments = mockAssignments
+            ),
+            onEvent = {},
+            onTaskListItemClick = {},
+            onBackArrowClick = {}
         )
     }
 }
