@@ -191,4 +191,5 @@
     <string name="skills_survey_discription">Which skill is key to success in your role? Leadership, Communication, Problem-solving, or Technical expertise? Your viewpoint shapes our collective understanding of essential skills.</string>
     <string name="professional_development_snapshot">Professional Development Snapshot</string>
     <string name="professional_development_snapshot_description">Active in workshops, further education, mentorship, or industry associations? Select your engagements to showcase your commitmen to continuous learning.</string>
+    <string name="dunning_kruger_effect">Dunning-Kruger Effect</string>
 </resources>
