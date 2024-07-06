@@ -2,8 +2,11 @@ package care.intouch.app.feature.questions.presentations.ui.questions
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,12 +26,14 @@ import androidx.compose.ui.unit.dp
 import care.intouch.app.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
+import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.navigation.TopBarArcButton
 import care.intouch.uikit.ui.questions.TextFieldQuestion
 import care.intouch.uikit.ui.questions.TextFieldWithCheckbox
 import care.intouch.uikit.ui.questions.TextFieldWithCheckmars
 import care.intouch.uikit.ui.questions.TextFieldWithSliderAndDigits
 import care.intouch.uikit.ui.textFields.MultilineTextField
+import care.intouch.uikit.ui.toggle.Toggle
 
 @Composable
 private fun QuestionsScreen() {
@@ -116,12 +121,35 @@ private fun QuestionsScreen() {
                 }
             }
             Spacer(modifier = Modifier.height(34.dp))
-
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = StringVO.Resource(R.string.share_with_therapist).value(),
+                    style = InTouchTheme.typography.bodySemibold,
+                    color = InTouchTheme.colors.textGreen,
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Toggle(
+                    isChecked = false
+                ) {
+                    
+                }
+            }
+            Spacer(modifier = Modifier.height(36.dp))
+            IntouchButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = StringVO.Resource(R.string.complete_task),
+                contentPadding = PaddingValues(horizontal = 51.dp, vertical = 13.dp)
+            )
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
-@Preview(showBackground = true, heightDp = 1920)
+@Preview(showBackground = true, heightDp = 1950)
 @Composable
 fun QuestionsScreenPreview() {
     InTouchTheme {

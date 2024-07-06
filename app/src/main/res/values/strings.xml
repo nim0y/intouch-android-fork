@@ -192,4 +192,6 @@
     <string name="professional_development_snapshot">Professional Development Snapshot</string>
     <string name="professional_development_snapshot_description">Active in workshops, further education, mentorship, or industry associations? Select your engagements to showcase your commitmen to continuous learning.</string>
     <string name="dunning_kruger_effect">Dunning-Kruger Effect</string>
+    <string name="share_task_with_doctor">Share this task with my therapist</string>
+    <string name="complete_task">Complete Task</string>
 </resources>
