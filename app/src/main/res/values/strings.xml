@@ -186,4 +186,9 @@
     <string name="professional_development_participating_in_mentorship_programs">Participating in mentorship programs</string>
     <string name="professional_development_joining_industry_related_associations">Joining industry-related associations</string>
     <string name="scale_questions">On a scale of 1 to 10, how satisfied are you with your current work-life balance?</string>
+    <string name="navigating_professional_development">Navigating Professional Development</string>
+    <string name="skills_survey">Skills Survey</string>
+    <string name="skills_survey_discription">Which skill is key to success in your role? Leadership, Communication, Problem-solving, or Technical expertise? Your viewpoint shapes our collective understanding of essential skills.</string>
+    <string name="professional_development_snapshot">Professional Development Snapshot</string>
+    <string name="professional_development_snapshot_description">Active in workshops, further education, mentorship, or industry associations? Select your engagements to showcase your commitmen to continuous learning.</string>
 </resources>

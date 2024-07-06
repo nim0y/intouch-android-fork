@@ -19,6 +19,7 @@ import care.intouch.app.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.navigation.TopBarArcButton
+import care.intouch.uikit.ui.questions.TextFieldQuestion
 import care.intouch.uikit.ui.questions.TextFieldWithCheckbox
 import care.intouch.uikit.ui.questions.TextFieldWithCheckmars
 import care.intouch.uikit.ui.questions.TextFieldWithSliderAndDigits
@@ -77,6 +78,17 @@ private fun QuestionsScreen() {
                 subtitleText = StringVO.Resource(R.string.scale_questions),
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(40.dp))
+            TextFieldQuestion(
+                modifier = Modifier.fillMaxWidth(),
+                isError = false,
+                enabled = true,
+                topTitleText = StringVO.Resource(R.string.navigating_professional_development),
+                topSubtitleText = StringVO.Resource(R.string.skills_survey),
+                topCaptionText = StringVO.Resource(R.string.skills_survey_discription),
+                bottomSubtitleText = StringVO.Resource(R.string.professional_development_snapshot),
+                bottomCaptionText = StringVO.Resource(R.string.professional_development_snapshot_description)
+                )
         }
     }
 }
