@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,31 +28,31 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
-import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
 import care.intouch.uikit.ui.pinCodeInput.PinCodeInputField
 
-@Preview
 @Composable
 fun PinCodeChangeScreen(
     modifier: Modifier = Modifier,
-    onSaveClick: () -> Unit = {},
-    onSkipClick: () -> Unit = {},
-    onBackClick: () -> Unit = {},
-    //viewModel: PinCodeChangeViewModel = hiltViewModel(),
+    onCloseClick: () -> Unit,
+    onSuccessChange: () -> Unit,
+    viewModel: PinCodeChangeViewModel = hiltViewModel(),
 ) {
 
-    //val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     var pinCode by rememberSaveable { mutableStateOf("") }
     var isFullPinCode by rememberSaveable { mutableStateOf(false) }
+    var isErrorPinCode by rememberSaveable { mutableStateOf(false) }
+    var titleText by rememberSaveable { mutableIntStateOf(care.intouch.app.R.string.enter_old_pin_sub_title) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
@@ -73,10 +74,9 @@ fun PinCodeChangeScreen(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(end = 31.dp)
-                    .clickable { onBackClick() }, contentAlignment = Alignment.Center
+                    .clickable { onCloseClick() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
-
                     painter = ImageVO.Resource(R.drawable.arc_rectangle).painter(),
                     contentDescription = null,
                     tint = InTouchTheme.colors.accentGreen50
@@ -84,7 +84,7 @@ fun PinCodeChangeScreen(
                 Icon(
                     painter = ImageVO.Resource(R.drawable.icon_close).painter(),
                     contentDescription = null,
-                    tint = InTouchTheme.colors.accentGreen50
+                    tint = InTouchTheme.colors.input
                 )
             }
         }
@@ -109,7 +109,7 @@ fun PinCodeChangeScreen(
 
             Spacer(modifier = Modifier.height(60.dp))
             Text(
-                text = StringVO.Resource(care.intouch.app.R.string.enter_old_pin_sub_title).value(),
+                text = StringVO.Resource(titleText).value(),
                 style = InTouchTheme.typography.bodyRegular,
                 textAlign = TextAlign.Center,
                 color = InTouchTheme.colors.textBlue
@@ -117,48 +117,79 @@ fun PinCodeChangeScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Column {
-                PinCodeInputField(value = pinCode, onValueChange = {
-                    pinCode = it
-                    //viewModel.onEvent(PinCodeConfirmationEvent.Entering(it))
-                })
-
-//                    when (state) {
-//
-//                        is PinCodeConfirmationScreenState.Confirmed -> {
-//                            onSaveClick()
-//                            Spacer(modifier = Modifier.height(28.dp))
-//                        }
-//
-//                        is PinCodeConfirmationScreenState.Default -> {
-//                            isFullPinCode = (state as PinCodeConfirmationScreenState.Default).isFullPinCode
-//                            Spacer(modifier = Modifier.height(28.dp))
-//                        }
-
-//                        is PinCodeConfirmationScreenState.NotConfirmed -> {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    modifier = Modifier.height(21.dp),
-                    text = StringVO.Resource(care.intouch.app.R.string.passwords_do_not_match)
-                        .value(),
-                    style = InTouchTheme.typography.caption1Semibold,
-                    textAlign = TextAlign.Start,
-                    color = InTouchTheme.colors.errorRed
+                PinCodeInputField(
+                    value = pinCode, onValueChange = {
+                        pinCode = it
+                        viewModel.onEvent(PinCodeChangeEvent.Entering(it))
+                    }, isError = isErrorPinCode
                 )
+                when (state) {
+                    PinCodeChangeScreenState.ConfirmNewPinCode -> {
+                        Spacer(modifier = Modifier.height(40.dp))
+                        isFullPinCode = state.isFullPinCode
+                        titleText = care.intouch.app.R.string.confirm_new_pin_sub_title
+                    }
 
-                Spacer(modifier = Modifier.height(11.dp))
+                    PinCodeChangeScreenState.Confirmed -> {
+                        onSuccessChange()
+                    }
+
+                    PinCodeChangeScreenState.Default -> {
+                        Spacer(modifier = Modifier.height(40.dp))
+                        isFullPinCode = state.isFullPinCode
+                    }
+
+                    PinCodeChangeScreenState.EnterNewPinCode -> {
+                        Spacer(modifier = Modifier.height(40.dp))
+                        isFullPinCode = state.isFullPinCode
+                        titleText = care.intouch.app.R.string.enter_new_pin_sub_title
+                    }
+
+                    PinCodeChangeScreenState.IncorrectPinCode -> {
+                        isErrorPinCode = true
+                        isFullPinCode = state.isFullPinCode
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            modifier = Modifier.height(21.dp),
+                            text = StringVO.Resource(care.intouch.app.R.string.incorrect_error)
+                                .value(),
+                            style = InTouchTheme.typography.caption1Semibold,
+                            textAlign = TextAlign.Start,
+                            color = InTouchTheme.colors.errorRed
+                        )
+
+                        Spacer(modifier = Modifier.height(11.dp))
+                    }
+
+                    PinCodeChangeScreenState.NotMatchPinCode -> {
+                        isErrorPinCode = true
+                        isFullPinCode = state.isFullPinCode
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            modifier = Modifier.height(21.dp),
+                            text = StringVO.Resource(care.intouch.app.R.string.passwords_do_not_match)
+                                .value(),
+                            style = InTouchTheme.typography.caption1Semibold,
+                            textAlign = TextAlign.Start,
+                            color = InTouchTheme.colors.errorRed
+                        )
+
+                        Spacer(modifier = Modifier.height(11.dp))
+                    }
+                }
             }
-//                    }
-//                }
 
             IntouchButton(
                 onClick = {
-//                        viewModel.onEvent(PinCodeConfirmationEvent.Statement(pinCode))
+                    viewModel.onEvent(PinCodeChangeEvent.Statement(pinCode))
                     pinCode = ""
                     isFullPinCode = false
+                    isErrorPinCode = false
                 },
                 modifier = Modifier,
-                text = StringVO.Resource(care.intouch.app.R.string.save_button).value(),
+                text = StringVO.Resource(care.intouch.app.R.string.save_button),
                 isEnabled = isFullPinCode
             )
 
