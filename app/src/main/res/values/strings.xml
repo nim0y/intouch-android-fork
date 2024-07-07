@@ -194,4 +194,6 @@
     <string name="dunning_kruger_effect">Dunning-Kruger Effect</string>
     <string name="share_task_with_doctor">Share this task with my therapist</string>
     <string name="complete_task">Complete Task</string>
+    <string name="questions_popap_not_all_filled">It seems not all fields are filled</string>
+    <string name="questions_popap_closing_task">Closing task without completion may lead to data loss</string>
 </resources>
