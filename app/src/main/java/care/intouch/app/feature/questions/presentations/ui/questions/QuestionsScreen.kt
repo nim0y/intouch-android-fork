@@ -48,6 +48,9 @@ import care.intouch.uikit.ui.toggle.Toggle
 private fun QuestionsScreen() {
     var answerText by remember { mutableStateOf("") }
     val systemKeyboardController = LocalSoftwareKeyboardController.current
+    var isCheckedToggle by remember {
+        mutableStateOf(false)
+    }
     Box(
         modifier = Modifier
             .background(InTouchTheme.colors.mainBlue)
@@ -153,10 +156,11 @@ private fun QuestionsScreen() {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Toggle(
-                    isChecked = false
-                ) {
-                    
-                }
+                    isChecked = isCheckedToggle,
+                    onChange = {
+                        isCheckedToggle = !isCheckedToggle
+                    }
+                )
             }
             Spacer(modifier = Modifier.height(36.dp))
             IntouchButton(
