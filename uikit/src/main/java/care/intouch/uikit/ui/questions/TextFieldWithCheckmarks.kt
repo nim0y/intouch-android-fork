@@ -1,5 +1,6 @@
 package care.intouch.uikit.ui.questions
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -9,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +42,11 @@ fun TextFieldWithCheckmars(
     Column(
         modifier = modifier.width(MultilineTextFieldDefaults.MinWidth)
     ) {
+        val items = listOf(checkmarkText, secondCheckmarkText, thirdCheckmarkText, fourthCheckmarkText)
+        val selectedOptions = remember {
+            mutableStateOf(setOf<StringVO>())
+        }
+
         if (titleText.value().isNotBlank()
             || subtitleText.value().isNotBlank()
             || captionText.value().isNotBlank()
@@ -86,42 +95,27 @@ fun TextFieldWithCheckmars(
         ) {
             Column (
                 modifier = Modifier.fillMaxWidth()
+                    .selectableGroup()
             ) {
-                Spacer(modifier = Modifier.height(10.dp))
-                CheckmarkWithText(
-                    isChecked = false,
-                    text = checkmarkText.value(),
-                    modifier = Modifier.padding(start = 24.dp, end = 22.dp)
-                )
-                {
-
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                CheckmarkWithText(
-                    isChecked = false,
-                    text = secondCheckmarkText.value(),
-                    modifier = Modifier.padding(start = 24.dp, end = 22.dp)
-                )
-                {
-
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                CheckmarkWithText(
-                    isChecked = false,
-                    text = thirdCheckmarkText.value(),
-                    modifier = Modifier.padding(start = 24.dp, end = 22.dp)
-                )
-                {
-
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                CheckmarkWithText(
-                    isChecked = false,
-                    text = fourthCheckmarkText.value(),
-                    modifier = Modifier.padding(start = 24.dp, end = 22.dp)
-                )
-                {
-
+                items.forEach { item ->
+                    Spacer(modifier = Modifier.height(10.dp))
+                    CheckmarkWithText(
+                        isChecked = selectedOptions.value.contains(item),
+                        text = item.value(),
+                        modifier = Modifier.padding(start = 24.dp, end = 22.dp),
+                        onChangeState = { selected ->
+                            val currentSelected = selectedOptions.value.toMutableSet()
+                            if (selected) {
+                                currentSelected.remove(item)
+                                Log.d("Test", "Произошел add в onChangeState")
+                            }
+                            else {
+                                currentSelected.add(item)
+                                Log.d("Test", "Произошло удаление в onChangeState")
+                            }
+                            selectedOptions.value = currentSelected
+                        }
+                    )
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }
