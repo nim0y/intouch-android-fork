@@ -3,14 +3,16 @@ package care.intouch.app.feature.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import care.intouch.app.R
+import care.intouch.app.feature.common.data.models.exception.NetworkException
+import care.intouch.app.feature.home.domain.AssignmentRepository
 import care.intouch.app.feature.home.domain.models.DiaryEntry
+import care.intouch.app.feature.home.domain.models.Mood
+import care.intouch.app.feature.home.domain.models.Status
+import care.intouch.app.feature.home.domain.models.Task
 import care.intouch.app.feature.home.presentation.models.EventType
 import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
 import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
-import care.intouch.app.feature.home.domain.models.Mood
-import care.intouch.app.feature.home.domain.models.Status
-import care.intouch.app.feature.home.domain.models.Task
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +26,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    val assignmentsRepository: AssignmentRepository
+) : ViewModel() {
     private val _stateScreen = MutableStateFlow(HomeScreenState())
     private val stateScreen: StateFlow<HomeScreenState> = _stateScreen.asStateFlow()
     private val _homeUIState = MutableStateFlow(HomeUiState())
@@ -171,6 +175,26 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun fetchTasks() {
+        viewModelScope.launch {
+            assignmentsRepository.getTasks(456)
+                .onSuccess { task ->
+                    _stateScreen.update { state ->
+                        state.copy(taskList = task)
+                    }
+                }
+                .onFailure { exception ->
+                    when (exception) {
+                        is NetworkException.NoInternetConnection -> {
+                            //
+                        }
+
+                        else -> {
+                            exception.message
+                        }
+                    }
+                }
+        }
+
         val taskList = listOf(
             Task(
                 id = 1,

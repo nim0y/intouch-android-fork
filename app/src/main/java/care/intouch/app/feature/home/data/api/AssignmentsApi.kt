@@ -15,7 +15,4 @@ interface AssignmentsApi {
 
     @POST("/api/v1/assignments-client/{id}/visible")
     suspend fun setAssignmentVisible(@Path("id") assignmentId: Int): Responses.Regular
-
-
-
 }

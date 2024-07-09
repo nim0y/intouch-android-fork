@@ -17,5 +17,4 @@ class NetworkErrorCodeToExceptionMapper @Inject constructor() {
             else -> NetworkException.Undefined(errorMessage, responseCode)
         }
     }
-
 }
