@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +33,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.R
+import care.intouch.app.feature.questions.presentations.ui.models.QuestionsState
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
@@ -45,7 +48,31 @@ import care.intouch.uikit.ui.textFields.MultilineTextField
 import care.intouch.uikit.ui.toggle.Toggle
 
 @Composable
-private fun QuestionsScreen() {
+fun QuestionsScreen(
+    onCloseClick: () -> Unit,
+    onCompleteTaskClick: () -> Unit,
+    viewModel: QuestionsViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsState()
+
+    QuestionsScreen(
+        onCloseClick = onCloseClick,
+        onCompleteTaskClick = onCompleteTaskClick,
+        onEvent = {
+            viewModel.onEvent()
+        },
+        state = state
+    )
+
+}
+
+@Composable
+private fun QuestionsScreen(
+    onCloseClick: () -> Unit,
+    onCompleteTaskClick: () -> Unit,
+    onEvent: () -> Unit,
+    state: QuestionsState
+) {
     var answerText by remember { mutableStateOf("") }
     val systemKeyboardController = LocalSoftwareKeyboardController.current
     var isCheckedToggle by remember {
@@ -177,7 +204,13 @@ private fun QuestionsScreen() {
 @Preview(showBackground = true, heightDp = 1950)
 @Composable
 fun QuestionsScreenPreview() {
+    val state = QuestionsState("")
     InTouchTheme {
-        QuestionsScreen()
+        QuestionsScreen(
+            onCloseClick = {},
+            onCompleteTaskClick = {},
+            onEvent = {},
+            state = state
+        )
     }
 }
