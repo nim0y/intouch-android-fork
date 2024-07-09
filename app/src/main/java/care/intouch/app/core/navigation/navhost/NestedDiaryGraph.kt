@@ -1,5 +1,6 @@
 package care.intouch.app.core.navigation.navhost
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -8,9 +9,9 @@ import care.intouch.app.core.navigation.CreatingNoteIntroduction
 import care.intouch.app.core.navigation.DiaryEntries
 import care.intouch.app.core.navigation.DiaryRouteBranch
 import care.intouch.app.core.navigation.EmotionChoice
-import care.intouch.app.feature.diary.presentation.ui.CreatingNoteIntroductionScreen
-import care.intouch.app.feature.diary.presentation.ui.DiaryEntriesScreen
-import care.intouch.app.feature.diary.presentation.ui.EmotionChoiceScreen
+import care.intouch.app.feature.diary.CreatingNoteIntroductionScreen
+import care.intouch.app.feature.diary.DiaryEntriesScreen
+import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.EmotionChoiceScreen
 
 fun NavGraphBuilder.addNestedDiaryGraph(
     navController: NavHostController
@@ -39,7 +40,8 @@ fun NavGraphBuilder.addNestedDiaryGraph(
             EmotionChoiceScreen(
                 onSaveClick = {
                     navController.navigate(route = DiaryEntries.route)
-                }
+                },
+                viewModel = hiltViewModel()
             )
         }
     }

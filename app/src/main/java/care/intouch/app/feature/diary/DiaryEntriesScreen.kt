@@ -1,6 +1,5 @@
-package care.intouch.app.feature.diary.presentation.ui
+package care.intouch.app.feature.diary
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,13 +13,11 @@ import androidx.compose.ui.unit.dp
 import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
-fun DiaryNoteScreen(
-    onMakeNoteClick: () -> Unit
+fun DiaryEntriesScreen(
+    onNextClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(InTouchTheme.colors.accentYellow),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
 
@@ -28,26 +25,26 @@ fun DiaryNoteScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 24.dp),
-            text = "DiaryNoteScreen",
+            text = "DiaryEntriesScreen",
             style = InTouchTheme.typography.titleMedium
         )
 
         Button(
             onClick = {
-                onMakeNoteClick.invoke()
+                onNextClick.invoke()
             }
         ) {
-            Text(text = "Make Note")
+            Text(text = "Next")
         }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun DiaryNoteScreenPreview() {
+fun DiaryEntriesScreenPreview() {
     InTouchTheme {
-        DiaryNoteScreen(
-            onMakeNoteClick = {}
+        DiaryEntriesScreen(
+            onNextClick = {}
         )
     }
 }

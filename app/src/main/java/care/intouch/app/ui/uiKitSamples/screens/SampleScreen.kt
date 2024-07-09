@@ -29,10 +29,13 @@ fun SampleScreen(
     onCheckmarkSampleClick: () -> Unit,
     onCheckboxSampleClick: () -> Unit,
     onCardSampleClick: () -> Unit,
-    onButtonSample2Click: () -> Unit
+    onButtonSample2Click: () -> Unit,
+    onEmotionClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -41,6 +44,12 @@ fun SampleScreen(
             text = "UI Sample Mode",
             style = InTouchTheme.typography.titleSmall
         )
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onEmotionClick.invoke() }
+        ) {
+            Text(text = "onEmotionClick")
+        }
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { onButtonSampleClick.invoke() }
@@ -146,7 +155,8 @@ fun SampleScreenPreview() {
             onCheckmarkSampleClick = {},
             onCheckboxSampleClick = {},
             onCardSampleClick = {},
-            onButtonSample2Click = {}
+            onButtonSample2Click = {},
+            onEmotionClick = {}
         )
     }
 }
