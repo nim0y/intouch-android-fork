@@ -1,8 +1,8 @@
 package care.intouch.app.feature.home.data.di
 
 import care.intouch.app.feature.common.di.RetrofitWithAuth
-import care.intouch.app.feature.home.data.models.AssignmentsApi
-import care.intouch.app.feature.home.data.models.DiaryNotesApi
+import care.intouch.app.feature.home.data.api.AssignmentsApi
+import care.intouch.app.feature.home.data.api.DiaryNotesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

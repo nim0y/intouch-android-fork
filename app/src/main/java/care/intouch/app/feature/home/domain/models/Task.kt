@@ -1,4 +1,4 @@
-package care.intouch.app.feature.home.presentation.models
+package care.intouch.app.feature.home.domain.models
 
 data class Task(
     val id: Int,

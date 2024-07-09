@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.app.R
-import care.intouch.app.feature.home.presentation.models.Status
-import care.intouch.app.feature.home.presentation.models.Task
+import care.intouch.app.feature.home.domain.models.Status
+import care.intouch.app.feature.home.domain.models.Task
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.cards.DropdownMenuItemsPlanCard

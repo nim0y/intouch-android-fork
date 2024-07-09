@@ -1,4 +1,4 @@
-package care.intouch.app.feature.home.presentation.models
+package care.intouch.app.feature.home.domain.models
 
 import care.intouch.app.R as AppR
 

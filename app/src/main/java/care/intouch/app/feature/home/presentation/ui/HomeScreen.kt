@@ -28,13 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.home.presentation.HomeViewModel
-import care.intouch.app.feature.home.presentation.models.DiaryEntry
+import care.intouch.app.feature.home.domain.models.DiaryEntry
 import care.intouch.app.feature.home.presentation.models.EventType
 import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
 import care.intouch.app.feature.home.presentation.models.HomeUiState
-import care.intouch.app.feature.home.presentation.models.Mood
-import care.intouch.app.feature.home.presentation.models.Status
-import care.intouch.app.feature.home.presentation.models.Task
+import care.intouch.app.feature.home.domain.models.Mood
+import care.intouch.app.feature.home.domain.models.Status
+import care.intouch.app.feature.home.domain.models.Task
 import care.intouch.app.models.DialogState
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.LoadingContainer
@@ -299,9 +299,9 @@ fun HomeScreenWithDiaryPreview() {
                                 append("а в конце должны быть точески ")
                             },
                             moodList = listOf(
-                                Mood(name = "Bad"),
-                                Mood(name = "Loneliness"),
-                                Mood(name = "Loneliness")
+                                Mood(nameId = "Bad"),
+                                Mood(nameId = "Loneliness"),
+                                Mood(nameId = "Loneliness")
                             ),
                             isSharedWithDoctor = false
                         ),
@@ -315,7 +315,7 @@ fun HomeScreenWithDiaryPreview() {
                                 append("длинный текст, который не должен поместиться на экране,")
                                 append("а в конце должны быть точески ")
                             },
-                            moodList = listOf(Mood(name = "Bad")),
+                            moodList = listOf(Mood(nameId = "Bad")),
                             isSharedWithDoctor = false
                         )
                     )
@@ -381,17 +381,17 @@ fun HomeScreenFullPreview() {
                         },
                         moodList = listOf(
                             Mood(
-                                name = buildString {
+                                nameId = buildString {
                                     append("Bad")
                                 }
                             ),
                             Mood(
-                                name = buildString {
+                                nameId = buildString {
                                     append("Loneliness")
                                 }
                             ),
                             Mood(
-                                name = buildString {
+                                nameId = buildString {
                                     append("Loneliness")
                                 }
                             )
@@ -410,7 +410,7 @@ fun HomeScreenFullPreview() {
                         },
                         moodList = listOf(
                             Mood(
-                                name = buildString {
+                                nameId = buildString {
                                     append("Bad")
                                 }
                             )

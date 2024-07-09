@@ -17,5 +17,5 @@ data class DiaryNoteDto(
     val physicalSensation: String,
     val physicalSensationTags: String,
     val primaryEmotion: String,
-    val clarifyingEmotion: String
+    val clarifyingEmotion: List<ClarifyingEmotionDto>
 )

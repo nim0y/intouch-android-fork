@@ -2,7 +2,7 @@ package care.intouch.app.feature.home.domain.use_case
 
 import care.intouch.app.feature.common.Resource
 import care.intouch.app.feature.common.domain.errors.ErrorEntity
-import care.intouch.app.feature.home.presentation.models.DiaryEntry
+import care.intouch.app.feature.home.domain.models.DiaryEntry
 import javax.inject.Inject
 
 interface GetDiaryEntries {

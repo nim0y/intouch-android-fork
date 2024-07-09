@@ -2,7 +2,7 @@ package care.intouch.app.feature.home.domain.use_case
 
 import care.intouch.app.feature.common.Resource
 import care.intouch.app.feature.common.domain.errors.ErrorEntity
-import care.intouch.app.feature.home.presentation.models.Task
+import care.intouch.app.feature.home.domain.models.Task
 import javax.inject.Inject
 
 interface GetTasks {

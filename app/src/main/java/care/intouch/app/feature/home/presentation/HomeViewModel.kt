@@ -3,14 +3,14 @@ package care.intouch.app.feature.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import care.intouch.app.R
-import care.intouch.app.feature.home.presentation.models.DiaryEntry
+import care.intouch.app.feature.home.domain.models.DiaryEntry
 import care.intouch.app.feature.home.presentation.models.EventType
 import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
 import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
-import care.intouch.app.feature.home.presentation.models.Mood
-import care.intouch.app.feature.home.presentation.models.Status
-import care.intouch.app.feature.home.presentation.models.Task
+import care.intouch.app.feature.home.domain.models.Mood
+import care.intouch.app.feature.home.domain.models.Status
+import care.intouch.app.feature.home.domain.models.Task
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -202,14 +202,14 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 id = 1,
                 data = "13, jul",
                 note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-                moodList = listOf(Mood(name = "Bad")),
+                moodList = listOf(Mood(nameId = "Bad")),
                 isSharedWithDoctor = false
             ),
             DiaryEntry(
                 id = 1,
                 data = "13, jul",
                 note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-                moodList = listOf(Mood(name = "Bad")),
+                moodList = listOf(Mood(nameId = "Bad")),
                 isSharedWithDoctor = false
             )
         )

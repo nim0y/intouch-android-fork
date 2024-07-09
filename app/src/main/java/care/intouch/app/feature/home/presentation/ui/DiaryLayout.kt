@@ -13,8 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import care.intouch.app.feature.home.presentation.models.DiaryEntry
-import care.intouch.app.feature.home.presentation.models.Mood
+import care.intouch.app.feature.home.domain.models.DiaryEntry
+import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.cards.NoteCards
@@ -39,7 +39,7 @@ fun DiaryLayout(
                 modifier = Modifier.padding(top = 16.dp),
                 dateText = diaryEntry.data,
                 noteText = diaryEntry.note,
-                moodChipsList = diaryEntry.moodList.map { StringVO.Plain(it.name) },
+                moodChipsList = diaryEntry.moodList.map { StringVO.Plain(it.nameId) },
                 toggleIsChecked = toggleState,
                 onClickToggle = {
                     toggleState = !toggleState
@@ -67,17 +67,17 @@ fun DiaryLayoutPreview() {
             },
             moodList = listOf(
                 Mood(
-                    name = buildString {
+                    nameId = buildString {
                         append("Bad")
                     }
                 ),
                 Mood(
-                    name = buildString {
+                    nameId = buildString {
                         append("Loneliness")
                     }
                 ),
                 Mood(
-                    name = buildString {
+                    nameId = buildString {
                         append("Loneliness")
                     }
                 )
@@ -94,7 +94,7 @@ fun DiaryLayoutPreview() {
             },
             moodList = listOf(
                 Mood(
-                    name = buildString {
+                    nameId = buildString {
                         append("Bad")
                     }
                 )
