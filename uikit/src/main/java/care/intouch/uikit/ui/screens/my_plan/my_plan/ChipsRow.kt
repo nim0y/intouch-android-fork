@@ -1,8 +1,12 @@
 package care.intouch.uikit.ui.screens.my_plan.my_plan
 
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +36,11 @@ fun ChipsRow(
         mutableStateOf(firstChipsTitle)
     }
 
+    val scrollState = rememberScrollState()
+
     Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.horizontalScroll(scrollState),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         RegularChips(
             text = firstChipsTitle,
@@ -84,7 +90,7 @@ fun ChipsRow(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview()
 fun ChipsRowPreview() {
     ChipsRow(
         onFirstChipsClick = {},
