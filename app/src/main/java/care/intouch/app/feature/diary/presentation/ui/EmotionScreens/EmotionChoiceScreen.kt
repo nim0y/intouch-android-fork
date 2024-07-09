@@ -80,7 +80,7 @@ fun EmotionChoiceScreen(
         EmotionsPager(taskList = state.emotion) { page ->
             onEvent(EmotionDataEvent.OnEmotionSwap(state.emotion[page].imageVO))
         }
-        EmotionDescriptionPager(taskList = state.emotionList) { index ->
+        EmotionDescriptionPager(taskList = state.emotionList, state.emotionListResult) { index ->
             onEvent(EmotionDataEvent.OnEmotionDescriptionClicked(state.emotionList[index]))
         }
         Spacer(modifier = Modifier.height(60.dp))

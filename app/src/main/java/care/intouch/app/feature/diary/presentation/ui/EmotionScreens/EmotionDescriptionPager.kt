@@ -23,9 +23,11 @@ import care.intouch.uikit.ui.cards.EmotionDescriptionCard
 @Composable
 fun EmotionDescriptionPager(
     taskList: List<EmotionDescriptionTask>,
+    selectedList: List<EmotionDescriptionTask>,
     onClick: (index: Int) -> Unit,
 ) {
     val selectedItems = remember { mutableStateListOf<EmotionDescriptionTask>() }
+    selectedItems.addAll(selectedList)
     LazyHorizontalStaggeredGrid(
         rows = StaggeredGridCells.Adaptive(40.dp),
         modifier = Modifier
@@ -94,6 +96,7 @@ fun EmotionDescriptionPager() {
                 EmotionDescriptionTask(StringVO.Resource(R.string.euphoria_clarifying_emotional)),
                 EmotionDescriptionTask(StringVO.Resource(R.string.love_clarifying_emotional))
             ),
+            listOf(),
             onClick = {}
         )
     }

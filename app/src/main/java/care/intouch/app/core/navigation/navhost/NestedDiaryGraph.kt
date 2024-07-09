@@ -10,8 +10,8 @@ import care.intouch.app.core.navigation.DiaryEntries
 import care.intouch.app.core.navigation.DiaryRouteBranch
 import care.intouch.app.core.navigation.EmotionChoice
 import care.intouch.app.feature.diary.CreatingNoteIntroductionScreen
-import care.intouch.app.feature.diary.DiaryEntriesScreen
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.EmotionChoiceScreen
+import care.intouch.app.feature.diary.presentation.ui.fillingOut.FillingOutScreen
 
 fun NavGraphBuilder.addNestedDiaryGraph(
     navController: NavHostController
@@ -32,7 +32,7 @@ fun NavGraphBuilder.addNestedDiaryGraph(
         }
 
         composable(route = DiaryEntries.route) {
-            DiaryEntriesScreen(
+            FillingOutScreen(
                 onNextClick = {
                     navController.navigate(route = EmotionChoice.route)
                 }

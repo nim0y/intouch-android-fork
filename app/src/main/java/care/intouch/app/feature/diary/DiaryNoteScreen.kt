@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import care.intouch.app.feature.diary.DiaryViewModel
+import care.intouch.app.feature.diary.presentation.ui.DiaryLayout
 import care.intouch.app.feature.diary.presentation.ui.models.DialogState
 import care.intouch.app.feature.diary.presentation.ui.models.DiaryChangeEvent
 import care.intouch.app.feature.diary.presentation.ui.models.DiaryEntry
@@ -142,7 +142,6 @@ private fun DiaryNoteScreen(
 @Composable
 @Preview(showBackground = true)
 fun DiaryNoteScreenLoadingPreview() {
-    InTouchTheme {
         DiaryNoteScreen(
             onMakeNoteClick = { },
             onBackButtonClick = { },
@@ -151,7 +150,6 @@ fun DiaryNoteScreenLoadingPreview() {
             isDialogVisible = false,
             dialogState = DialogState()
         )
-    }
 }
 
 @Composable
