@@ -1,16 +1,15 @@
 package care.intouch.app.feature.home.data.reposytories
 
-import care.intouch.app.feature.common.Resource
 import care.intouch.app.feature.home.data.api.AssignmentsApi
 import care.intouch.app.feature.home.data.mappers.HomeMapper
-import care.intouch.app.feature.home.domain.AssignmentRepository
+import care.intouch.app.feature.home.domain.AssignmentNetworkRepository
 import care.intouch.app.feature.home.domain.models.Task
 import javax.inject.Inject
 
 class AssignmentRepositoryImpl @Inject constructor(
     private val homeApi: AssignmentsApi,
     private val mapper: HomeMapper
-) : AssignmentRepository {
+) : AssignmentNetworkRepository {
     override suspend fun getTasks(userId: Int): Result<List<Task>> {
         try {
             val request = mapper.mapAssignmentsRequest(userId = userId)
@@ -21,25 +20,23 @@ class AssignmentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun clearAssignment(taskId: Int): Result<String> {
+    override suspend fun clearAssignment(assignmentId: Int): Result<String> {
         try {
-            val response = homeApi.clearAssignment(assignmentId = taskId)
-            return Resource.Success(response.massage)
+            val response = homeApi.clearAssignment(assignmentId = assignmentId)
+            return Result.success(response.massage)
 
         } catch (exception: Exception) {
-            val error = exceptionMapper.handleException(exception)
-            return Result.failure(error)
+            return Result.failure(exception)
         }
     }
 
-    override suspend fun setAssignmentVisible(taskId: Int): Result<String> {
+    override suspend fun setAssignmentVisible(assignmentId: Int): Result<String> {
         try {
-            val response = homeApi.setAssignmentVisible(assignmentId = taskId)
-            return Resource.Success(response.massage)
+            val response = homeApi.setAssignmentVisible(assignmentId = assignmentId)
+            return Result.success(response.massage)
 
         } catch (exception: Exception) {
-            val error = exceptionMapper.handleException(exception)
-            return Result.Error(error)
+            return Result.failure(exception)
         }
     }
 

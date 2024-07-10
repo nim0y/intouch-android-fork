@@ -1,17 +1,15 @@
 package care.intouch.app.feature.home.domain.use_case
 
-import care.intouch.app.feature.common.Resource
-import care.intouch.app.feature.common.domain.errors.ErrorEntity
+import care.intouch.app.feature.home.domain.AssignmentNetworkRepository
 import care.intouch.app.feature.home.domain.models.Task
 import javax.inject.Inject
 
 interface GetTasks {
+    suspend fun getTasks(userId: Int): Result<List<Task>>
 
-    suspend fun getTasks(): Resource<List<Task>, ErrorEntity>
-
-    class Base @Inject constructor() : GetTasks {
-        override suspend fun getTasks(): Resource<List<Task>, ErrorEntity> {
-            TODO("Not yet implemented")
+    class Base @Inject constructor(private val repository: AssignmentNetworkRepository) : GetTasks {
+        override suspend fun getTasks(userId: Int): Result<List<Task>> {
+            return repository.getTasks(userId = userId)
         }
     }
 }

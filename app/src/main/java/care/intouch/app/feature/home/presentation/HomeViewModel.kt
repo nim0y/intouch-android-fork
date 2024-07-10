@@ -4,17 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import care.intouch.app.R
 import care.intouch.app.feature.common.data.models.exception.NetworkException
-import care.intouch.app.feature.home.domain.AssignmentRepository
-import care.intouch.app.feature.home.domain.models.DiaryEntry
-import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.app.feature.home.domain.models.Status
-import care.intouch.app.feature.home.domain.models.Task
+import care.intouch.app.feature.home.domain.use_case.AssignmentsInteractor
+import care.intouch.app.feature.home.domain.use_case.DiaryEntriesInteractor
+import care.intouch.app.feature.home.domain.use_case.GetDiaryEntries
+import care.intouch.app.feature.home.domain.use_case.GetTasks
+import care.intouch.app.feature.home.domain.use_case.GetUserInformation
 import care.intouch.app.feature.home.presentation.models.EventType
 import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
 import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -27,7 +29,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val assignmentsRepository: AssignmentRepository
+    private val assignmentsInteractor: AssignmentsInteractor,
+    private val diaryEntriesInteractor: DiaryEntriesInteractor,
+    private val getDiaryEntries: GetDiaryEntries,
+    private val getTasks: GetTasks,
+    private val getUserInformation: GetUserInformation
 ) : ViewModel() {
     private val _stateScreen = MutableStateFlow(HomeScreenState())
     private val stateScreen: StateFlow<HomeScreenState> = _stateScreen.asStateFlow()
@@ -39,13 +45,15 @@ class HomeViewModel @Inject constructor(
     init {
         fetchTasks()
         fetchDiary()
+        fetchUserInformation()
 
         viewModelScope.launch {
             stateScreen.collect { state ->
                 _homeUIState.update {
                     it.copy(
                         taskList = state.taskList,
-                        diaryList = state.diaryList
+                        diaryList = state.diaryList,
+                        userName = state.userInformation.userName
                     )
                 }
             }
@@ -174,9 +182,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun fetchUserInformation() {
+        val userInformation = getUserInformation.execute()
+        _stateScreen.update { state ->
+            state.copy(userInformation = userInformation)
+        }
+    }
+
     private fun fetchTasks() {
-        viewModelScope.launch {
-            assignmentsRepository.getTasks(456)
+        viewModelScope.launch(Dispatchers.IO) {
+            getTasks.getTasks(456)
                 .onSuccess { task ->
                     _stateScreen.update { state ->
                         state.copy(taskList = task)
@@ -185,7 +200,7 @@ class HomeViewModel @Inject constructor(
                 .onFailure { exception ->
                     when (exception) {
                         is NetworkException.NoInternetConnection -> {
-                            //
+
                         }
 
                         else -> {
@@ -194,51 +209,27 @@ class HomeViewModel @Inject constructor(
                     }
                 }
         }
-
-        val taskList = listOf(
-            Task(
-                id = 1,
-                status = Status.IN_PROGRESS,
-                isSharedWithDoctor = false,
-                description = "Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
-            ),
-            Task(
-                id = 1,
-                status = Status.IN_PROGRESS,
-                isSharedWithDoctor = false,
-                description = "aboba Невероятно длинный текст, который не должен поместиться на экране, а в конце должны быть точески"
-            ),
-            Task(
-                id = 1,
-                status = Status.IN_PROGRESS,
-                isSharedWithDoctor = false,
-                description = "aboba"
-            )
-        )
-        _stateScreen.update {
-            it.copy(taskList = taskList)
-        }
     }
 
     private fun fetchDiary() {
-        val diaryList = listOf(
-            DiaryEntry(
-                id = 1,
-                data = "13, jul",
-                note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-                moodList = listOf(Mood(nameId = "Bad")),
-                isSharedWithDoctor = false
-            ),
-            DiaryEntry(
-                id = 1,
-                data = "13, jul",
-                note = "Lorem Ipsum dolor sit amet Lorem Ipsum... ",
-                moodList = listOf(Mood(nameId = "Bad")),
-                isSharedWithDoctor = false
-            )
-        )
-        _stateScreen.update {
-            it.copy(diaryList = diaryList)
+        viewModelScope.launch(Dispatchers.IO) {
+            getDiaryEntries.execute(456)
+                .onSuccess { diaryEntries ->
+                    _stateScreen.update { state ->
+                        state.copy(diaryList = diaryEntries)
+                    }
+                }
+                .onFailure { exception ->
+                    when (exception) {
+                        is NetworkException.NoInternetConnection -> {
+
+                        }
+
+                        else -> {
+                            exception.message
+                        }
+                    }
+                }
         }
     }
 

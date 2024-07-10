@@ -1,17 +1,19 @@
 package care.intouch.app.feature.home.domain.use_case
 
+import care.intouch.app.feature.home.domain.DiaryEntryNetworkRepository
 import javax.inject.Inject
 
 interface DiaryEntriesInteractor {
-    fun deleteDiaryEntry(id: Int)
-    fun shareDiaryEntryWithDoctor(id: Int)
-    class Base @Inject constructor() : DiaryEntriesInteractor {
-        override fun deleteDiaryEntry(id: Int) {
-            TODO("Not yet implemented")
+    suspend fun deleteDiaryEntry(diaryNoteId: Int): Result<String>
+    suspend fun shareDiaryEntryWithDoctor(diaryNoteId: Int): Result<String>
+    class Base @Inject constructor(private val repository: DiaryEntryNetworkRepository) :
+        DiaryEntriesInteractor {
+        override suspend fun deleteDiaryEntry(diaryNoteId: Int): Result<String> {
+            return repository.deleteDiaryEntry(diaryNoteId = diaryNoteId)
         }
 
-        override fun shareDiaryEntryWithDoctor(id: Int) {
-            TODO("Not yet implemented")
+        override suspend fun shareDiaryEntryWithDoctor(diaryNoteId: Int): Result<String> {
+            return repository.setDiaryEntryVisible(diaryNoteId = diaryNoteId)
         }
     }
 }

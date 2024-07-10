@@ -1,13 +1,15 @@
 package care.intouch.app.feature.home.data.mappers
 
-import care.intouch.app.feature.home.data.models.Responses
+import care.intouch.app.feature.home.data.models.AssignmentsResponse
+import care.intouch.app.feature.home.data.models.DiaryNotesResponse
 import care.intouch.app.feature.home.domain.models.DiaryEntry
 import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.app.feature.home.domain.models.Status
 import care.intouch.app.feature.home.domain.models.Task
+import javax.inject.Inject
 
-class HomeMapper {
-    fun mapAssignments(response: Responses.Assignments): List<Task> {
+class HomeMapper @Inject constructor() {
+    fun mapAssignments(response: AssignmentsResponse): List<Task> {
         return response.assignments.map { assignment ->
             Task(
                 id = assignment.id,
@@ -18,7 +20,7 @@ class HomeMapper {
         }
     }
 
-    fun mapDiaryEntries(response: Responses.DiariesNotes): List<DiaryEntry> {
+    fun mapDiaryEntries(response: DiaryNotesResponse): List<DiaryEntry> {
         val diaryEntries = response.diariesNotes.subList(0, 6).map { diaryNote ->
             DiaryEntry(
                 id = diaryNote.id,

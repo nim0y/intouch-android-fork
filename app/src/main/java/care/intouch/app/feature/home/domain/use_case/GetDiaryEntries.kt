@@ -1,15 +1,15 @@
 package care.intouch.app.feature.home.domain.use_case
 
-import care.intouch.app.feature.common.Resource
-import care.intouch.app.feature.common.domain.errors.ErrorEntity
+import care.intouch.app.feature.home.domain.DiaryEntryNetworkRepository
 import care.intouch.app.feature.home.domain.models.DiaryEntry
 import javax.inject.Inject
 
 interface GetDiaryEntries {
-    suspend fun execute(): Resource<List<DiaryEntry>, ErrorEntity>
-    class Base @Inject constructor() : GetDiaryEntries {
-        override suspend fun execute(): Resource<List<DiaryEntry>, ErrorEntity> {
-            TODO("Not yet implemented")
+    suspend fun execute(userId: Int): Result<List<DiaryEntry>>
+    class Base @Inject constructor(private val repository: DiaryEntryNetworkRepository) :
+        GetDiaryEntries {
+        override suspend fun execute(userId: Int): Result<List<DiaryEntry>> {
+            return repository.getDiaryEntries(userId = userId)
         }
     }
 }
