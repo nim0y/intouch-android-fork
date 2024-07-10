@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.home.presentation.ui.FoldingScreen
 import care.intouch.app.feature.plan.domain.models.AssignmentStatus
-import care.intouch.app.feature.plan.domain.useCase.mockAssignments
+import care.intouch.app.feature.plan.domain.models.PlanScreenSideEffect
+import care.intouch.app.feature.plan.domain.usecase.mockAssignments
 import care.intouch.app.feature.plan.presentation.models.PlanScreenEvent
 import care.intouch.app.feature.plan.presentation.models.PlanScreenState
 import care.intouch.app.feature.plan.presentation.viewmodel.PlanScreenViewModel
@@ -35,8 +37,24 @@ fun PlanScreen(
     onTaskListItemClick: () -> Unit,
     onBackArrowClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val viewModel: PlanScreenViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.sideEffect.collect { sideEffect ->
+            when(sideEffect) {
+                is PlanScreenSideEffect.ShowToast -> {
+                    Toast.makeText(
+                        context,
+                        sideEffect.message.value(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
 
     PlanScreen(
         state = state,
