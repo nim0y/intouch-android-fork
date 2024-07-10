@@ -74,7 +74,7 @@ fun PlanScreen(
             )
 
             ChipsRow(
-                modifier = Modifier.padding(horizontal = 28.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 onFirstChipsClick = {
                     onEvent(PlanScreenEvent.FilterAssignmentsEvent(
                         assignmentStatus = AssignmentStatus.SHOW_ALL
@@ -98,7 +98,7 @@ fun PlanScreen(
             )
 
             LazyColumn(
-                modifier = Modifier.padding(top = 28.dp, start = 28.dp, end = 28.dp),
+                modifier = Modifier.padding(top = 28.dp, start = 16.dp, end = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(28.dp)
             ) {
                 itemsIndexed(state.filteredAssignments) { index, assignment ->
