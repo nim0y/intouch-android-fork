@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionTask
+import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.cards.EmotionCard
@@ -32,10 +34,10 @@ fun EmotionsPager(
             .padding(top = 32.dp),
     ) { page ->
         val scale = if (page == pagerState.currentPage) 1.0f else 0.8f
+        onClick.invoke(pagerState.currentPage)
         EmotionCard(
             modifier = Modifier,
-            emotion = (if (scale == 1.0f) taskList[page].bigImageVO else taskList[page].imageVO),
-            onClick = { onClick(page) }
+            emotion = (if (scale == 1.0f) taskList[page].bigImageVO else taskList[page].imageVO)
         )
     }
 }
@@ -46,24 +48,29 @@ fun PlanPagerPreview() {
     InTouchTheme {
         val taskList = listOf(
             EmotionTask(
-                imageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_terrible),
-                bigImageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_terrible_big)
+                imageVO = ImageVO.Resource(R.drawable.icon_terrible),
+                bigImageVO = ImageVO.Resource(R.drawable.icon_terrible_big),
+                emotionDesc = EmotionDesc.TERRIBLE
             ),
             EmotionTask(
-                imageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_bad),
-                bigImageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_bad_big)
+                imageVO = ImageVO.Resource(R.drawable.icon_bad),
+                bigImageVO = ImageVO.Resource(R.drawable.icon_bad_big),
+                emotionDesc = EmotionDesc.BAD
             ),
             EmotionTask(
-                imageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_okay),
-                bigImageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_okey_big)
+                imageVO = ImageVO.Resource(R.drawable.icon_okay),
+                bigImageVO = ImageVO.Resource(R.drawable.icon_okey_big),
+                emotionDesc = EmotionDesc.OKAY
             ),
             EmotionTask(
-                imageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_good),
-                bigImageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_good_big)
+                imageVO = ImageVO.Resource(R.drawable.icon_good),
+                bigImageVO = ImageVO.Resource(R.drawable.icon_good_big),
+                emotionDesc = EmotionDesc.GOOD
             ),
             EmotionTask(
-                imageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_great),
-                bigImageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_great_big)
+                imageVO = ImageVO.Resource(R.drawable.icon_great),
+                bigImageVO = ImageVO.Resource(R.drawable.icon_great_big),
+                emotionDesc = EmotionDesc.GREAT
             ),
         )
         EmotionsPager(

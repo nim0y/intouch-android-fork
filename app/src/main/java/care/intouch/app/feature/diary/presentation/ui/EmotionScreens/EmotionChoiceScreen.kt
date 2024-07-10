@@ -1,6 +1,7 @@
 package care.intouch.app.feature.diary.presentation.ui.EmotionScreens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.app.R
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDataEvent
+import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionScreenState
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.viewModel.EmotionViewModel
 import care.intouch.uikit.common.ImageVO
@@ -30,12 +32,14 @@ import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
 fun EmotionChoiceScreen(
     onSaveClick: () -> Unit,
     viewModel: EmotionViewModel,
+    onBackClick: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
     EmotionChoiceScreen(
-        onSaveClick = { onSaveClick },
+        onSaveClick = onSaveClick,
         state = state,
-        onEvent = { viewModel.onEvent(it) }
+        onEvent = { viewModel.onEvent(it) },
+        onBackClick = onBackClick
     )
 }
 
@@ -45,11 +49,13 @@ fun EmotionChoiceScreen(
     arrowImage: ImageVO = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_arrow_left),
     state: EmotionScreenState,
     onEvent: (EmotionDataEvent) -> Unit,
+    onBackClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .background(InTouchTheme.colors.mainBlue),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
@@ -57,7 +63,7 @@ fun EmotionChoiceScreen(
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 28.dp, top = 38.dp)
-                .clickable { }
+                .clickable(onClick = onBackClick)
         )
         Spacer(modifier = Modifier.height(38.dp))
         Text(
@@ -78,14 +84,14 @@ fun EmotionChoiceScreen(
             color = InTouchTheme.colors.textGreen,
         )
         EmotionsPager(taskList = state.emotion) { page ->
-            onEvent(EmotionDataEvent.OnEmotionSwap(state.emotion[page].imageVO))
+            onEvent(EmotionDataEvent.OnEmotionSwap(state.emotion[page].emotionDesc))
         }
         EmotionDescriptionPager(taskList = state.emotionList, state.emotionListResult) { index ->
             onEvent(EmotionDataEvent.OnEmotionDescriptionClicked(state.emotionList[index]))
         }
         Spacer(modifier = Modifier.height(60.dp))
         PrimaryButtonGreen(
-            onClick = { },
+            onClick = { onEvent(EmotionDataEvent.OnSaveButtonClicked) },
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = StringVO.Resource(R.string.save_button)
         )
@@ -97,13 +103,13 @@ fun EmotionChoiceScreen(
 fun EmotionChoiceScreenPreview() {
     InTouchTheme {
         val state = EmotionScreenState(
-            emotionResult = null,
+            emotionResult = EmotionDesc.EMPTY,
             emotionList = listOf(),
             emotion = listOf(),
             emotionListResult = mutableListOf()
         )
         EmotionChoiceScreen(
-            onSaveClick = {}, state = state, onEvent = {}
+            onSaveClick = {}, state = state, onEvent = {}, onBackClick = {}
         )
     }
 }

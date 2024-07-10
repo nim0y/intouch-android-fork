@@ -3,10 +3,12 @@ package care.intouch.uikit.ui.cards
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -17,14 +19,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
-import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
-import care.intouch.uikit.ui.buttons.IntouchButton
 
 @Composable
-fun AddEmotionCard(
+fun ResultEmotionCard(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onTrashClick: () -> Unit,
+    emotionIcon: ImageVO = ImageVO.Resource(R.drawable.icon_terrible_small_active),
     backgroundColor: Color = InTouchTheme.colors.input85,
 ) {
 
@@ -43,59 +45,42 @@ fun AddEmotionCard(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp),
         ) {
-            IntouchButton(
-                onClick = onClick,
-                modifier = Modifier,
-                text = StringVO.Plain("Add Emotions"),
-                enableBackgroundColor = InTouchTheme.colors.textGreen,
-                disableBackgroundColor = InTouchTheme.colors.textGreen,
-                textStyle = InTouchTheme.typography.caption1Semibold,
-                contentPadding = PaddingValues(
-                    start = 38.dp,
-                    top = 12.dp,
-                    bottom = 12.dp,
-                    end = 12.dp
-                ),
-                isEnabled = true
-            )
+
             Image(
-                painter = ImageVO.Resource(R.drawable.icon_plus_small_white).painter(),
+                painter = emotionIcon.painter(),
                 contentDescription = "",
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = 8.dp)
             )
             Image(
-                painter = ImageVO.Resource(R.drawable.icon_terrible_small).painter(),
-                contentDescription = "",
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 80.dp)
-            )
-            Image(
-                painter = ImageVO.Resource(R.drawable.icon_okey_small).painter(),
-                contentDescription = "",
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-            )
-            Image(
-                painter = ImageVO.Resource(R.drawable.icon_bad_small).painter(),
+                painter = ImageVO.Resource(R.drawable.icon_edit).painter(),
                 contentDescription = "",
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .padding(end = 40.dp)
+                    .clickable(onClick = onEditClick)
+            )
+            Image(
+                painter = ImageVO.Resource(R.drawable.icon_trash).painter(),
+                contentDescription = "",
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .clickable(onClick = onTrashClick)
             )
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
 @Preview
 @Composable
-fun AddEmotionCardPreview() {
+fun ResultEmotionCardPreview() {
     InTouchTheme {
-        AddEmotionCard(
+        ResultEmotionCard(
             modifier = Modifier.padding(45.dp),
-            onClick = {}
+            onEditClick = {},
+            onTrashClick = {}
         )
     }
 }

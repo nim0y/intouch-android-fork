@@ -98,7 +98,10 @@ fun NavGraphBuilder.addNestedSamplesGraph() {
             ButtonSampleScreenSecond()
         }
         composable(route = OnEmotionClick.route) {
-            EmotionChoiceScreen(onSaveClick = { /*TODO*/ }, viewModel = hiltViewModel())
+            EmotionChoiceScreen(
+                onSaveClick = { /*TODO*/ },
+                viewModel = hiltViewModel(),
+                onBackClick = {})
         }
     }
 }

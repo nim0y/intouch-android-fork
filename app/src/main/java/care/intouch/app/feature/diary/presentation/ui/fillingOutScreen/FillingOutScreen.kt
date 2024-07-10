@@ -1,4 +1,4 @@
-package care.intouch.app.feature.diary.presentation.ui.fillingOut
+package care.intouch.app.feature.diary.presentation.ui.fillingOutScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,11 +12,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import care.intouch.app.R
+import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.FillingOutDataEvent
+import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.FillingOutScreenState
+import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.viewModel.FillingOutViewModel
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
@@ -28,6 +33,24 @@ import care.intouch.uikit.ui.toggle.Toggle
 @Composable
 fun FillingOutScreen(
     onNextClick: () -> Unit,
+    viewModel: FillingOutViewModel,
+    onBackClick: () -> Unit,
+) {
+    val state by viewModel.uiState.collectAsState()
+    FillingOutScreen(
+        onNextClick = onNextClick,
+        state = state,
+        onEvent = { viewModel.onEvent(it) },
+        onBackClick = onBackClick
+    )
+}
+
+@Composable
+fun FillingOutScreen(
+    onNextClick: () -> Unit,
+    state: FillingOutScreenState,
+    onEvent: (FillingOutDataEvent) -> Unit,
+    onBackClick: () -> Unit,
 ) {
     Column(
         Modifier.background(InTouchTheme.colors.mainBlue)
@@ -40,7 +63,7 @@ fun FillingOutScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             TopBarArcButton(
-                onClick = { },
+                onClick = onBackClick,
                 enabled = true,
                 modifier = Modifier
                     .align(Alignment.End)
@@ -50,8 +73,8 @@ fun FillingOutScreen(
             MultilineTextField(
                 titleText = StringVO.Resource(R.string.event_sub_title_emotional),
                 subtitleText = StringVO.Resource(R.string.event_desc_emotional),
-                value = "",
-                onValueChange = {},
+                value = state.detailsText,
+                onValueChange = { onEvent(FillingOutDataEvent.OnDetailsTextChanged(it)) },
                 isError = false,
                 enabled = true,
                 hint = StringVO.Resource(R.string.edit_text_hint),
@@ -61,8 +84,8 @@ fun FillingOutScreen(
             MultilineTextField(
                 titleText = StringVO.Resource(R.string.thoughts_sub_title_emotional),
                 subtitleText = StringVO.Resource(R.string.thoughts_desc_emotional),
-                value = "",
-                onValueChange = {},
+                value = state.analysisText,
+                onValueChange = { onEvent(FillingOutDataEvent.OnAnalysisTextChanged(it)) },
                 isError = false,
                 enabled = true,
                 hint = StringVO.Resource(R.string.edit_text_hint),
@@ -72,21 +95,24 @@ fun FillingOutScreen(
             MultilineTextField(
                 titleText = StringVO.Resource(R.string.emotional_type_sub_title_emotional),
                 subtitleText = StringVO.Resource(R.string.emotional_type_desc_emotional),
-                value = "",
-                onValueChange = {},
+                value = state.typeText,
+                onValueChange = { onEvent(FillingOutDataEvent.OnTypeTextChanged(it)) },
                 isError = false,
                 enabled = true,
                 hint = StringVO.Resource(R.string.edit_text_hint),
                 modifier = Modifier.fillMaxSize()
             )
             Spacer(modifier = Modifier.height(8.dp))
-            AddEmotionCard(onClick = {}, modifier = Modifier.fillMaxWidth())
+            AddEmotionCard(
+                onClick = onNextClick,
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(modifier = Modifier.height(40.dp))
             MultilineTextField(
                 titleText = StringVO.Resource(R.string.sensations_sub_title_emotional),
                 subtitleText = StringVO.Resource(R.string.sensations_desc_emotional),
-                value = "",
-                onValueChange = {},
+                value = state.sensationsText,
+                onValueChange = { onEvent(FillingOutDataEvent.OnSensationsTextChanged(it)) },
                 isError = false,
                 enabled = true,
                 hint = StringVO.Resource(R.string.edit_text_hint),
@@ -110,7 +136,7 @@ fun FillingOutScreen(
             }
             Spacer(modifier = Modifier.height(40.dp))
             PrimaryButtonGreen(
-                onClick = { },
+                onClick = {},
                 modifier = Modifier,
                 text = StringVO.Resource(R.string.save_button)
             )
@@ -120,9 +146,15 @@ fun FillingOutScreen(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 1350)
 fun FillingOutScreenPreview() {
+    val state = FillingOutScreenState(
+        detailsText = "",
+        analysisText = "",
+        typeText = "",
+        sensationsText = "",
+    )
     InTouchTheme {
-        FillingOutScreen(onNextClick = {})
+        FillingOutScreen(onNextClick = {}, state, onEvent = {}, onBackClick = {})
     }
 }

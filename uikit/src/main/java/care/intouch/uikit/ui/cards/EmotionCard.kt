@@ -1,7 +1,6 @@
 package care.intouch.uikit.ui.cards
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +13,6 @@ import care.intouch.uikit.theme.InTouchTheme
 fun EmotionCard(
     emotion: ImageVO,
     modifier: Modifier,
-    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -22,7 +20,7 @@ fun EmotionCard(
         Image(
             painter = emotion.painter(),
             contentDescription = "",
-            modifier = Modifier.clickable { onClick }
+            modifier = modifier
         )
     }
 }
@@ -34,7 +32,6 @@ fun EmotionCard() {
         EmotionCard(
             emotion = ImageVO.Resource(care.intouch.uikit.R.drawable.icon_terrible),
             modifier = Modifier,
-            onClick = {}
         )
     }
 }
