@@ -34,7 +34,7 @@ fun CardHolder(
 
     val chipColor = when(chipText.value()) {
         StringVO.Resource(resId = R.string.to_do).value() -> InTouchTheme.colors.accentYellow
-        StringVO.Plain("In progress").value() -> InTouchTheme.colors.textBlue
+        StringVO.Resource(resId = R.string.in_progress).value() -> InTouchTheme.colors.textBlue
         StringVO.Resource(resId = R.string.done).value() -> InTouchTheme.colors.darkGreen
         else -> InTouchTheme.colors.accentYellow
     }

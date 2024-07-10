@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.home.presentation.ui.FoldingScreen
+import care.intouch.app.feature.plan.domain.models.Assignment
 import care.intouch.app.feature.plan.domain.models.AssignmentStatus
 import care.intouch.app.feature.plan.domain.models.PlanScreenSideEffect
-import care.intouch.app.feature.plan.domain.usecase.mockAssignments
 import care.intouch.app.feature.plan.presentation.models.PlanScreenEvent
 import care.intouch.app.feature.plan.presentation.models.PlanScreenState
 import care.intouch.app.feature.plan.presentation.viewmodel.PlanScreenViewModel
@@ -92,7 +92,7 @@ fun PlanScreen(
             )
 
             ChipsRow(
-                modifier = Modifier.padding(horizontal = 28.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 onFirstChipsClick = {
                     onEvent(PlanScreenEvent.FilterAssignmentsEvent(
                         assignmentStatus = AssignmentStatus.SHOW_ALL
@@ -116,10 +116,10 @@ fun PlanScreen(
             )
 
             LazyColumn(
-                modifier = Modifier.padding(top = 28.dp, start = 28.dp, end = 28.dp),
+                modifier = Modifier.padding(top = 28.dp, start = 16.dp, end = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(28.dp)
             ) {
-                itemsIndexed(state.filteredAssignments) { index, assignment ->
+                items(state.filteredAssignments) { assignment ->
                     CardHolder(
                         chipText = StringVO.Plain(assignment.status.value),
                         text = assignment.title,
@@ -127,14 +127,14 @@ fun PlanScreen(
                         onDuplicateMenuItemClick = {
                             Toast.makeText(
                                 context,
-                                "Duplicate operation. Assignment index: $index",
+                                "Duplicate operation. Assignment id: ${assignment.id}",
                                 Toast.LENGTH_SHORT
                             ).show()
                         },
                         onClearMenuItemClick = {
                             Toast.makeText(
                                 context,
-                                "Clean operation. Assignment index: $index",
+                                "Clean operation. Assignment id: ${assignment.id}",
                                 Toast.LENGTH_SHORT
                             ).show()
 
@@ -143,7 +143,7 @@ fun PlanScreen(
                         onClickToggle = { toggleValue ->
                             Toast.makeText(
                                 context,
-                                "Toggle action with '$toggleValue' and assignment index: $index",
+                                "Toggle action with '$toggleValue' and Assignment id: ${assignment.id}",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -195,3 +195,48 @@ fun PlanScreenPreview() {
         )
     }
 }
+
+val mockAssignments: List<Assignment> = listOf(
+    Assignment(
+        id = 1,
+        title = "Assignment 1",
+        date = "19.06.2024",
+        status = AssignmentStatus.TO_DO
+    ),
+    Assignment(
+        id = 2,
+        title = "Assignment 2",
+        date = "20.06.2024",
+        status = AssignmentStatus.TO_DO
+    ),
+    Assignment(
+        id = 3,
+        title = "Assignment 3",
+        date = "21.06.2024",
+        status = AssignmentStatus.IN_PROGRESS
+    ),
+    Assignment(
+        id = 4,
+        title = "Assignment 4",
+        date = "22.06.2024",
+        status = AssignmentStatus.IN_PROGRESS
+    ),
+    Assignment(
+        id = 5,
+        title = "Assignment 5",
+        date = "23.06.2024",
+        status = AssignmentStatus.DONE
+    ),
+    Assignment(
+        id = 6,
+        title = "Assignment 6",
+        date = "24.06.2024",
+        status = AssignmentStatus.DONE
+    ),
+    Assignment(
+        id = 7,
+        title = "Assignment 7",
+        date = "25.06.2024",
+        status = AssignmentStatus.DONE
+    )
+)

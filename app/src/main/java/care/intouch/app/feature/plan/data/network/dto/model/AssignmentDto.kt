@@ -9,12 +9,9 @@ import kotlinx.serialization.Serializable
 data class AssignmentDto(
     val id: Int,
     val title: String,
-    val text: String,
     @SerialName("update_date")
     val date: String,
     val status: String,
-    @SerialName("image_url")
-    val imageUrl: String
 )
 
 fun AssignmentDto.mapToAssignment(): Assignment {
@@ -28,9 +25,7 @@ fun AssignmentDto.mapToAssignment(): Assignment {
     return Assignment(
         id = this.id,
         title = this.title,
-        text = this.text,
         date = this.date,
         status = assignmentStatus,
-        imageUrl = this.imageUrl
     )
 }
