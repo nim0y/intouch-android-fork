@@ -39,7 +39,7 @@ fun DiaryLayout(
                 modifier = Modifier.padding(top = 16.dp),
                 dateText = diaryEntry.data,
                 noteText = diaryEntry.note,
-                moodChipsList = diaryEntry.moodList.map { StringVO.Plain(it.nameId) },
+                moodChipsList = diaryEntry.moodList.map { StringVO.Resource(it.nameId) },
                 toggleIsChecked = toggleState,
                 onClickToggle = {
                     toggleState = !toggleState
@@ -66,21 +66,9 @@ fun DiaryLayoutPreview() {
                 append("Lorem Ipsum dolor sit amet Lorem Ipsum... ")
             },
             moodList = listOf(
-                Mood(
-                    nameId = buildString {
-                        append("Bad")
-                    }
-                ),
-                Mood(
-                    nameId = buildString {
-                        append("Loneliness")
-                    }
-                ),
-                Mood(
-                    nameId = buildString {
-                        append("Loneliness")
-                    }
-                )
+                Mood.Loneliness,
+                Mood.Joy,
+                Mood.Hope
             ),
             isSharedWithDoctor = false
         ),
@@ -93,11 +81,9 @@ fun DiaryLayoutPreview() {
                 append("Lorem Ipsum dolor sit amet Lorem Ipsum... ")
             },
             moodList = listOf(
-                Mood(
-                    nameId = buildString {
-                        append("Bad")
-                    }
-                )
+                Mood.Loneliness,
+                Mood.Joy,
+                Mood.Hope
             ),
             isSharedWithDoctor = false
         )

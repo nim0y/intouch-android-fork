@@ -11,4 +11,9 @@ sealed interface HomeScreenSideEffect {
         val onConfirm: () -> Unit = {},
         val onDismiss: () -> Unit = {},
     ) : HomeScreenSideEffect
+
+    data class ShowToast(
+        val massage: StringVO = StringVO.Plain(""),
+        val onDismiss: () -> Unit = {}
+    ) : HomeScreenSideEffect
 }

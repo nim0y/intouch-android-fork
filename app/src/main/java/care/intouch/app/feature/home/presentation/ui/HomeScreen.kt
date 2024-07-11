@@ -27,19 +27,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import care.intouch.app.feature.home.presentation.HomeViewModel
 import care.intouch.app.feature.home.domain.models.DiaryEntry
-import care.intouch.app.feature.home.presentation.models.EventType
-import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
-import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.app.feature.home.domain.models.Status
 import care.intouch.app.feature.home.domain.models.Task
+import care.intouch.app.feature.home.presentation.HomeViewModel
+import care.intouch.app.feature.home.presentation.models.EventType
+import care.intouch.app.feature.home.presentation.models.HomeScreenSideEffect
+import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.app.models.DialogState
+import care.intouch.app.models.ToastState
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.LoadingContainer
-import care.intouch.uikit.ui.cards.ConformationDialog
 import care.intouch.uikit.ui.customShape.CustomHeaderShape
+import care.intouch.uikit.ui.events.ConformationDialog
+import care.intouch.uikit.ui.events.Toast
 import care.intouch.app.R as AppR
 
 @Composable
@@ -50,7 +52,9 @@ fun HomeScreen(
     val viewModel: HomeViewModel = hiltViewModel()
     val screenState by viewModel.homeUIState.collectAsState()
     var isDialogVisible by remember { mutableStateOf(false) }
+    var isToastVisible by remember { mutableStateOf(false) }
     var dialogState by remember { mutableStateOf(DialogState()) }
+    var toastState by remember { mutableStateOf(ToastState()) }
     val sideEffect = viewModel.sideEffect
 
     LaunchedEffect(key1 = sideEffect) {
@@ -68,8 +72,19 @@ fun HomeScreen(
                             isDialogVisible = false
                         },
                         onDismiss = {
-                            effect.onConfirm()
+                            effect.onDismiss()
                             isDialogVisible = false
+                        }
+                    )
+                }
+
+                is HomeScreenSideEffect.ShowToast -> {
+                    isToastVisible = true
+                    toastState = ToastState(
+                        massage = effect.massage,
+                        onDismiss = {
+                            effect.onDismiss()
+                            isToastVisible = false
                         }
                     )
                 }
@@ -85,7 +100,9 @@ fun HomeScreen(
             onSeeAllPlanClicked = onSeeAllPlanClicked,
             onSeeAllDiaryClicked = onSeeAllDiaryClicked,
             isDialogVisible = isDialogVisible,
-            dialogState = dialogState
+            dialogState = dialogState,
+            isToastVisible = isToastVisible,
+            toastState = toastState
         )
     }
 
@@ -98,7 +115,9 @@ fun HomeScreen(
     onSeeAllPlanClicked: () -> Unit,
     onSeeAllDiaryClicked: () -> Unit,
     isDialogVisible: Boolean = false,
-    dialogState: DialogState = DialogState()
+    dialogState: DialogState = DialogState(),
+    isToastVisible: Boolean = false,
+    toastState: ToastState = ToastState()
 ) {
     Box(
         modifier = Modifier
@@ -148,19 +167,17 @@ fun HomeScreen(
                             )
                         )
                     },
-                    dropdownMenuDuplicate = { taskId, taskIndex ->
+                    dropdownMenuDuplicate = { taskId ->
                         onEvent(
                             EventType.DuplicateTask(
-                                taskId = taskId,
-                                index = taskIndex
+                                taskId = taskId
                             )
                         )
                     },
-                    dropdownMenuClear = { taskId, taskIndex ->
+                    dropdownMenuClear = { taskId ->
                         onEvent(
                             EventType.ClearTask(
-                                taskId = taskId,
-                                index = taskIndex
+                                taskId = taskId
                             )
                         )
                     }
@@ -181,8 +198,7 @@ fun HomeScreen(
                     onDeleteButtonClicked = { itemId, itemIndex ->
                         onEvent(
                             EventType.DeleteDiaryEntry(
-                                diaryEntryId = itemId,
-                                index = itemIndex
+                                diaryEntryId = itemId
                             )
                         )
                     },
@@ -197,6 +213,17 @@ fun HomeScreen(
                     }
                 )
             }
+        }
+
+        if (isToastVisible) {
+            Toast(
+                modifier = Modifier
+                    .padding(vertical = 24.dp)
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(24.dp),
+                text = toastState.massage.value()
+            )
         }
 
         if (isDialogVisible) {
@@ -299,9 +326,9 @@ fun HomeScreenWithDiaryPreview() {
                                 append("а в конце должны быть точески ")
                             },
                             moodList = listOf(
-                                Mood(nameId = "Bad"),
-                                Mood(nameId = "Loneliness"),
-                                Mood(nameId = "Loneliness")
+                                Mood.Loneliness,
+                                Mood.Joy,
+                                Mood.Hope
                             ),
                             isSharedWithDoctor = false
                         ),
@@ -315,7 +342,7 @@ fun HomeScreenWithDiaryPreview() {
                                 append("длинный текст, который не должен поместиться на экране,")
                                 append("а в конце должны быть точески ")
                             },
-                            moodList = listOf(Mood(nameId = "Bad")),
+                            moodList = listOf(Mood.Fear),
                             isSharedWithDoctor = false
                         )
                     )
@@ -380,21 +407,9 @@ fun HomeScreenFullPreview() {
                             append("а в конце должны быть точески ")
                         },
                         moodList = listOf(
-                            Mood(
-                                nameId = buildString {
-                                    append("Bad")
-                                }
-                            ),
-                            Mood(
-                                nameId = buildString {
-                                    append("Loneliness")
-                                }
-                            ),
-                            Mood(
-                                nameId = buildString {
-                                    append("Loneliness")
-                                }
-                            )
+                            Mood.Loneliness,
+                            Mood.Joy,
+                            Mood.Hope
                         ),
                         isSharedWithDoctor = false
                     ),
@@ -409,11 +424,9 @@ fun HomeScreenFullPreview() {
                             append("а в конце должны быть точески ")
                         },
                         moodList = listOf(
-                            Mood(
-                                nameId = buildString {
-                                    append("Bad")
-                                }
-                            )
+                            Mood.Loneliness,
+                            Mood.Joy,
+                            Mood.Hope
                         ),
                         isSharedWithDoctor = false
                     )

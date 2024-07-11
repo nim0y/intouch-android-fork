@@ -28,8 +28,8 @@ import care.intouch.uikit.ui.cards.PlanCard
 fun PlanPager(
     taskList: List<Task>,
     onSwitcherChange: (Int, Int, Boolean) -> Unit,
-    dropdownMenuDuplicate: (itemId: Int, itemIndex: Int) -> Unit,
-    dropdownMenuClear: (itemId: Int, itemIndex: Int) -> Unit
+    dropdownMenuDuplicate: (itemId: Int) -> Unit,
+    dropdownMenuClear: (itemId: Int) -> Unit
 ) {
     val pagerState = rememberPagerState(
         pageCount = { taskList.size },
@@ -53,8 +53,7 @@ fun PlanPager(
                 care.intouch.uikit.R.drawable.icon_duplicate
             ) {
                 dropdownMenuDuplicate(
-                    taskList[page].id,
-                    page
+                    taskList[page].id
                 )
                 dropDownMenu = !dropDownMenu
             },
@@ -63,8 +62,7 @@ fun PlanPager(
                     care.intouch.uikit.R.drawable.icon_small_trash
                 ) {
                     dropdownMenuClear(
-                        taskList[page].id,
-                        page,
+                        taskList[page].id
                     )
                     dropDownMenu = !dropDownMenu
                 })
@@ -127,8 +125,8 @@ fun PlanPagerPreview() {
         PlanPager(
             taskList = taskList,
             onSwitcherChange = { _, _, _ -> },
-            dropdownMenuDuplicate = { _, _ -> },
-            dropdownMenuClear = { _, _ -> }
+            dropdownMenuDuplicate = { _ -> },
+            dropdownMenuClear = { _-> }
         )
     }
 }

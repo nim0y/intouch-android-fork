@@ -2,14 +2,14 @@ package care.intouch.app.feature.home.data.reposytories
 
 import care.intouch.app.feature.home.data.api.DiaryNotesApi
 import care.intouch.app.feature.home.data.mappers.HomeMapper
-import care.intouch.app.feature.home.domain.DiaryEntryNetworkRepository
+import care.intouch.app.feature.home.domain.DiaryEntryRepository
 import care.intouch.app.feature.home.domain.models.DiaryEntry
 import javax.inject.Inject
 
-class DiaryEntryNetworkRepositoryImp @Inject constructor(
+class DiaryEntryRepositoryImpl @Inject constructor(
     private val diaryNoteApi: DiaryNotesApi,
     private val mapper: HomeMapper
-) : DiaryEntryNetworkRepository {
+) : DiaryEntryRepository {
     override suspend fun getDiaryEntries(userId: Int): Result<List<DiaryEntry>> {
         try {
             val request = mapper.mapDiaryNoteRequest(

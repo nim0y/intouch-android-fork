@@ -11,5 +11,6 @@ data class HomeUiState(
     val isDiaryListVisible: Boolean = diaryList.isNotEmpty(),
     val isDiaryListEmpty: Boolean = diaryList.isNotEmpty(),
     val isLoading: Boolean = false,
+    val isConnectionLost: Boolean = false,
     val userName: String = "Bob"
 )

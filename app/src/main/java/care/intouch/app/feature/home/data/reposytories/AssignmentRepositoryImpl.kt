@@ -2,14 +2,14 @@ package care.intouch.app.feature.home.data.reposytories
 
 import care.intouch.app.feature.home.data.api.AssignmentsApi
 import care.intouch.app.feature.home.data.mappers.HomeMapper
-import care.intouch.app.feature.home.domain.AssignmentNetworkRepository
+import care.intouch.app.feature.home.domain.AssignmentRepository
 import care.intouch.app.feature.home.domain.models.Task
 import javax.inject.Inject
 
 class AssignmentRepositoryImpl @Inject constructor(
     private val homeApi: AssignmentsApi,
     private val mapper: HomeMapper
-) : AssignmentNetworkRepository {
+) : AssignmentRepository {
     override suspend fun getTasks(userId: Int): Result<List<Task>> {
         try {
             val request = mapper.mapAssignmentsRequest(userId = userId)

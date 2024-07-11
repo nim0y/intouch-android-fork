@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import care.intouch.app.R
 import care.intouch.app.feature.common.data.models.exception.NetworkException
-import care.intouch.app.feature.home.domain.models.Status
 import care.intouch.app.feature.home.domain.use_case.AssignmentsInteractor
 import care.intouch.app.feature.home.domain.use_case.DiaryEntriesInteractor
 import care.intouch.app.feature.home.domain.use_case.GetDiaryEntries
@@ -17,6 +16,7 @@ import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -43,9 +43,15 @@ class HomeViewModel @Inject constructor(
     val sideEffect: SharedFlow<HomeScreenSideEffect> = _sideEffect.asSharedFlow()
 
     init {
-        fetchTasks()
-        fetchDiary()
         fetchUserInformation()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _stateScreen.update { state ->
+                state.copy(isLoading = true)
+            }
+            fetchTasks()
+            fetchDiary()
+        }
 
         viewModelScope.launch {
             stateScreen.collect { state ->
@@ -53,7 +59,9 @@ class HomeViewModel @Inject constructor(
                     it.copy(
                         taskList = state.taskList,
                         diaryList = state.diaryList,
-                        userName = state.userInformation.userName
+                        userName = state.userInformation.userName,
+                        isLoading = state.isLoading,
+                        isConnectionLost = state.isConnectionLost
                     )
                 }
             }
@@ -66,16 +74,12 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is EventType.DuplicateTask -> {
                 duplicateTask(
-                    taskId = event.taskId,
-                    index = event.index
+                    taskId = event.taskId
                 )
             }
 
             is EventType.ClearTask -> {
-                clearTask(
-                    taskId = event.taskId,
-                    index = event.index
-                )
+                clearTask(taskId = event.taskId)
             }
 
             is EventType.ShareTask -> {
@@ -95,90 +99,157 @@ class HomeViewModel @Inject constructor(
 
             is EventType.DeleteDiaryEntry -> {
                 deleteDiaryEntry(
-                    diaryId = event.diaryEntryId,
-                    index = event.index
+                    diaryId = event.diaryEntryId
                 )
             }
         }
     }
 
-    private fun duplicateTask(taskId: Int, index: Int) {
-        val newItem = getState().taskList[index]
-        val newTaskList = getState().taskList.toMutableList()
-        newTaskList.add(newItem)
-        _stateScreen.update {
-            it.copy(taskList = newTaskList)
-        }
+    private fun duplicateTask(taskId: Int) {
+
     }
 
-    private fun clearTask(taskId: Int, index: Int) {
+    private fun clearTask(taskId: Int) {
         showDialog(
             title = StringVO.Resource(R.string.info_delete_task_question),
             massage = StringVO.Resource(R.string.warning_delete),
             onConfirmButtonText = StringVO.Resource(R.string.confirm_button),
             onDismissButtonText = StringVO.Resource(R.string.cancel_button),
             onConfirm = {
-                handleClearTask(taskId, index)
+                handleClearTask(taskId)
             },
             onDismiss = {}
         )
     }
 
-    private fun handleClearTask(taskId: Int, index: Int) {
-        val newTaskList = getState().taskList.toMutableList()
-        newTaskList[index] = newTaskList[index]
-            .copy(
-                isSharedWithDoctor = false,
-                status = Status.TO_DO,
-                description = ""
-            )
-        _stateScreen.update {
-            it.copy(taskList = newTaskList)
+    private fun handleClearTask(taskId: Int) {
+        _stateScreen.update { state ->
+            state.copy(isLoading = true)
         }
+        viewModelScope.launch(Dispatchers.IO) {
+            assignmentsInteractor.clearAssignment(assignmentId = taskId)
+                .onSuccess {
+                    fetchTasks()
+                }
+                .onFailure { exception ->
+                    when (exception) {
+                        is NetworkException.NoInternetConnection -> {
+                            showToast(
+                                massage = StringVO.Resource(R.string.problem_with_connection)
+                            )
+                        }
+
+                        else -> {
+                            showToast(
+                                massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry)
+                            )
+                        }
+                    }
+                }
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+
     }
 
     private fun shareTask(taskId: Int, index: Int, shareStatus: Boolean) {
-        val sharedTask = getState()
-            .taskList[index]
-            .copy(isSharedWithDoctor = shareStatus)
-        val taskList = getState().taskList.toMutableList()
-        taskList[index] = sharedTask
+        viewModelScope.launch(Dispatchers.IO) {
+            assignmentsInteractor.shareTaskWithDoctor(assignmentId = taskId)
+                .onSuccess {
+                    val sharedTask = getState()
+                        .taskList[index]
+                        .copy(isSharedWithDoctor = shareStatus)
+                    val taskList = getState().taskList.toMutableList()
+                    taskList[index] = sharedTask
 
-        _stateScreen.update { state ->
-            state.copy(taskList = taskList)
+                    _stateScreen.update { state ->
+                        state.copy(taskList = taskList)
+                    }
+                    showToast(
+                        massage = StringVO.Resource(R.string.toast_success_share_task)
+                    )
+                }
+                .onFailure {
+                    showToast(
+                        massage = StringVO.Resource(R.string.toast_failure_share_task)
+                    )
+                }
         }
     }
 
     private fun shareDiaryEntry(diaryEntryId: Int, index: Int, isShared: Boolean) {
-        val sharedTask = getState()
-            .diaryList[index]
-            .copy(isSharedWithDoctor = isShared)
-        val diaryList = getState().diaryList.toMutableList()
-        diaryList[index] = sharedTask
+        viewModelScope.launch(Dispatchers.IO) {
+            diaryEntriesInteractor.shareDiaryEntryWithDoctor(diaryNoteId = diaryEntryId)
+                .onSuccess {
+                    val sharedTask = getState()
+                        .diaryList[index]
+                        .copy(isSharedWithDoctor = isShared)
+                    val diaryList = getState().diaryList.toMutableList()
+                    diaryList[index] = sharedTask
 
-        _stateScreen.update { state ->
-            state.copy(diaryList = diaryList)
+                    _stateScreen.update { state ->
+                        state.copy(diaryList = diaryList)
+                    }
+                    showToast(
+                        massage = StringVO.Resource(R.string.toast_success_share_diary_entry)
+                    )
+                }
+                .onFailure {
+                    showToast(
+                        massage = StringVO.Resource(R.string.toast_success_share_task)
+                    )
+                }
         }
+
     }
 
-    private fun deleteDiaryEntry(diaryId: Int, index: Int) {
+    private fun deleteDiaryEntry(diaryId: Int) {
         showDialog(
             title = StringVO.Resource(R.string.info_delete_node_question),
             massage = StringVO.Resource(R.string.warning_delete),
             onConfirmButtonText = StringVO.Resource(R.string.confirm_button),
             onDismissButtonText = StringVO.Resource(R.string.cancel_button),
             onConfirm = {
-                handleDeleteDiaryEntry(diaryId, index)
+                handleDeleteDiaryEntry(diaryId)
             },
             onDismiss = {}
         )
     }
 
-    private fun handleDeleteDiaryEntry(diaryId: Int, index: Int) {
-        val newDiaryList = getState().diaryList.toMutableList()
-        newDiaryList.removeAt(index)
-        _stateScreen.update {
-            it.copy(diaryList = newDiaryList)
+    private fun handleDeleteDiaryEntry(diaryId: Int) {
+        _stateScreen.update { state ->
+            state.copy(isLoading = true)
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            diaryEntriesInteractor.deleteDiaryEntry(diaryNoteId = diaryId)
+                .onSuccess {
+                    fetchDiary()
+                }
+                .onFailure { exception ->
+                    when (exception) {
+                        is NetworkException.NoInternetConnection -> {
+                            showToast(
+                                massage = StringVO.Resource(R.string.problem_with_connection)
+                            )
+                            _stateScreen.update { state ->
+                                state.copy(isLoading = false)
+                            }
+                        }
+
+                        else -> {
+                            showToast(
+                                massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry)
+                            )
+                            _stateScreen.update { state ->
+                                state.copy(isLoading = false)
+                            }
+                        }
+                    }
+                }
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
         }
     }
 
@@ -189,48 +260,48 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchTasks() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getTasks.getTasks(456)
-                .onSuccess { task ->
-                    _stateScreen.update { state ->
-                        state.copy(taskList = task)
+    private suspend fun fetchTasks() {
+        getTasks.getTasks(456)
+            .onSuccess { task ->
+                _stateScreen.update { state ->
+                    state.copy(taskList = task)
+                }
+            }
+            .onFailure { exception ->
+                when (exception) {
+                    is NetworkException.NoInternetConnection -> {
+
+                    }
+
+                    else -> {
+                        showToast(
+                            massage = StringVO.Resource(R.string.server_error)
+                        )
                     }
                 }
-                .onFailure { exception ->
-                    when (exception) {
-                        is NetworkException.NoInternetConnection -> {
-
-                        }
-
-                        else -> {
-                            exception.message
-                        }
-                    }
-                }
-        }
+            }
     }
 
-    private fun fetchDiary() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getDiaryEntries.execute(456)
-                .onSuccess { diaryEntries ->
-                    _stateScreen.update { state ->
-                        state.copy(diaryList = diaryEntries)
+    private suspend fun fetchDiary() {
+        getDiaryEntries.execute(456)
+            .onSuccess { diaryEntries ->
+                _stateScreen.update { state ->
+                    state.copy(diaryList = diaryEntries)
+                }
+            }
+            .onFailure { exception ->
+                when (exception) {
+                    is NetworkException.NoInternetConnection -> {
+
+                    }
+
+                    else -> {
+                        showToast(
+                            massage = StringVO.Resource(R.string.server_error)
+                        )
                     }
                 }
-                .onFailure { exception ->
-                    when (exception) {
-                        is NetworkException.NoInternetConnection -> {
-
-                        }
-
-                        else -> {
-                            exception.message
-                        }
-                    }
-                }
-        }
+            }
     }
 
     private fun showDialog(
@@ -253,6 +324,25 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun showToast(massage: StringVO) {
+        viewModelScope.launch {
+            _sideEffect.emit(
+                HomeScreenSideEffect.ShowToast(
+                    massage = massage,
+                    onDismiss = {
+                        viewModelScope.launch {
+                            delay(TOAST_DISMISS_TIME)
+                        }
+                    }
+                )
+            )
+        }
+    }
+
+    companion object {
+        private const val TOAST_DISMISS_TIME = 1000L
     }
 }
 
