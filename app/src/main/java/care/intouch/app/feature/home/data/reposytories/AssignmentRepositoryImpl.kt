@@ -4,16 +4,19 @@ import care.intouch.app.feature.home.data.api.AssignmentsApi
 import care.intouch.app.feature.home.data.mappers.HomeMapper
 import care.intouch.app.feature.home.domain.AssignmentRepository
 import care.intouch.app.feature.home.domain.models.Task
+import timber.log.Timber
 import javax.inject.Inject
 
 class AssignmentRepositoryImpl @Inject constructor(
     private val homeApi: AssignmentsApi,
     private val mapper: HomeMapper
 ) : AssignmentRepository {
-    override suspend fun getTasks(userId: Int): Result<List<Task>> {
+    override suspend fun getAssignments(userId: Int): Result<List<Task>> {
         try {
             val request = mapper.mapAssignmentsRequest(userId = userId)
-            val response = homeApi.getClientsAssignments(queryParameters = request)
+            val response = homeApi.getClientsAssignments()
+
+            Timber.tag("response").d(response.toString())
             return Result.success(mapper.mapAssignments(response))
         } catch (exception: Exception) {
             return Result.failure(exception)

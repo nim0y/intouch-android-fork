@@ -15,7 +15,6 @@ import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +24,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,13 +44,18 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchUserInformation()
+        val userId = _stateScreen.value.userInformation.userId
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
+            Timber.tag("UserId").d(_stateScreen.value.userInformation.userId.toString())
             _stateScreen.update { state ->
                 state.copy(isLoading = true)
             }
-            fetchTasks()
-            fetchDiary()
+            fetchTasks(userId)
+            fetchDiary(userId)
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
         }
 
         viewModelScope.launch {
@@ -126,10 +131,10 @@ class HomeViewModel @Inject constructor(
         _stateScreen.update { state ->
             state.copy(isLoading = true)
         }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             assignmentsInteractor.clearAssignment(assignmentId = taskId)
                 .onSuccess {
-                    fetchTasks()
+                    fetchTasks(_stateScreen.value.userInformation.userId)
                 }
                 .onFailure { exception ->
                     when (exception) {
@@ -154,7 +159,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun shareTask(taskId: Int, index: Int, shareStatus: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             assignmentsInteractor.shareTaskWithDoctor(assignmentId = taskId)
                 .onSuccess {
                     val sharedTask = getState()
@@ -179,7 +184,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun shareDiaryEntry(diaryEntryId: Int, index: Int, isShared: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             diaryEntriesInteractor.shareDiaryEntryWithDoctor(diaryNoteId = diaryEntryId)
                 .onSuccess {
                     val sharedTask = getState()
@@ -221,10 +226,10 @@ class HomeViewModel @Inject constructor(
         _stateScreen.update { state ->
             state.copy(isLoading = true)
         }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             diaryEntriesInteractor.deleteDiaryEntry(diaryNoteId = diaryId)
                 .onSuccess {
-                    fetchDiary()
+                    fetchDiary(_stateScreen.value.userInformation.userId)
                 }
                 .onFailure { exception ->
                     when (exception) {
@@ -260,9 +265,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchTasks() {
-        getTasks.getTasks(456)
+    private suspend fun fetchTasks(userId: Int) {
+        getTasks.getTasks(userId)
             .onSuccess { task ->
+                Timber.tag("Task").d(task.toString())
                 _stateScreen.update { state ->
                     state.copy(taskList = task)
                 }
@@ -282,9 +288,10 @@ class HomeViewModel @Inject constructor(
             }
     }
 
-    private suspend fun fetchDiary() {
-        getDiaryEntries.execute(456)
+    private suspend fun fetchDiary(userId: Int) {
+        getDiaryEntries.execute(userId)
             .onSuccess { diaryEntries ->
+                Timber.tag("diaryEntries").d(diaryEntries.toString())
                 _stateScreen.update { state ->
                     state.copy(diaryList = diaryEntries)
                 }

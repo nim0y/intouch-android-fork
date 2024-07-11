@@ -1,3 +1,7 @@
 package care.intouch.app.feature.home.data.models
 
-data class AssignmentsResponse(val assignments: List<AssignmentDto>)
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class AssignmentsResponse( @SerialName("results")val assignments: List<AssignmentDto>)

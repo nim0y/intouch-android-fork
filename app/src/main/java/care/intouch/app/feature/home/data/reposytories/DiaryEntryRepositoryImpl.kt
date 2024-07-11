@@ -4,6 +4,7 @@ import care.intouch.app.feature.home.data.api.DiaryNotesApi
 import care.intouch.app.feature.home.data.mappers.HomeMapper
 import care.intouch.app.feature.home.domain.DiaryEntryRepository
 import care.intouch.app.feature.home.domain.models.DiaryEntry
+import timber.log.Timber
 import javax.inject.Inject
 
 class DiaryEntryRepositoryImpl @Inject constructor(
@@ -13,13 +14,11 @@ class DiaryEntryRepositoryImpl @Inject constructor(
     override suspend fun getDiaryEntries(userId: Int): Result<List<DiaryEntry>> {
         try {
             val request = mapper.mapDiaryNoteRequest(
-                userId = userId,
-                limit = AMOUNT_OF_DIARY_NOTES_PER_PAGE,
-                page = AMOUNT_OF_DIARY_NOTES_PAGE
+                userId = userId
             )
             val response = diaryNoteApi.getDiaryNotes(
-                request
             )
+            Timber.tag("response").d(response.toString())
             return Result.success(mapper.mapDiaryEntries(response))
 
         } catch (exception: Exception) {

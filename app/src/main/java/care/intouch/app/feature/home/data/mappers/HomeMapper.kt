@@ -15,7 +15,7 @@ class HomeMapper @Inject constructor() {
                 id = assignment.id,
                 description = assignment.text,
                 isSharedWithDoctor = changeToBoolean(assignment.share),
-                status = Status.valueOf(assignment.status)
+                status = mapStatus(assignment.status)
             )
         }
     }
@@ -35,7 +35,10 @@ class HomeMapper @Inject constructor() {
         return listOf()
     }
 
-    fun mapAssignmentsRequest(userId: Int, limit: Int = 0, page: Int = 0): HashMap<String, String> {
+    fun mapAssignmentsRequest(
+        userId: Int, limit: Int? = null,
+        page: Int? = null
+    ): HashMap<String, String> {
         val request = hashMapOf("user" to "$userId")
         if (limit != 0) {
             request["limit"] = "$limit"
@@ -46,12 +49,25 @@ class HomeMapper @Inject constructor() {
         return request
     }
 
-    fun mapDiaryNoteRequest(userId: Int, limit: Int = 0, page: Int = 0): HashMap<String, String> {
+    fun mapStatus(status: String): Status {
+        return when (status) {
+            Status.TO_DO.name -> Status.TO_DO
+            Status.IN_PROGRESS.name -> Status.IN_PROGRESS
+            Status.DONE.name -> Status.DONE
+            else -> Status.TO_DO
+        }
+    }
+
+    fun mapDiaryNoteRequest(
+        userId: Int,
+        limit: Int? = null,
+        page: Int? = null
+    ): HashMap<String, String> {
         val request = hashMapOf("user" to "$userId")
-        if (limit != 0) {
+        if (limit != null) {
             request["limit"] = "$limit"
         }
-        if (page != 0) {
+        if (page != null) {
             request["page"] = "$page"
         }
         return request

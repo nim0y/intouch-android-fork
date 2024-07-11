@@ -1,5 +1,6 @@
 package care.intouch.app.feature.home.data.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,14 +9,14 @@ data class DiaryNoteDto(
     val author: Int,
     val addDate: String,
     val visible: Boolean,
-    val eventDetails: String,
-    val eventDetailsTags: String,
-    val thoughtsAnalysis: String,
-    val thoughtsAnalysisTags: String,
-    val emotionType: String,
-    val emotionTypeTags: String,
-    val physicalSensation: String,
-    val physicalSensationTags: String,
-    val primaryEmotion: String,
-    val clarifyingEmotion: List<ClarifyingEmotionDto>
+    @SerialName("event_details") val eventDetails: String,
+    @SerialName("event_details_tags") val eventDetailsTags: String,
+    @SerialName("thoughts_analysis") val thoughtsAnalysis: String,
+    @SerialName("thoughts_analysis_tags") val thoughtsAnalysisTags: String,
+    @SerialName("emotion_type") val emotionType: String,
+    @SerialName("emotion_type_tags") val emotionTypeTags: String,
+    @SerialName("physical_sensation") val physicalSensation: String,
+    @SerialName("physical_sensation_tags") val physicalSensationTags: String,
+    @SerialName("primary_emotion") val primaryEmotion: String,
+    @SerialName("clarifying_emotion") val clarifyingEmotion: List<ClarifyingEmotionDto>
 )
