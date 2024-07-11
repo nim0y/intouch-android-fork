@@ -143,8 +143,6 @@ private fun DiaryEntriesScreen(
                         .padding(start = 28.dp, end = 28.dp, top = 8.dp),
                     buttonText = StringVO.Resource(R.string.add_emotions_button),
                     selectedEmotion = stateData.primaryEmotion,
-                    isError = false,
-                    enabled = false,
                     onAddClick = {
                         onEvent(
                             NewNoteEvent.EmotionsChange(
