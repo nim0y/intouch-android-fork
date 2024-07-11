@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -70,18 +71,6 @@ fun QuestionsScreen(
 }
 
 @Composable
-private fun FoldingScreen() {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.5F)
-            .padding(top = 100.dp)
-            .padding(horizontal = 28.dp),
-        content = { }
-    )
-}
-
-@Composable
 private fun QuestionsScreen(
     onCloseClick: () -> Unit,
     onCompleteTaskClick: () -> Unit,
@@ -97,50 +86,15 @@ private fun QuestionsScreen(
         mutableStateOf(false)
     }
     Box(
-        modifier =Modifier
+        modifier = Modifier
             .background(InTouchTheme.colors.mainBlue)
             .verticalScroll(rememberScrollState())
             .clickable {
                 systemKeyboardController?.hide()
                 showClosingTaskWithoutSaveDialog = false
             }
-            .alpha(if (showClosingTaskWithoutSaveDialog) 0.2f else 1f)
+            .alpha( if (showClosingTaskWithoutSaveDialog) 0.2f else 1f )
     ) {
-        if (showClosingTaskWithoutSaveDialog) {
-            Box(
-                modifier = Modifier
-                    .alpha(1f)
-            )
-            {
-                PopupQuestions(
-                    inTouchButtonClick = {
-                        /*TODO*/ },
-                    secondaryButtonClick = {
-                        showClosingTaskWithoutSaveDialog = !showClosingTaskWithoutSaveDialog
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 28.dp),
-                    titleText = StringVO.Resource(R.string.questions_popap_closing_task),
-                    intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
-                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
-            }
-        }
-//        if (showClosingTaskWithoutSaveDialog) {
-//                    //FoldingScreen()
-//                    PopupQuestions(
-//                    inTouchButtonClick = {
-//                        /*TODO*/ },
-//                    secondaryButtonClick = {
-//                        showClosingTaskWithoutSaveDialog = !showClosingTaskWithoutSaveDialog
-//                    },
-//                    modifier = Modifier
-//                        .padding(horizontal = 28.dp)
-//                        .padding(top = 100.dp),
-//                    titleText = StringVO.Resource(R.string.questions_popap_closing_task),
-//                    intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
-//                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
-//
-//        }
         Column (
             modifier = Modifier
                 .fillMaxSize()
@@ -255,10 +209,32 @@ private fun QuestionsScreen(
             )
             Spacer(modifier = Modifier.height(40.dp))
         }
+        }
+    if (showClosingTaskWithoutSaveDialog) {
+        Surface(
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
+                .alpha(1F)
+                .padding(top = 100.dp)
+                .clip(RoundedCornerShape(20.dp)),
+            content = {
+                PopupQuestions(
+                    inTouchButtonClick = {
+
+                    },
+                    secondaryButtonClick = {
+                        showClosingTaskWithoutSaveDialog = !showClosingTaskWithoutSaveDialog
+                    },
+                    firstLineText = StringVO.Resource(R.string.questions_popap_closing_task_first_line),
+                    secondLineText = StringVO.Resource(R.string.questions_popup_closing_task_second_line),
+                    intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
+                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
+            }
+        )
     }
 }
 
-@Preview(showBackground = true, heightDp = 1950)
+@Preview(showBackground = true, heightDp = 1024)
 @Composable
 fun QuestionsScreenPreview() {
     val state = QuestionsState("")

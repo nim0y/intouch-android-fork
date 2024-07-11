@@ -1,7 +1,7 @@
 package care.intouch.uikit.ui.questions
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,33 +31,45 @@ fun PopupQuestions(
     inTouchButtonClick: () -> Unit,
     secondaryButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    titleText: StringVO = StringVO.Plain(BLANC_STRING),
+    firstLineText: StringVO = StringVO.Plain(BLANC_STRING),
+    secondLineText: StringVO = StringVO.Plain(BLANC_STRING),
     intouchButtonText: StringVO = StringVO.Plain(BLANC_STRING),
     secondaryButtonText: StringVO = StringVO.Plain(BLANC_STRING),
     backgroundColor: Color = InTouchTheme.colors.input85,
 ) {
-        Box(
-            modifier = Modifier
-                .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
-                .border(
-                    width = 1.dp,
-                    color = backgroundColor,
-                    shape = RoundedCornerShape(12.dp),
-                )
-                .padding(horizontal = 28.dp)
-        ) {
             Column (
-                modifier = modifier.align(Alignment.Center)
-                    .padding(horizontal = 28.dp, vertical = 48.dp)
-
+                modifier = modifier
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(backgroundColor),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = titleText.value(),
-                    style = InTouchTheme.typography.titleSmall,
-                    color = InTouchTheme.colors.textBlue,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                Box(modifier = Modifier) {
+                    Column {
+                        Text(
+                            text = firstLineText.value(),
+                            style = InTouchTheme.typography.filtersSemibold,
+                            color = InTouchTheme.colors.textBlue,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 48.dp)
+                                .padding(horizontal = 28.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = secondLineText.value(),
+                            style = InTouchTheme.typography.filtersSemibold,
+                            color = InTouchTheme.colors.textBlue,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(horizontal = 28.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
+                }
                 Spacer(modifier = Modifier.height(48.dp))
                 IntouchButton(
                     onClick = {
@@ -63,28 +77,31 @@ fun PopupQuestions(
                     },
                     text = intouchButtonText,
                     contentPadding = PaddingValues(vertical = 13.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .padding(horizontal = 28.dp)
+                        .fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 SecondaryButtonDark(
                     onClick = {
                         secondaryButtonClick.invoke()
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 48.dp),
                     text = secondaryButtonText,
                     textStyle = InTouchTheme.typography.titleSmall
                 )
             }
         }
-    }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PopupQuestionsPreview() {
     InTouchTheme {
         PopupQuestions(
-            titleText = StringVO.Plain("Title small "),
-            //modifier = Modifier.padding(45.dp),
+            firstLineText = StringVO.Plain("Title small on first line"),
+            secondLineText = StringVO.Plain("Title small"),
             intouchButtonText = StringVO.Plain("Back"),
             secondaryButtonText = StringVO.Plain("Complete as is"),
             inTouchButtonClick = {
