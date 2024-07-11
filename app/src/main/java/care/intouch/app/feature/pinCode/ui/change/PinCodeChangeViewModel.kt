@@ -96,10 +96,15 @@ class PinCodeChangeViewModel @Inject constructor(
     private fun verifyOldPinCode(pinCode: String) {
         viewModelScope.launch {
             when (val result = repository.verifyPinCode(pinCode)) {
-                is Resource.Error -> _state.update { PinCodeChangeScreenState.IncorrectPinCode }
+                is Resource.Error -> _state.update {
+                    PinCodeChangeScreenState.IncorrectPinCode
+                }
+
                 is Resource.Success -> {
                     if (result.data) {
-                        _state.update { PinCodeChangeScreenState.EnterNewPinCode }
+                        _state.update {
+                            PinCodeChangeScreenState.EnterNewPinCode
+                        }
                         enteringPinCode = ""
                     } else {
                         _state.update { PinCodeChangeScreenState.IncorrectPinCode }

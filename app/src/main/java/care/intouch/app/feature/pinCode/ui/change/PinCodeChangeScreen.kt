@@ -28,6 +28,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,14 +45,28 @@ fun PinCodeChangeScreen(
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit,
     onSuccessChange: () -> Unit,
-    viewModel: PinCodeChangeViewModel = hiltViewModel(),
 ) {
-
+    val viewModel: PinCodeChangeViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    PinCodeChangeScreen(
+        modifier = modifier,
+        onSuccessChange = onSuccessChange,
+        onCloseClick = onCloseClick,
+        onEvent = viewModel::onEvent,
+        state = state
+    )
+}
+
+@Composable
+fun PinCodeChangeScreen(
+    modifier: Modifier = Modifier,
+    onCloseClick: () -> Unit,
+    onSuccessChange: () -> Unit,
+    onEvent: (event: PinCodeChangeEvent) -> Unit,
+    state: PinCodeChangeScreenState
+) {
     var pinCode by rememberSaveable { mutableStateOf("") }
-    var isFullPinCode by rememberSaveable { mutableStateOf(false) }
-    var isErrorPinCode by rememberSaveable { mutableStateOf(false) }
     var titleText by rememberSaveable { mutableIntStateOf(care.intouch.app.R.string.enter_old_pin_sub_title) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -73,7 +88,7 @@ fun PinCodeChangeScreen(
             Box(
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .padding(end = 31.dp)
+                    .padding(end = 32.dp)
                     .clickable { onCloseClick() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -118,15 +133,17 @@ fun PinCodeChangeScreen(
 
             Column {
                 PinCodeInputField(
-                    value = pinCode, onValueChange = {
+                    value = pinCode,
+                    onValueChange = {
                         pinCode = it
-                        viewModel.onEvent(PinCodeChangeEvent.Entering(it))
-                    }, isError = isErrorPinCode
+                        onEvent(PinCodeChangeEvent.Entering(it))
+                    },
+                    isError = state == PinCodeChangeScreenState.IncorrectPinCode || state == PinCodeChangeScreenState.NotMatchPinCode
                 )
+
                 when (state) {
                     PinCodeChangeScreenState.ConfirmNewPinCode -> {
                         Spacer(modifier = Modifier.height(40.dp))
-                        isFullPinCode = state.isFullPinCode
                         titleText = care.intouch.app.R.string.confirm_new_pin_sub_title
                     }
 
@@ -136,18 +153,14 @@ fun PinCodeChangeScreen(
 
                     PinCodeChangeScreenState.Default -> {
                         Spacer(modifier = Modifier.height(40.dp))
-                        isFullPinCode = state.isFullPinCode
                     }
 
                     PinCodeChangeScreenState.EnterNewPinCode -> {
                         Spacer(modifier = Modifier.height(40.dp))
-                        isFullPinCode = state.isFullPinCode
                         titleText = care.intouch.app.R.string.enter_new_pin_sub_title
                     }
 
                     PinCodeChangeScreenState.IncorrectPinCode -> {
-                        isErrorPinCode = true
-                        isFullPinCode = state.isFullPinCode
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
@@ -159,16 +172,14 @@ fun PinCodeChangeScreen(
                             color = InTouchTheme.colors.errorRed
                         )
 
-                        Spacer(modifier = Modifier.height(11.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
 
                     PinCodeChangeScreenState.NotMatchPinCode -> {
-                        isErrorPinCode = true
-                        isFullPinCode = state.isFullPinCode
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            modifier = Modifier.height(21.dp),
+                            modifier = Modifier.height(22.dp),
                             text = StringVO.Resource(care.intouch.app.R.string.passwords_do_not_match)
                                 .value(),
                             style = InTouchTheme.typography.caption1Semibold,
@@ -176,21 +187,19 @@ fun PinCodeChangeScreen(
                             color = InTouchTheme.colors.errorRed
                         )
 
-                        Spacer(modifier = Modifier.height(11.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
 
             IntouchButton(
                 onClick = {
-                    viewModel.onEvent(PinCodeChangeEvent.Statement(pinCode))
+                    onEvent(PinCodeChangeEvent.Statement(pinCode))
                     pinCode = ""
-                    isFullPinCode = false
-                    isErrorPinCode = false
                 },
                 modifier = Modifier,
                 text = StringVO.Resource(care.intouch.app.R.string.save_button),
-                isEnabled = isFullPinCode
+                isEnabled = state.isFullPinCode
             )
 
             Spacer(modifier = Modifier.height(2.dp))
@@ -199,5 +208,16 @@ fun PinCodeChangeScreen(
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
         keyboardController?.show()
+    }
+}
+
+@Preview
+@Composable
+fun PreviewPinCodeChangeScreen() {
+    val state: PinCodeChangeScreenState by remember {
+        mutableStateOf(PinCodeChangeScreenState.Initial)
+    }
+    InTouchTheme {
+        PinCodeChangeScreen(onCloseClick = { }, onSuccessChange = { }, onEvent = {}, state = state)
     }
 }
