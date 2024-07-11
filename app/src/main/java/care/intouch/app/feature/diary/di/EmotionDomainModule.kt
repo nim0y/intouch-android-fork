@@ -1,5 +1,8 @@
 package care.intouch.app.feature.diary.di
 
+import care.intouch.app.feature.diary.domain.useCase.ClearEmotionsUC
+import care.intouch.app.feature.diary.domain.useCase.GetEmotionDescUC
+import care.intouch.app.feature.diary.domain.useCase.GetEmotionUC
 import care.intouch.app.feature.diary.domain.useCase.SaveEmotionDescUC
 import care.intouch.app.feature.diary.domain.useCase.SaveEmotionUC
 import dagger.Binds
@@ -19,4 +22,19 @@ interface EmotionDomainModule {
     fun bindSaveEmotionUC(
         impl: SaveEmotionUC.Base,
     ): SaveEmotionUC
+
+    @Binds
+    fun bindGetEmotionDescUC(
+        impl: GetEmotionDescUC.Base,
+    ): GetEmotionDescUC
+
+    @Binds
+    fun bindGetEmotionUC(
+        impl: GetEmotionUC.Base,
+    ): GetEmotionUC
+
+    @Binds
+    fun bindClearEmotionsUC(
+        impl: ClearEmotionsUC.Base,
+    ): ClearEmotionsUC
 }

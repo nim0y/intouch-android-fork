@@ -12,20 +12,26 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import care.intouch.app.R
+import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.ResultEmotionDescriptionList
+import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionTask
 import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.FillingOutDataEvent
 import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.FillingOutScreenState
 import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.viewModel.FillingOutViewModel
+import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.PrimaryButtonGreen
 import care.intouch.uikit.ui.cards.AddEmotionCard
+import care.intouch.uikit.ui.cards.ResultEmotionCard
 import care.intouch.uikit.ui.navigation.TopBarArcButton
 import care.intouch.uikit.ui.textFields.MultilineTextField
 import care.intouch.uikit.ui.toggle.Toggle
@@ -37,11 +43,15 @@ fun FillingOutScreen(
     onBackClick: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val imageState by viewModel.sharedImageUiState.collectAsStateWithLifecycle(null)
+    val listState by viewModel.sharedListUiState.collectAsStateWithLifecycle(listOf())
     FillingOutScreen(
         onNextClick = onNextClick,
         state = state,
         onEvent = { viewModel.onEvent(it) },
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        imageState = imageState,
+        listState = listState
     )
 }
 
@@ -51,10 +61,15 @@ fun FillingOutScreen(
     state: FillingOutScreenState,
     onEvent: (FillingOutDataEvent) -> Unit,
     onBackClick: () -> Unit,
+    imageState: ImageVO?,
+    listState: List<EmotionDescriptionTask>,
 ) {
     Column(
         Modifier.background(InTouchTheme.colors.mainBlue)
     ) {
+        LaunchedEffect(key1 = imageState) {
+            onEvent(FillingOutDataEvent.OnUpdateStateChanged)
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,10 +118,19 @@ fun FillingOutScreen(
                 modifier = Modifier.fillMaxSize()
             )
             Spacer(modifier = Modifier.height(8.dp))
-            AddEmotionCard(
-                onClick = onNextClick,
-                modifier = Modifier.fillMaxWidth()
-            )
+            if (imageState != null) {
+                ResultEmotionCard(
+                    onEditClick = onNextClick,
+                    onTrashClick = { onEvent(FillingOutDataEvent.OnTrashClicked) },
+                    emotionIcon = imageState
+                )
+                ResultEmotionDescriptionList(items = listState)
+            } else {
+                AddEmotionCard(
+                    onClick = onNextClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Spacer(modifier = Modifier.height(40.dp))
             MultilineTextField(
                 titleText = StringVO.Resource(R.string.sensations_sub_title_emotional),
@@ -155,6 +179,13 @@ fun FillingOutScreenPreview() {
         sensationsText = "",
     )
     InTouchTheme {
-        FillingOutScreen(onNextClick = {}, state, onEvent = {}, onBackClick = {})
+        FillingOutScreen(
+            onNextClick = {},
+            state,
+            onEvent = {},
+            onBackClick = {},
+            imageState = null,
+            listState = listOf()
+        )
     }
 }

@@ -12,12 +12,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import care.intouch.app.R
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDataEvent
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
@@ -35,11 +37,13 @@ fun EmotionChoiceScreen(
     onBackClick: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val sharedState by viewModel.sharedUiState.collectAsStateWithLifecycle(initialValue = false)
     EmotionChoiceScreen(
         onSaveClick = onSaveClick,
         state = state,
         onEvent = { viewModel.onEvent(it) },
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        sharedState = sharedState
     )
 }
 
@@ -50,7 +54,13 @@ fun EmotionChoiceScreen(
     state: EmotionScreenState,
     onEvent: (EmotionDataEvent) -> Unit,
     onBackClick: () -> Unit,
+    sharedState: Boolean,
 ) {
+    if (sharedState) {
+        LaunchedEffect(key1 = sharedState) {
+            onSaveClick.invoke()
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -109,7 +119,7 @@ fun EmotionChoiceScreenPreview() {
             emotionListResult = mutableListOf()
         )
         EmotionChoiceScreen(
-            onSaveClick = {}, state = state, onEvent = {}, onBackClick = {}
+            onSaveClick = {}, state = state, onEvent = {}, onBackClick = {}, sharedState = false
         )
     }
 }
