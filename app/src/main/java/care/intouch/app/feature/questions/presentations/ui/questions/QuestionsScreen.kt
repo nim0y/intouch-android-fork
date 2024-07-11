@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -40,6 +42,7 @@ import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.navigation.TopBarArcButton
+import care.intouch.uikit.ui.questions.PopupQuestions
 import care.intouch.uikit.ui.questions.TextFieldQuestion
 import care.intouch.uikit.ui.questions.TextFieldWithCheckbox
 import care.intouch.uikit.ui.questions.TextFieldWithCheckmars
@@ -67,6 +70,18 @@ fun QuestionsScreen(
 }
 
 @Composable
+private fun FoldingScreen() {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .alpha(0.5F)
+            .padding(top = 100.dp)
+            .padding(horizontal = 28.dp),
+        content = { }
+    )
+}
+
+@Composable
 private fun QuestionsScreen(
     onCloseClick: () -> Unit,
     onCompleteTaskClick: () -> Unit,
@@ -78,23 +93,65 @@ private fun QuestionsScreen(
     var isCheckedToggle by remember {
         mutableStateOf(false)
     }
+    var showClosingTaskWithoutSaveDialog by remember {
+        mutableStateOf(false)
+    }
     Box(
-        modifier = Modifier
+        modifier =Modifier
             .background(InTouchTheme.colors.mainBlue)
             .verticalScroll(rememberScrollState())
             .clickable {
                 systemKeyboardController?.hide()
+                showClosingTaskWithoutSaveDialog = false
             }
+            .alpha(if (showClosingTaskWithoutSaveDialog) 0.2f else 1f)
     ) {
+        if (showClosingTaskWithoutSaveDialog) {
+            Box(
+                modifier = Modifier
+                    .alpha(1f)
+            )
+            {
+                PopupQuestions(
+                    inTouchButtonClick = {
+                        /*TODO*/ },
+                    secondaryButtonClick = {
+                        showClosingTaskWithoutSaveDialog = !showClosingTaskWithoutSaveDialog
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 28.dp),
+                    titleText = StringVO.Resource(R.string.questions_popap_closing_task),
+                    intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
+                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
+            }
+        }
+//        if (showClosingTaskWithoutSaveDialog) {
+//                    //FoldingScreen()
+//                    PopupQuestions(
+//                    inTouchButtonClick = {
+//                        /*TODO*/ },
+//                    secondaryButtonClick = {
+//                        showClosingTaskWithoutSaveDialog = !showClosingTaskWithoutSaveDialog
+//                    },
+//                    modifier = Modifier
+//                        .padding(horizontal = 28.dp)
+//                        .padding(top = 100.dp),
+//                    titleText = StringVO.Resource(R.string.questions_popap_closing_task),
+//                    intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
+//                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
+//
+//        }
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 27.dp),
+                .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             TopBarArcButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    showClosingTaskWithoutSaveDialog = true
+                },
                 enabled = true,
                 modifier = Modifier.align(Alignment.End)
             )
@@ -179,7 +236,7 @@ private fun QuestionsScreen(
                 Text(
                     text = StringVO.Resource(R.string.share_with_therapist).value(),
                     style = InTouchTheme.typography.bodySemibold,
-                    color = InTouchTheme.colors.textGreen,
+                    color = InTouchTheme.colors.textGreen
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Toggle(

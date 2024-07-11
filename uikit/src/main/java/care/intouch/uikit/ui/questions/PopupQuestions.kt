@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,11 +22,12 @@ import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.buttons.SecondaryButtonDark
-import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults
 import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults.BLANC_STRING
 
 @Composable
-fun PopapQuestions(
+fun PopupQuestions(
+    inTouchButtonClick: () -> Unit,
+    secondaryButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     titleText: StringVO = StringVO.Plain(BLANC_STRING),
     intouchButtonText: StringVO = StringVO.Plain(BLANC_STRING),
@@ -42,11 +42,12 @@ fun PopapQuestions(
                     color = backgroundColor,
                     shape = RoundedCornerShape(12.dp),
                 )
+                .padding(horizontal = 28.dp)
         ) {
             Column (
-                modifier = modifier
-                    .width(MultilineTextFieldDefaults.MinWidth)
-                    .align(Alignment.Center)
+                modifier = modifier.align(Alignment.Center)
+                    .padding(horizontal = 28.dp, vertical = 48.dp)
+
             ) {
                 Text(
                     text = titleText.value(),
@@ -57,31 +58,41 @@ fun PopapQuestions(
                 )
                 Spacer(modifier = Modifier.height(48.dp))
                 IntouchButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        inTouchButtonClick.invoke()
+                    },
                     text = intouchButtonText,
-                    contentPadding = PaddingValues(horizontal = 113.dp, vertical = 13.dp),
-                    modifier = Modifier
+                    contentPadding = PaddingValues(vertical = 13.dp),
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 SecondaryButtonDark(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        secondaryButtonClick.invoke()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     text = secondaryButtonText,
                     textStyle = InTouchTheme.typography.titleSmall
                 )
             }
         }
-}
+    }
 
 @Preview
 @Composable
-fun PopapQuestionsPreview() {
+fun PopupQuestionsPreview() {
     InTouchTheme {
-        PopapQuestions(
+        PopupQuestions(
             titleText = StringVO.Plain("Title small "),
-            modifier = Modifier.padding(45.dp),
+            //modifier = Modifier.padding(45.dp),
             intouchButtonText = StringVO.Plain("Back"),
-            secondaryButtonText = StringVO.Plain("Complete as is")
+            secondaryButtonText = StringVO.Plain("Complete as is"),
+            inTouchButtonClick = {
+
+            },
+            secondaryButtonClick = {
+
+            }
         )
     }
 }
