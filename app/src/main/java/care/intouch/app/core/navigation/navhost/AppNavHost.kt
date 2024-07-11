@@ -58,7 +58,7 @@ fun AppNavHost(
                     navController.navigate(route = DiaryRouteBranch.route)
                 },
                 onBackButtonClick = {
-                    navController.popBackStack()
+                    navController.navigate(route = Home.route)
                 }
             )
         }
