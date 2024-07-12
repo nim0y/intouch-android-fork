@@ -78,6 +78,7 @@ private fun QuestionsScreen(
     onEvent: () -> Unit,
     state: QuestionsState
 ) {
+
     var answerText by remember { mutableStateOf("") }
     val systemKeyboardController = LocalSoftwareKeyboardController.current
     var isCheckedToggle by remember {
@@ -89,6 +90,9 @@ private fun QuestionsScreen(
     var isShowCompleteTaskDialog by remember {
         mutableStateOf(false)
     }
+    var currentSliderPosition by remember {
+        mutableStateOf(0)
+    }
     Box(
         modifier = Modifier
             .background(InTouchTheme.colors.mainBlue)
@@ -98,7 +102,7 @@ private fun QuestionsScreen(
                 isShowClosingDialog = false
                 isShowCompleteTaskDialog = false
             }
-            .alpha( if (isShowClosingDialog /*|| isShowCompleteTaskDialog*/) 0.2f else 1f )
+            .alpha(if (isShowClosingDialog /*|| isShowCompleteTaskDialog*/) 0.2f else 1f)
     ) {
         Column (
             modifier = Modifier
@@ -154,9 +158,10 @@ private fun QuestionsScreen(
             TextFieldWithSliderAndDigits(
                 subtitleText = StringVO.Resource(R.string.scale_questions),
                 modifier = Modifier.fillMaxWidth(),
-                onValueChange = {
-
-                }
+                onValueChange = { value ->
+                    currentSliderPosition = value
+                },
+                isError = if (currentSliderPosition == 0 && isShowCompleteTaskDialog) true else false
             )
             Spacer(modifier = Modifier.height(40.dp))
             TextFieldQuestion(

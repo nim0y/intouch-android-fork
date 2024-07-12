@@ -29,7 +29,8 @@ fun TextFieldWithSliderAndDigits(
     backgroundColor: Color = InTouchTheme.colors.input85,
     leftEvaluateText: StringVO = StringVO.Plain("Dissatisfied"),
     rightEvaluateText: StringVO = StringVO.Plain("Satisfied"),
-    onValueChange: (Int) -> Unit
+    onValueChange: (Int) -> Unit,
+    isError: Boolean = false
 ) {
     Column(
         modifier = modifier.width(MultilineTextFieldDefaults.MinWidth)
@@ -76,7 +77,7 @@ fun TextFieldWithSliderAndDigits(
                 .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
                 .border(
                     width = 1.dp,
-                    color = backgroundColor,
+                    color = if (isError) InTouchTheme.colors.errorRed else backgroundColor,
                     shape = RoundedCornerShape(12.dp),
                 )
         ) {
@@ -84,8 +85,8 @@ fun TextFieldWithSliderAndDigits(
                 leftEvaluateText = leftEvaluateText.value(),
                 rightEvaluateText = rightEvaluateText.value(),
                 modifier = Modifier.padding(vertical = 14.dp, horizontal = 11.dp),
-                onValueChange = {
-                    onValueChange
+                onValueChange = { value ->
+                    onValueChange(value)
                 }
             )
         }
