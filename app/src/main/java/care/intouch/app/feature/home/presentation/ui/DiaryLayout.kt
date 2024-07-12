@@ -32,18 +32,15 @@ fun DiaryLayout(
             .fillMaxHeight(),
     ) {
         itemsIndexed(diaryEntryList) { index, diaryEntry ->
-            var toggleState by rememberSaveable {
-                mutableStateOf(diaryEntry.isSharedWithDoctor)
-            }
             NoteCards(
                 modifier = Modifier.padding(top = 16.dp),
-                dateText = diaryEntry.data,
+                dateText = diaryEntry.date,
+                dateTextDivider = " ",
                 noteText = diaryEntry.note,
                 moodChipsList = diaryEntry.moodList.map { StringVO.Resource(it.nameId) },
-                toggleIsChecked = toggleState,
+                toggleIsChecked = diaryEntry.isSharedWithDoctor,
                 onClickToggle = {
-                    toggleState = !toggleState
-                    onSwitcherChange(diaryEntry.id, index, toggleState)
+                    onSwitcherChange(diaryEntry.id, index, !diaryEntry.isSharedWithDoctor)
                 },
                 onClickTrash = { onDeleteButtonClicked(diaryEntry.id, index) })
         }
@@ -59,7 +56,7 @@ fun DiaryLayoutPreview() {
     val diaryEntryList = listOf(
         DiaryEntry(
             id = 1,
-            data = buildString {
+            date = buildString {
                 append("13, jul")
             },
             note = buildString {
@@ -74,7 +71,7 @@ fun DiaryLayoutPreview() {
         ),
         DiaryEntry(
             id = 1,
-            data = buildString {
+            date = buildString {
                 append("13, jul")
             },
             note = buildString {

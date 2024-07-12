@@ -1,5 +1,6 @@
 package care.intouch.uikit.ui.events
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +24,7 @@ fun Toast(
     textColor: Color = InTouchTheme.colors.textBlue
 ) {
     Box(
-        modifier = modifier
+        modifier = modifier.background(color = InTouchTheme.colors.mainBlue)
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
@@ -44,8 +45,7 @@ fun ToastPreview() {
             modifier = Modifier
                 .padding(vertical = 24.dp)
                 .fillMaxWidth()
-                .height(24.dp)
-
+                .height(36.dp)
         )
     }
 }

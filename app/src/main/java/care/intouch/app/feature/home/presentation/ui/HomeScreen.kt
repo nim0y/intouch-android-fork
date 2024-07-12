@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,8 @@ import care.intouch.uikit.ui.LoadingContainer
 import care.intouch.uikit.ui.customShape.CustomHeaderShape
 import care.intouch.uikit.ui.events.ConformationDialog
 import care.intouch.uikit.ui.events.Toast
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import care.intouch.app.R as AppR
 
 @Composable
@@ -56,6 +59,8 @@ fun HomeScreen(
     var dialogState by remember { mutableStateOf(DialogState()) }
     var toastState by remember { mutableStateOf(ToastState()) }
     val sideEffect = viewModel.sideEffect
+    val coroutineScope = rememberCoroutineScope()
+    val popUpDelay = 1000L
 
     LaunchedEffect(key1 = sideEffect) {
         viewModel.sideEffect.collect { effect ->
@@ -84,7 +89,10 @@ fun HomeScreen(
                         massage = effect.massage,
                         onDismiss = {
                             effect.onDismiss()
-                            isToastVisible = false
+                            coroutineScope.launch {
+                                delay(popUpDelay)
+                                isToastVisible = false
+                            }
                         }
                     )
                 }
@@ -140,7 +148,7 @@ fun HomeScreen(
                 Text(
                     modifier = Modifier
                         .padding(top = 24.dp),
-                    text = stringResource(id = AppR.string.hi_title, "Bob"),
+                    text = stringResource(id = AppR.string.hi_title, state.userName),
                     style = InTouchTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                     color = InTouchTheme.colors.textBlue
@@ -167,12 +175,7 @@ fun HomeScreen(
                             )
                         )
                     },
-                    dropdownMenuDuplicate = { taskId ->
-                        onEvent(
-                            EventType.DuplicateTask(
-                                taskId = taskId
-                            )
-                        )
+                    dropdownMenuDuplicate = { _ ->
                     },
                     dropdownMenuClear = { taskId ->
                         onEvent(
@@ -221,9 +224,11 @@ fun HomeScreen(
                     .padding(vertical = 24.dp)
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .height(24.dp),
+                    .height(36.dp),
                 text = toastState.massage.value()
             )
+            toastState.onDismiss()
+
         }
 
         if (isDialogVisible) {
@@ -317,7 +322,7 @@ fun HomeScreenWithDiaryPreview() {
                     diaryList = listOf(
                         DiaryEntry(
                             id = 1,
-                            data = buildString {
+                            date = buildString {
                                 append("13, jul")
                             },
                             note = buildString {
@@ -334,7 +339,7 @@ fun HomeScreenWithDiaryPreview() {
                         ),
                         DiaryEntry(
                             id = 1,
-                            data = buildString {
+                            date = buildString {
                                 append("13, jul")
                             },
                             note = buildString {
@@ -398,7 +403,7 @@ fun HomeScreenFullPreview() {
                 diaryList = mutableStateListOf(
                     DiaryEntry(
                         id = 1,
-                        data = buildString {
+                        date = buildString {
                             append("13, jul")
                         },
                         note = buildString {
@@ -415,7 +420,7 @@ fun HomeScreenFullPreview() {
                     ),
                     DiaryEntry(
                         id = 1,
-                        data = buildString {
+                        date = buildString {
                             append("13, jul")
                         },
                         note = buildString {

@@ -2,15 +2,20 @@ package care.intouch.app.feature.home.data.mappers
 
 import care.intouch.app.feature.home.data.models.AssignmentsResponse
 import care.intouch.app.feature.home.data.models.DiaryNotesResponse
+import care.intouch.app.feature.home.data.models.StatusDto
 import care.intouch.app.feature.home.domain.models.DiaryEntry
 import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.app.feature.home.domain.models.Status
 import care.intouch.app.feature.home.domain.models.Task
+import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 class HomeMapper @Inject constructor() {
     fun mapAssignments(response: AssignmentsResponse): List<Task> {
-        return response.assignments.map { assignment ->
+        val mappedResponse = response.assignments.map { assignment ->
             Task(
                 id = assignment.id,
                 description = assignment.text,
@@ -18,13 +23,28 @@ class HomeMapper @Inject constructor() {
                 status = mapStatus(assignment.status)
             )
         }
+        Timber.tag("mappedResponse").d(mappedResponse.toString())
+        val mappedResponseList = mutableListOf<Task>()
+        val onlyToDo =
+            mappedResponse.filter { it.status == Status.TO_DO }.take(MAX_COUNT_OF_TASK_BY_STATUS)
+        val onlyInProgress = mappedResponse.filter { it.status == Status.IN_PROGRESS }
+            .take(MAX_COUNT_OF_TASK_BY_STATUS)
+        Timber.tag("onlyInProgress").d(onlyInProgress.toString())
+        Timber.tag("onlyToDo").d(onlyToDo.toString())
+
+        mappedResponseList.addAll(onlyToDo)
+        Timber.tag("mappedResponseList1").d(mappedResponseList.toString())
+        mappedResponseList.addAll(onlyInProgress)
+        Timber.tag("mappedResponseList2").d(mappedResponseList.toString())
+
+        return mappedResponseList.toList()
     }
 
     fun mapDiaryEntries(response: DiaryNotesResponse): List<DiaryEntry> {
-        val diaryEntries = response.diariesNotes.subList(0, 6).map { diaryNote ->
+        val diaryEntries = response.diariesNotes.take(MAX_COUNT_OF_DIARY_NOTES).map { diaryNote ->
             DiaryEntry(
                 id = diaryNote.id,
-                data = diaryNote.addDate,
+                date = formatDate(diaryNote.addDate),
                 note = diaryNote.eventDetails,
                 moodList = diaryNote.clarifyingEmotion.map {
                     Mood.valueOf(it.name)
@@ -32,7 +52,8 @@ class HomeMapper @Inject constructor() {
                 isSharedWithDoctor = diaryNote.visible
             )
         }
-        return listOf()
+        Timber.tag("diaryEntries").d(diaryEntries.toString())
+        return diaryEntries
     }
 
     fun mapAssignmentsRequest(
@@ -47,15 +68,6 @@ class HomeMapper @Inject constructor() {
             request["page"] = "$page"
         }
         return request
-    }
-
-    fun mapStatus(status: String): Status {
-        return when (status) {
-            Status.TO_DO.name -> Status.TO_DO
-            Status.IN_PROGRESS.name -> Status.IN_PROGRESS
-            Status.DONE.name -> Status.DONE
-            else -> Status.TO_DO
-        }
     }
 
     fun mapDiaryNoteRequest(
@@ -73,9 +85,39 @@ class HomeMapper @Inject constructor() {
         return request
     }
 
+    private fun mapStatus(status: String): Status {
+        Timber.tag("status").d(status)
+        val statusResult = when (status) {
+            StatusDto.TO_DO.status-> Status.TO_DO
+            StatusDto.IN_PROGRESS.status -> Status.IN_PROGRESS
+            StatusDto.DONE.status -> Status.DONE
+            else -> Status.TO_DO
+        }
+
+        return statusResult
+    }
+
+    private fun formatDate(date: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        return inputFormat.parse(date)
+            ?.let {
+                outputFormat.format(it)
+                    .lowercase(Locale.ENGLISH)
+                    .filterNot { char -> char == '.' }
+            } ?: ""
+    }
+
     private fun changeToBoolean(number: Int): Boolean {
         return number == 1
     }
 
+    companion object {
+        const val MAX_COUNT_OF_TASK_BY_STATUS = 3
+        const val MAX_COUNT_OF_DIARY_NOTES = 6
+
+    }
 
 }

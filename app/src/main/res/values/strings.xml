@@ -25,7 +25,7 @@
     <string name="diary_title">Diary</string>
     <string name="profile_title">Profile</string>
     <string name="security_title">Security</string>
-    <string name="passwords_do_not_match" >Passwords don\'t match. Please try again</string>
+    <string name="passwords_do_not_match">Passwords don\'t match. Please try again</string>
 
     <string name="my_diary_sub_title">My diary</string>
     <string name="my_plan_sub_title">My plan</string>
@@ -189,11 +189,12 @@
     <string name="unknown_error">Unknown error</string>
     <string name="diary_introduction_text">"Dear  %s,\n​\nCapture your emotional experiences \nand thoughtfully analyze situations.\n\nJournal is designed to help you reflect on your emotional experiences and gain insights into your reactions to various situations. "</string>
 
-    <string name="toast_failure_delete_diary_entry">Diary entry was not deleted, server error</string>
-    <string name="toast_failure_clear_task">Task was not cleared, server error</string>
+
     <string name="toast_success_share_diary_entry">Diary entry shared with doctor</string>
     <string name="toast_success_share_task">Task shared with doctor</string>
     <string name="toast_failure_share_diary_entry">Diary entry was not shared with doctor, server error</string>
     <string name="toast_failure_share_task">Task was not shared with doctor, server error</string>
+    <string name="toast_failure_delete_diary_entry">No cleaning required. Status is "to do".</string>
+    <string name="toast_failure_clear_task">Task was not cleared, server error</string>
     <string name="server_error">Server error</string>
 </resources>

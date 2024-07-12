@@ -15,7 +15,6 @@ import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +45,6 @@ class HomeViewModel @Inject constructor(
         val userId = _stateScreen.value.userInformation.userId
 
         viewModelScope.launch {
-            Timber.tag("UserId").d(_stateScreen.value.userInformation.userId.toString())
             _stateScreen.update { state ->
                 state.copy(isLoading = true)
             }
@@ -64,6 +61,8 @@ class HomeViewModel @Inject constructor(
                     it.copy(
                         taskList = state.taskList,
                         diaryList = state.diaryList,
+                        isSeeAllPlanVisible = state.taskList.isNotEmpty(),
+                        isDiaryListVisible = state.diaryList.isNotEmpty(),
                         userName = state.userInformation.userName,
                         isLoading = state.isLoading,
                         isConnectionLost = state.isConnectionLost
@@ -77,12 +76,6 @@ class HomeViewModel @Inject constructor(
 
     fun executeEvent(event: EventType) {
         when (event) {
-            is EventType.DuplicateTask -> {
-                duplicateTask(
-                    taskId = event.taskId
-                )
-            }
-
             is EventType.ClearTask -> {
                 clearTask(taskId = event.taskId)
             }
@@ -90,7 +83,8 @@ class HomeViewModel @Inject constructor(
             is EventType.ShareTask -> {
                 shareTask(
                     taskId = event.taskId,
-                    index = event.index, event.isSharedWithDoctor
+                    index = event.index,
+                    shareStatus = event.isSharedWithDoctor
                 )
             }
 
@@ -108,10 +102,6 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun duplicateTask(taskId: Int) {
-
     }
 
     private fun clearTask(taskId: Int) {
@@ -134,19 +124,21 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             assignmentsInteractor.clearAssignment(assignmentId = taskId)
                 .onSuccess {
-                    fetchTasks(_stateScreen.value.userInformation.userId)
+                    refreshTasks()
                 }
                 .onFailure { exception ->
                     when (exception) {
                         is NetworkException.NoInternetConnection -> {
                             showToast(
-                                massage = StringVO.Resource(R.string.problem_with_connection)
+                                massage = StringVO.Resource(R.string.problem_with_connection),
+                                onDismiss = {}
                             )
                         }
 
                         else -> {
                             showToast(
-                                massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry)
+                                massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry),
+                                onDismiss = {}
                             )
                         }
                     }
@@ -172,12 +164,14 @@ class HomeViewModel @Inject constructor(
                         state.copy(taskList = taskList)
                     }
                     showToast(
-                        massage = StringVO.Resource(R.string.toast_success_share_task)
+                        massage = StringVO.Resource(R.string.toast_success_share_task),
+                        onDismiss = {}
                     )
                 }
                 .onFailure {
                     showToast(
-                        massage = StringVO.Resource(R.string.toast_failure_share_task)
+                        massage = StringVO.Resource(R.string.toast_failure_share_task),
+                        onDismiss = {}
                     )
                 }
         }
@@ -197,12 +191,14 @@ class HomeViewModel @Inject constructor(
                         state.copy(diaryList = diaryList)
                     }
                     showToast(
-                        massage = StringVO.Resource(R.string.toast_success_share_diary_entry)
+                        massage = StringVO.Resource(R.string.toast_success_share_diary_entry),
+                        onDismiss = {}
                     )
                 }
                 .onFailure {
                     showToast(
-                        massage = StringVO.Resource(R.string.toast_success_share_task)
+                        massage = StringVO.Resource(R.string.toast_failure_share_diary_entry),
+                        onDismiss = {}
                     )
                 }
         }
@@ -229,13 +225,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             diaryEntriesInteractor.deleteDiaryEntry(diaryNoteId = diaryId)
                 .onSuccess {
-                    fetchDiary(_stateScreen.value.userInformation.userId)
+                    refreshDiary()
                 }
                 .onFailure { exception ->
                     when (exception) {
                         is NetworkException.NoInternetConnection -> {
                             showToast(
-                                massage = StringVO.Resource(R.string.problem_with_connection)
+                                massage = StringVO.Resource(R.string.problem_with_connection),
+                                onDismiss = {}
                             )
                             _stateScreen.update { state ->
                                 state.copy(isLoading = false)
@@ -244,7 +241,8 @@ class HomeViewModel @Inject constructor(
 
                         else -> {
                             showToast(
-                                massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry)
+                                massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry),
+                                onDismiss = {}
                             )
                             _stateScreen.update { state ->
                                 state.copy(isLoading = false)
@@ -268,7 +266,6 @@ class HomeViewModel @Inject constructor(
     private suspend fun fetchTasks(userId: Int) {
         getTasks.getTasks(userId)
             .onSuccess { task ->
-                Timber.tag("Task").d(task.toString())
                 _stateScreen.update { state ->
                     state.copy(taskList = task)
                 }
@@ -281,17 +278,37 @@ class HomeViewModel @Inject constructor(
 
                     else -> {
                         showToast(
-                            massage = StringVO.Resource(R.string.server_error)
+                            massage = StringVO.Resource(R.string.server_error),
+                            onDismiss = {}
                         )
                     }
                 }
             }
     }
 
+    private fun refreshDiary() {
+        viewModelScope.launch {
+            fetchDiary(_stateScreen.value.userInformation.userId)
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+
+    }
+
+    private fun refreshTasks() {
+        viewModelScope.launch {
+            fetchTasks(_stateScreen.value.userInformation.userId)
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+
+    }
+
     private suspend fun fetchDiary(userId: Int) {
         getDiaryEntries.execute(userId)
             .onSuccess { diaryEntries ->
-                Timber.tag("diaryEntries").d(diaryEntries.toString())
                 _stateScreen.update { state ->
                     state.copy(diaryList = diaryEntries)
                 }
@@ -304,7 +321,8 @@ class HomeViewModel @Inject constructor(
 
                     else -> {
                         showToast(
-                            massage = StringVO.Resource(R.string.server_error)
+                            massage = StringVO.Resource(R.string.server_error),
+                            onDismiss = {}
                         )
                     }
                 }
@@ -333,24 +351,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun showToast(massage: StringVO) {
+    private fun showToast(massage: StringVO, onDismiss: () -> Unit) {
         viewModelScope.launch {
             _sideEffect.emit(
                 HomeScreenSideEffect.ShowToast(
                     massage = massage,
-                    onDismiss = {
-                        viewModelScope.launch {
-                            delay(TOAST_DISMISS_TIME)
-                        }
-                    }
+                    onDismiss = onDismiss
                 )
             )
         }
     }
 
-    companion object {
-        private const val TOAST_DISMISS_TIME = 1000L
-    }
 }
 
 

@@ -146,7 +146,7 @@ private fun ProfileScreen(
                 focusRequester = emailFocusRequester,
                 buttonEnabled = state.viewsComponentsState.emailButtonEnabled,
             )
-            if (state.profileDataState.dataIsValid) {  // Show or not a message about data incorrectness
+            if (state.profileDataState.dataIsValid) {  // Show or not a message about date incorrectness
                 Spacer(modifier = Modifier.height(22.dp))
             } else {
                 Spacer(modifier = Modifier.height(16.dp))

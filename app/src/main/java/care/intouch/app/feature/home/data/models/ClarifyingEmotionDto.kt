@@ -1,5 +1,8 @@
 package care.intouch.app.feature.home.data.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class ClarifyingEmotionDto(name: String) {
     Loss(name = "Loss"),
     Fear(name = "Fear"),
@@ -8,7 +11,7 @@ enum class ClarifyingEmotionDto(name: String) {
     Interest(name = "Interest"),
     Pride(name = "Pride"),
     Hope(name = "Hope"),
-    Happiness(name = "Hapiness"),
+    Hapiness(name = "Hapiness"),
     Anger(name = "Anger"),
     Anxiety(name = "Anxiety"),
     Embarrassment(name = "Embarrassment"),
@@ -32,7 +35,7 @@ enum class ClarifyingEmotionDto(name: String) {
     Acceptance(name = "Acceptance"),
     Enthusiasm(name = "Enthusiasm"),
     Love(name = "Love"),
-    Disappointment(name = "Dissapointment"),
+    Dissapointment(name = "Dissapointment"),
     Confusion(name = "Confusion"),
     Satisfaction(name = "Satisfaction"),
     SelfLove(name = "Self-love"),

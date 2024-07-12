@@ -5,5 +5,4 @@ sealed interface EventType {
     data class ShareTask(val taskId: Int, val index: Int, val isSharedWithDoctor: Boolean) : EventType
     data class ShareDiaryEntry(val diaryEntryId: Int, val index: Int, val isSharedWithDoctor: Boolean) : EventType
     data class DeleteDiaryEntry(val diaryEntryId: Int) : EventType
-    data class DuplicateTask(val taskId: Int) : EventType
 }
