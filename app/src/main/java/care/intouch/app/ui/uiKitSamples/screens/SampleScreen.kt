@@ -46,12 +46,6 @@ fun SampleScreen(
         )
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { onEmotionClick.invoke() }
-        ) {
-            Text(text = "onEmotionClick")
-        }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
             onClick = { onButtonSampleClick.invoke() }
         ) {
             Text(text = "Go To Button Sample")

@@ -1,6 +1,5 @@
 package care.intouch.app.core.navigation.navhost
 
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -12,7 +11,6 @@ import care.intouch.app.core.navigation.CheckmarkSample
 import care.intouch.app.core.navigation.ChipsSample
 import care.intouch.app.core.navigation.MultilineTextFieldSample
 import care.intouch.app.core.navigation.NavigationSample
-import care.intouch.app.core.navigation.OnEmotionClick
 import care.intouch.app.core.navigation.OneLineTextFieldSample
 import care.intouch.app.core.navigation.PasswordTextFieldSample
 import care.intouch.app.core.navigation.PinCodeSample
@@ -20,7 +18,6 @@ import care.intouch.app.core.navigation.ProgressBarSample
 import care.intouch.app.core.navigation.SampleRouteBranch
 import care.intouch.app.core.navigation.SliderSample
 import care.intouch.app.core.navigation.ToggleSample
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.EmotionChoiceScreen
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreen
 import care.intouch.app.ui.uiKitSamples.samples.ButtonSampleScreenSecond
 import care.intouch.app.ui.uiKitSamples.samples.CardsSample
@@ -96,12 +93,6 @@ fun NavGraphBuilder.addNestedSamplesGraph() {
 
         composable(route = ButtonSample2.route) {
             ButtonSampleScreenSecond()
-        }
-        composable(route = OnEmotionClick.route) {
-            EmotionChoiceScreen(
-                onSaveClick = { /*TODO*/ },
-                viewModel = hiltViewModel(),
-                onBackClick = {})
         }
     }
 }
