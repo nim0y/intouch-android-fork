@@ -57,16 +57,18 @@ fun PopupQuestions(
                                 .padding(horizontal = 28.dp),
                             textAlign = TextAlign.Center
                         )
-                        Text(
-                            text = secondLineText.value(),
-                            style = InTouchTheme.typography.filtersSemibold,
-                            color = InTouchTheme.colors.textBlue,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(horizontal = 28.dp),
-                            textAlign = TextAlign.Center
-                        )
+                        if (secondLineText.value().isNotBlank()) {
+                            Text(
+                                text = secondLineText.value(),
+                                style = InTouchTheme.typography.filtersSemibold,
+                                color = InTouchTheme.colors.textBlue,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(horizontal = 28.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
 
                 }
