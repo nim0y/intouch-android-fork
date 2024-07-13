@@ -21,7 +21,7 @@ fun NavGraphBuilder.addNestedQuestionsGraph(
        composable(route = IntroductoryQuestion.route) {
            IntroductoryQuestionsScreen(
                onBackClick = {
-
+                    navController.popBackStack()
                },
                onNextClick = {
                    navController.navigate(route = AssignmentsQuestion.route) {

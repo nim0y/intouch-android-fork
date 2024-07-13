@@ -90,7 +90,8 @@ fun PopupQuestions(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 48.dp),
+                        .padding(bottom = 48.dp)
+                        .padding(horizontal = 28.dp),
                     text = secondaryButtonText,
                     textStyle = InTouchTheme.typography.titleSmall
                 )

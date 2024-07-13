@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -102,7 +101,7 @@ private fun QuestionsScreen(
                 isShowClosingDialog = false
                 isShowCompleteTaskDialog = false
             }
-            .alpha(if (isShowClosingDialog /*|| isShowCompleteTaskDialog*/) 0.2f else 1f)
+            .alpha(if (isShowClosingDialog) 0.2f else 1f)
     ) {
         Column (
             modifier = Modifier
@@ -229,7 +228,6 @@ private fun QuestionsScreen(
     if (isShowClosingDialog) {
         Surface(
             modifier = Modifier
-                .wrapContentHeight(align = Alignment.Top)
                 .padding(horizontal = 28.dp)
                 .alpha(1F)
                 .padding(top = 100.dp)
@@ -252,23 +250,24 @@ private fun QuestionsScreen(
     if (isShowCompleteTaskDialog) {
         Surface(
             modifier = Modifier
-                .wrapContentHeight(align = Alignment.Bottom)
                 .padding(horizontal = 28.dp)
                 .alpha(1F)
-                .padding(bottom = 181.dp)
+                .padding(top = 195.dp)
                 .clip(RoundedCornerShape(20.dp)),
             content = {
-                PopupQuestions(
-                    inTouchButtonClick = {
-                        isShowCompleteTaskDialog = !isShowCompleteTaskDialog
-                    },
-                    secondaryButtonClick = {
+                Column {
+                    PopupQuestions(
+                        inTouchButtonClick = {
+                            isShowCompleteTaskDialog = !isShowCompleteTaskDialog
+                        },
+                        secondaryButtonClick = {
 
-                    },
-                    firstLineText = StringVO.Resource(R.string.questions_popap_not_all_filled),
-                    intouchButtonText = StringVO.Resource(R.string.back_button),
-                    secondaryButtonText = StringVO.Resource(R.string.complete_as_is_button))
-            }
+                        },
+                        firstLineText = StringVO.Resource(R.string.questions_popap_not_all_filled),
+                        intouchButtonText = StringVO.Resource(R.string.back_button),
+                        secondaryButtonText = StringVO.Resource(R.string.complete_as_is_button))
+                }
+                }
         )
     }
 }

@@ -67,7 +67,8 @@ private fun IntroductoryQuestionsScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             TopPanel(
-                backButtonClick = onBackClick,
+                backButtonClick = {
+                    onBackClick.invoke() },
                 text = StringVO.Resource(resId = R.string.name_task_mock)
             )
             Spacer(modifier = Modifier.height(51.dp))
