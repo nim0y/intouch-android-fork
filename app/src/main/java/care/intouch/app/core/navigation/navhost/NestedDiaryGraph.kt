@@ -46,7 +46,7 @@ fun NavGraphBuilder.addNestedDiaryGraph(
         composable(route = EmotionChoice.route) {
             EmotionChoiceScreen(
                 onSaveClick = {
-                    navController.navigate(route = DiaryEntries.route)
+                    navController.popBackStack()
                 },
                 onBackClick = {
                     navController.popBackStack()

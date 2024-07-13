@@ -7,5 +7,6 @@ sealed class FillingOutDataEvent {
     data class OnSensationsTextChanged(val text: String) : FillingOutDataEvent()
     data object OnUpdateStateChanged : FillingOutDataEvent()
     data object OnTrashClicked : FillingOutDataEvent()
+    data object OnAddEmotionClicked : FillingOutDataEvent()
 
 }

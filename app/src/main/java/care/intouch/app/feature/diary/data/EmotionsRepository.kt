@@ -10,4 +10,7 @@ interface EmotionsRepository {
     suspend fun getEmotion(): String
     suspend fun getEmotionDesc(): List<EmotionDescriptionEnum>
     suspend fun clearEmotions()
+    suspend fun saveAnswers(details: String, analysis: String, type: String, sensation: String)
+    suspend fun clearAllInformation()
+    suspend fun getSavedAnswers(): List<String>
 }

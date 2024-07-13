@@ -151,12 +151,16 @@ class EmotionViewModel @Inject constructor(
                 EmotionDescriptionEnum.Fear
             ),
             EmotionDescriptionTask(
+                StringVO.Resource(care.intouch.app.R.string.anger_clarifying_emotional),
+                EmotionDescriptionEnum.Anger
+            ),
+            EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.excitement_clarifying_emotional),
                 EmotionDescriptionEnum.Excitement
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.anger_clarifying_emotional),
-                EmotionDescriptionEnum.Anger
+                StringVO.Resource(care.intouch.app.R.string.shame_clarifying_emotional),
+                EmotionDescriptionEnum.Shame
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.disgust_clarifying_emotional),
@@ -167,32 +171,24 @@ class EmotionViewModel @Inject constructor(
                 EmotionDescriptionEnum.Guilt
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.shame_clarifying_emotional),
-                EmotionDescriptionEnum.Shame
-            ),
-            EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.nervousness_clarifying_emotional),
                 EmotionDescriptionEnum.Nervousness
-            ),
-            EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.disappointment_clarifying_emotional),
-                EmotionDescriptionEnum.Disappointment
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.sadness_clarifying_emotional),
                 EmotionDescriptionEnum.Sadness
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.impatience_clarifying_emotional),
-                EmotionDescriptionEnum.Impatience
-            ),
-            EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.exhaustion_clarifying_emotional),
                 EmotionDescriptionEnum.Exhaustion
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.frustration_clarifying_emotional),
-                EmotionDescriptionEnum.Frustration
+                StringVO.Resource(care.intouch.app.R.string.impatience_clarifying_emotional),
+                EmotionDescriptionEnum.Impatience
+            ),
+            EmotionDescriptionTask(
+                StringVO.Resource(care.intouch.app.R.string.disappointment_clarifying_emotional),
+                EmotionDescriptionEnum.Disappointment
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.confusion_clarifying_emotional),
@@ -207,12 +203,12 @@ class EmotionViewModel @Inject constructor(
                 EmotionDescriptionEnum.Acceptance
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.laziness_clarifying_emotional),
-                EmotionDescriptionEnum.Laziness
+                StringVO.Resource(care.intouch.app.R.string.frustration_clarifying_emotional),
+                EmotionDescriptionEnum.Frustration
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.interest_clarifying_emotional),
-                EmotionDescriptionEnum.Interest
+                StringVO.Resource(care.intouch.app.R.string.laziness_clarifying_emotional),
+                EmotionDescriptionEnum.Laziness
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.pride_clarifying_emotional),
@@ -231,8 +227,8 @@ class EmotionViewModel @Inject constructor(
                 EmotionDescriptionEnum.Gratitude
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.happiness_clarifying_emotional),
-                EmotionDescriptionEnum.Happiness
+                StringVO.Resource(care.intouch.app.R.string.interest_clarifying_emotional),
+                EmotionDescriptionEnum.Interest
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.respect_clarifying_emotional),
@@ -251,8 +247,8 @@ class EmotionViewModel @Inject constructor(
                 EmotionDescriptionEnum.SelfLove
             ),
             EmotionDescriptionTask(
-                StringVO.Resource(care.intouch.app.R.string.joy_clarifying_emotional),
-                EmotionDescriptionEnum.Joy
+                StringVO.Resource(care.intouch.app.R.string.happiness_clarifying_emotional),
+                EmotionDescriptionEnum.Happiness
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.inspiration_clarifying_emotional),
@@ -265,6 +261,10 @@ class EmotionViewModel @Inject constructor(
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.euphoria_clarifying_emotional),
                 EmotionDescriptionEnum.Euphoria
+            ),
+            EmotionDescriptionTask(
+                StringVO.Resource(care.intouch.app.R.string.joy_clarifying_emotional),
+                EmotionDescriptionEnum.Joy
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.love_clarifying_emotional),

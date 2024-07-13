@@ -45,13 +45,15 @@ fun FillingOutScreen(
     val state by viewModel.uiState.collectAsState()
     val imageState by viewModel.sharedImageUiState.collectAsStateWithLifecycle(null)
     val listState by viewModel.sharedListUiState.collectAsStateWithLifecycle(listOf())
+    val navigateState by viewModel.sharedNavigateState.collectAsStateWithLifecycle(false)
     FillingOutScreen(
         onNextClick = onNextClick,
         state = state,
         onEvent = { viewModel.onEvent(it) },
         onBackClick = onBackClick,
         imageState = imageState,
-        listState = listState
+        listState = listState,
+        navigateState = navigateState
     )
 }
 
@@ -63,12 +65,17 @@ fun FillingOutScreen(
     onBackClick: () -> Unit,
     imageState: ImageVO?,
     listState: List<EmotionDescriptionTask>,
+    navigateState: Boolean,
 ) {
     Column(
         Modifier.background(InTouchTheme.colors.mainBlue)
     ) {
         LaunchedEffect(key1 = imageState) {
             onEvent(FillingOutDataEvent.OnUpdateStateChanged)
+        }
+        LaunchedEffect(key1 = navigateState) {
+            if (navigateState)
+                onNextClick.invoke()
         }
         Column(
             modifier = Modifier
@@ -120,14 +127,14 @@ fun FillingOutScreen(
             Spacer(modifier = Modifier.height(8.dp))
             if (imageState != null) {
                 ResultEmotionCard(
-                    onEditClick = onNextClick,
+                    onEditClick = { onEvent(FillingOutDataEvent.OnAddEmotionClicked) },
                     onTrashClick = { onEvent(FillingOutDataEvent.OnTrashClicked) },
                     emotionIcon = imageState
                 )
                 ResultEmotionDescriptionList(items = listState)
             } else {
                 AddEmotionCard(
-                    onClick = onNextClick,
+                    onClick = { onEvent(FillingOutDataEvent.OnAddEmotionClicked) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -185,7 +192,8 @@ fun FillingOutScreenPreview() {
             onEvent = {},
             onBackClick = {},
             imageState = null,
-            listState = listOf()
+            listState = listOf(),
+            navigateState = false
         )
     }
 }

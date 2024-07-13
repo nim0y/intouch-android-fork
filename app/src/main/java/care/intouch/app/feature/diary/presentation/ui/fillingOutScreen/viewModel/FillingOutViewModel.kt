@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import care.intouch.app.feature.diary.domain.useCase.ClearEmotionsUC
 import care.intouch.app.feature.diary.domain.useCase.GetEmotionDescUC
 import care.intouch.app.feature.diary.domain.useCase.GetEmotionUC
+import care.intouch.app.feature.diary.domain.useCase.GetSavedAnswers
+import care.intouch.app.feature.diary.domain.useCase.SaveAnswersUC
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionEnum
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionTask
 import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.FillingOutDataEvent
@@ -25,6 +27,8 @@ class FillingOutViewModel @Inject constructor(
     private val getEmotionUC: GetEmotionUC,
     private val getEmotionDescUC: GetEmotionDescUC,
     private val clearEmotionsUC: ClearEmotionsUC,
+    private val saveAnswersUC: SaveAnswersUC,
+    private val getSavedAnswers: GetSavedAnswers,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         FillingOutScreenState(
@@ -39,10 +43,15 @@ class FillingOutViewModel @Inject constructor(
     val sharedImageUiState = _sharedImageUiState.asSharedFlow()
     private val _sharedListUiState = MutableSharedFlow<List<EmotionDescriptionTask>>()
     val sharedListUiState = _sharedListUiState.asSharedFlow()
+    private val _sharedNavigateState = MutableSharedFlow<Boolean>()
+    val sharedNavigateState = _sharedNavigateState.asSharedFlow()
+    private val _sharedUiState = MutableSharedFlow<FillingOutScreenState>()
+    val sharedUiState = _sharedUiState.asSharedFlow()
 
     init {
         getEmotionDescription()
         getEmotion()
+        getSavedAnswers()
     }
     fun onEvent(event: FillingOutDataEvent) {
         when (event) {
@@ -52,9 +61,28 @@ class FillingOutViewModel @Inject constructor(
             is FillingOutDataEvent.OnTypeTextChanged -> updateTypeState(event.text)
             FillingOutDataEvent.OnUpdateStateChanged -> updateStates()
             FillingOutDataEvent.OnTrashClicked -> clearEmotions()
+            FillingOutDataEvent.OnAddEmotionClicked -> navigateToEmotionChoice()
         }
     }
 
+    private fun getSavedAnswers() {
+        viewModelScope.launch {
+            val result = getSavedAnswers.invoke()
+            _uiState.emit(FillingOutScreenState(result[0], result[1], result[2], result[3]))
+        }
+    }
+
+    private fun navigateToEmotionChoice() {
+        viewModelScope.launch {
+            saveAnswersUC.invoke(
+                uiState.value.detailsText,
+                uiState.value.analysisText,
+                uiState.value.typeText,
+                uiState.value.sensationsText
+            )
+            _sharedNavigateState.emit(true)
+        }
+    }
     private fun updateStates() {
         getEmotion()
         getEmotionDescription()
@@ -157,40 +185,37 @@ class FillingOutViewModel @Inject constructor(
 
                     EmotionDescriptionEnum.Anger -> result.add(
                         EmotionDescriptionTask(
+                            StringVO.Resource(care.intouch.app.R.string.anger_clarifying_emotional),
+                            EmotionDescriptionEnum.Anger
+                        )
+                    )
+
+                    EmotionDescriptionEnum.Excitement -> result.add(
+                        EmotionDescriptionTask(
                             StringVO.Resource(
                                 care.intouch.app.R.string.excitement_clarifying_emotional
                             ), EmotionDescriptionEnum.Excitement
                         )
                     )
 
-                    EmotionDescriptionEnum.Excitement -> result.add(
-                        EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.anger_clarifying_emotional),
-                            EmotionDescriptionEnum.Anger
-                        )
-                    )
-
                     EmotionDescriptionEnum.Shame -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.disgust_clarifying_emotional
-                            ), EmotionDescriptionEnum.Disgust
+                            StringVO.Resource(care.intouch.app.R.string.shame_clarifying_emotional),
+                            EmotionDescriptionEnum.Shame
                         )
                     )
 
                     EmotionDescriptionEnum.Disgust -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.guilt_clarifying_emotional
-                            ), EmotionDescriptionEnum.Guilt
+                            StringVO.Resource(care.intouch.app.R.string.disgust_clarifying_emotional),
+                            EmotionDescriptionEnum.Disgust
                         )
                     )
 
                     EmotionDescriptionEnum.Guilt -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.shame_clarifying_emotional
-                            ), EmotionDescriptionEnum.Shame
+                            StringVO.Resource(care.intouch.app.R.string.guilt_clarifying_emotional),
+                            EmotionDescriptionEnum.Guilt
                         )
                     )
 
@@ -203,16 +228,15 @@ class FillingOutViewModel @Inject constructor(
 
                     EmotionDescriptionEnum.Sadness -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.disappointment_clarifying_emotional
-                            ), EmotionDescriptionEnum.Disappointment
+                            StringVO.Resource(care.intouch.app.R.string.sadness_clarifying_emotional),
+                            EmotionDescriptionEnum.Sadness
                         )
                     )
 
                     EmotionDescriptionEnum.Exhaustion -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.sadness_clarifying_emotional),
-                            EmotionDescriptionEnum.Sadness
+                            StringVO.Resource(care.intouch.app.R.string.exhaustion_clarifying_emotional),
+                            EmotionDescriptionEnum.Exhaustion
                         )
                     )
 
@@ -225,36 +249,36 @@ class FillingOutViewModel @Inject constructor(
 
                     EmotionDescriptionEnum.Disappointment -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.exhaustion_clarifying_emotional),
-                            EmotionDescriptionEnum.Exhaustion
+                            StringVO.Resource(care.intouch.app.R.string.disappointment_clarifying_emotional),
+                            EmotionDescriptionEnum.Disappointment
                         )
                     )
 
                     EmotionDescriptionEnum.Confusion -> result.add(
-                        EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.frustration_clarifying_emotional),
-                            EmotionDescriptionEnum.Frustration
-                        )
-                    )
-
-                    EmotionDescriptionEnum.Loneliness -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.confusion_clarifying_emotional),
                             EmotionDescriptionEnum.Confusion
                         )
                     )
 
-                    EmotionDescriptionEnum.Acceptance -> result.add(
+                    EmotionDescriptionEnum.Loneliness -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.loneliness_clarifying_emotional),
                             EmotionDescriptionEnum.Loneliness
                         )
                     )
 
-                    EmotionDescriptionEnum.Frustration -> result.add(
+                    EmotionDescriptionEnum.Acceptance -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.acceptance_clarifying_emotional),
                             EmotionDescriptionEnum.Acceptance
+                        )
+                    )
+
+                    EmotionDescriptionEnum.Frustration -> result.add(
+                        EmotionDescriptionTask(
+                            StringVO.Resource(care.intouch.app.R.string.frustration_clarifying_emotional),
+                            EmotionDescriptionEnum.Frustration
                         )
                     )
 
@@ -267,79 +291,68 @@ class FillingOutViewModel @Inject constructor(
 
                     EmotionDescriptionEnum.Pride -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.interest_clarifying_emotional
-                            ), EmotionDescriptionEnum.Interest
+                            StringVO.Resource(care.intouch.app.R.string.pride_clarifying_emotional),
+                            EmotionDescriptionEnum.Pride
                         )
                     )
 
                     EmotionDescriptionEnum.Hope -> result.add(
-                        EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.pride_clarifying_emotional
-                            ), EmotionDescriptionEnum.Pride
-                        )
-                    )
-
-                    EmotionDescriptionEnum.Calmness -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.hope_clarifying_emotional),
                             EmotionDescriptionEnum.Hope
                         )
                     )
 
-                    EmotionDescriptionEnum.Gratitude -> result.add(
+                    EmotionDescriptionEnum.Calmness -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.calmness_clarifying_emotional),
                             EmotionDescriptionEnum.Calmness
                         )
                     )
 
-                    EmotionDescriptionEnum.Interest -> result.add(
+                    EmotionDescriptionEnum.Gratitude -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.gratitude_clarifying_emotional),
                             EmotionDescriptionEnum.Gratitude
                         )
                     )
 
-                    EmotionDescriptionEnum.Respect -> result.add(
+                    EmotionDescriptionEnum.Interest -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.happiness_clarifying_emotional
-                            ), EmotionDescriptionEnum.Happiness
+                            StringVO.Resource(care.intouch.app.R.string.interest_clarifying_emotional),
+                            EmotionDescriptionEnum.Interest
                         )
                     )
 
-                    EmotionDescriptionEnum.Enthusiasm -> result.add(
+                    EmotionDescriptionEnum.Respect -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.respect_clarifying_emotional),
                             EmotionDescriptionEnum.Respect
                         )
                     )
 
-                    EmotionDescriptionEnum.Happiness -> result.add(
+                    EmotionDescriptionEnum.Enthusiasm -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.enthusiasm_clarifying_emotional),
                             EmotionDescriptionEnum.Enthusiasm
                         )
                     )
 
+                    EmotionDescriptionEnum.Happiness -> result.add(
+                        EmotionDescriptionTask(
+                            StringVO.Resource(care.intouch.app.R.string.happiness_clarifying_emotional),
+                            EmotionDescriptionEnum.Happiness
+                        )
+                    )
+
                     EmotionDescriptionEnum.Inspiration -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.satisfaction_clarifying_emotional),
-                            EmotionDescriptionEnum.Satisfaction
+                            StringVO.Resource(care.intouch.app.R.string.inspiration_clarifying_emotional),
+                            EmotionDescriptionEnum.Inspiration
                         )
                     )
 
                     EmotionDescriptionEnum.Joy -> result.add(
-                        EmotionDescriptionTask(
-                            StringVO.Resource(
-                                care.intouch.app.R.string.self_love_clarifying_emotional
-                            ), EmotionDescriptionEnum.SelfLove
-                        )
-                    )
-
-                    EmotionDescriptionEnum.Love -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(
                                 care.intouch.app.R.string.joy_clarifying_emotional
@@ -347,31 +360,38 @@ class FillingOutViewModel @Inject constructor(
                         )
                     )
 
-                    EmotionDescriptionEnum.Amazement -> result.add(
+                    EmotionDescriptionEnum.Love -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.inspiration_clarifying_emotional),
-                            EmotionDescriptionEnum.Inspiration
+                            StringVO.Resource(care.intouch.app.R.string.love_clarifying_emotional),
+                            EmotionDescriptionEnum.Love
                         )
                     )
 
-                    EmotionDescriptionEnum.Satisfaction -> result.add(
+                    EmotionDescriptionEnum.Amazement -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.amazement_clarifying_emotional),
                             EmotionDescriptionEnum.Amazement
                         )
                     )
 
+                    EmotionDescriptionEnum.Satisfaction -> result.add(
+                        EmotionDescriptionTask(
+                            StringVO.Resource(care.intouch.app.R.string.satisfaction_clarifying_emotional),
+                            EmotionDescriptionEnum.Satisfaction
+                        )
+                    )
+
                     EmotionDescriptionEnum.SelfLove -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.euphoria_clarifying_emotional),
-                            EmotionDescriptionEnum.Euphoria
+                            StringVO.Resource(care.intouch.app.R.string.self_love_clarifying_emotional),
+                            EmotionDescriptionEnum.SelfLove
                         )
                     )
 
                     EmotionDescriptionEnum.Euphoria -> result.add(
                         EmotionDescriptionTask(
-                            StringVO.Resource(care.intouch.app.R.string.love_clarifying_emotional),
-                            EmotionDescriptionEnum.Love
+                            StringVO.Resource(care.intouch.app.R.string.euphoria_clarifying_emotional),
+                            EmotionDescriptionEnum.Euphoria
                         )
                     )
                 }

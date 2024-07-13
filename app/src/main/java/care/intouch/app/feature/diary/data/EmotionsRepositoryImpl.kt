@@ -1,7 +1,6 @@
 package care.intouch.app.feature.diary.data
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.core.content.edit
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionEnum
@@ -32,12 +31,47 @@ class EmotionsRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveAnswers(
+        details: String,
+        analysis: String,
+        type: String,
+        sensation: String,
+    ) {
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit { putString(DETAILS, details) }
+            sharedPreferences.edit { putString(ANALYSIS, analysis) }
+            sharedPreferences.edit { putString(TYPE, type) }
+            sharedPreferences.edit { putString(SENSATION, sensation) }
+        }
+    }
+
+    override suspend fun getSavedAnswers(): List<String> {
+        val result: MutableList<String> = mutableListOf()
+        withContext(Dispatchers.IO) {
+            result.add(sharedPreferences.getString(DETAILS, null).orEmpty())
+            result.add(sharedPreferences.getString(ANALYSIS, null).orEmpty())
+            result.add(sharedPreferences.getString(TYPE, null).orEmpty())
+            result.add(sharedPreferences.getString(SENSATION, null).orEmpty())
+        }
+        return result
+    }
+
+    override suspend fun clearAllInformation() {
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit().remove(EMOTION_KEY).apply()
+            sharedPreferences.edit().remove(DESC_KEY).apply()
+            sharedPreferences.edit().remove(DETAILS).apply()
+            sharedPreferences.edit().remove(ANALYSIS).apply()
+            sharedPreferences.edit().remove(TYPE).apply()
+            sharedPreferences.edit().remove(SENSATION).commit()
+        }
+    }
+
     override suspend fun getEmotion(): String {
         var result: String = ""
         withContext(Dispatchers.IO) {
             result = sharedPreferences.getString(EMOTION_KEY, null).orEmpty()
         }
-        Log.d("1", "$result")
         return result
     }
 
@@ -52,13 +86,12 @@ class EmotionsRepositoryImpl @Inject constructor(
                 listOf()
             }
         }
-        Log.d("2", "$result")
         return result
     }
 
     override suspend fun clearEmotions() {
         withContext(Dispatchers.IO) {
-            sharedPreferences.edit().remove(EMOTION_KEY).commit()
+            sharedPreferences.edit().remove(EMOTION_KEY).apply()
             sharedPreferences.edit().remove(DESC_KEY).commit()
         }
     }
@@ -66,5 +99,9 @@ class EmotionsRepositoryImpl @Inject constructor(
     companion object {
         const val EMOTION_KEY = "EMOTION"
         const val DESC_KEY = "DESC_KEY"
+        const val DETAILS = "DETAILS"
+        const val ANALYSIS = "ANALYSIS"
+        const val TYPE = "TYPE"
+        const val SENSATION = "SENSATION"
     }
 }
