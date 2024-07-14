@@ -1,4 +1,4 @@
-package care.intouch.app.feature.questions.domain
+package care.intouch.app.feature.questions.domain.useCase
 
 import care.intouch.app.feature.questions.domain.models.Assignments
 
