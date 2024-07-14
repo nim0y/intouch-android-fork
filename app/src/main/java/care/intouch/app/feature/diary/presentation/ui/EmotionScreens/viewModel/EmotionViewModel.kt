@@ -188,7 +188,7 @@ class EmotionViewModel @Inject constructor(
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.disappointment_clarifying_emotional),
-                EmotionDescriptionEnum.Disappointment
+                EmotionDescriptionEnum.Dissapointment
             ),
             EmotionDescriptionTask(
                 StringVO.Resource(care.intouch.app.R.string.confusion_clarifying_emotional),

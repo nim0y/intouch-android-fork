@@ -2,11 +2,14 @@ package care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.viewMode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import care.intouch.app.feature.diary.domain.modal.Diary
+import care.intouch.app.feature.diary.domain.useCase.ClearAllInformationUC
 import care.intouch.app.feature.diary.domain.useCase.ClearEmotionsUC
 import care.intouch.app.feature.diary.domain.useCase.GetEmotionDescUC
 import care.intouch.app.feature.diary.domain.useCase.GetEmotionUC
 import care.intouch.app.feature.diary.domain.useCase.GetSavedAnswers
 import care.intouch.app.feature.diary.domain.useCase.SaveAnswersUC
+import care.intouch.app.feature.diary.domain.useCase.SaveDiaryUC
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionEnum
 import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionTask
 import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.FillingOutDataEvent
@@ -14,6 +17,7 @@ import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.models.Fi
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,6 +33,8 @@ class FillingOutViewModel @Inject constructor(
     private val clearEmotionsUC: ClearEmotionsUC,
     private val saveAnswersUC: SaveAnswersUC,
     private val getSavedAnswers: GetSavedAnswers,
+    private val saveDiaryUC: SaveDiaryUC,
+    private val clearAllInformationUC: ClearAllInformationUC
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         FillingOutScreenState(
@@ -62,6 +68,25 @@ class FillingOutViewModel @Inject constructor(
             FillingOutDataEvent.OnUpdateStateChanged -> updateStates()
             FillingOutDataEvent.OnTrashClicked -> clearEmotions()
             FillingOutDataEvent.OnAddEmotionClicked -> navigateToEmotionChoice()
+            FillingOutDataEvent.OnChangeVisible -> changeVisible()
+            FillingOutDataEvent.OnClickSave -> saveDiary()
+        }
+    }
+
+    private fun saveDiary(){
+        viewModelScope.launch(Dispatchers.IO) {
+            saveDiaryUC.invoke(
+                Diary(
+                    eventDetails = _uiState.value.detailsText,
+                    thoughtsAnalysis = _uiState.value.analysisText,
+                    physicalSensations = _uiState.value.sensationsText,
+                    emotionType = _uiState.value.typeText,
+                    visible = _uiState.value.visible,
+                    primaryEmotion = getEmotionUC.invoke(),
+                    clarifyingEmotion = getEmotionDescUC.invoke().map { it.nameEmotion }
+                )
+            )
+            clearAllInformationUC.invoke()
         }
     }
 
@@ -247,10 +272,10 @@ class FillingOutViewModel @Inject constructor(
                         )
                     )
 
-                    EmotionDescriptionEnum.Disappointment -> result.add(
+                    EmotionDescriptionEnum.Dissapointment -> result.add(
                         EmotionDescriptionTask(
                             StringVO.Resource(care.intouch.app.R.string.disappointment_clarifying_emotional),
-                            EmotionDescriptionEnum.Disappointment
+                            EmotionDescriptionEnum.Dissapointment
                         )
                     )
 
@@ -420,6 +445,12 @@ class FillingOutViewModel @Inject constructor(
     private fun updateTypeState(text: String) {
         _uiState.update {
             it.copy(typeText = text)
+        }
+    }
+
+    private fun changeVisible(){
+        _uiState.update {
+            it.copy(visible = !it.visible)
         }
     }
 }
