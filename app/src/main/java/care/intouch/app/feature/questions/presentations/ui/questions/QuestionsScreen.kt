@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -183,7 +184,7 @@ private fun QuestionsScreen(
                     .padding(top = 14.dp, bottom = 20.dp)) {
                     Text(
                         text = StringVO.Resource(R.string.dunning_kruger_effect).value(),
-                        style = InTouchTheme.typography.bodySemibold,
+                        style = InTouchTheme.typography.caption1Bold,
                         color = InTouchTheme.colors.textGreen
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -229,6 +230,7 @@ private fun QuestionsScreen(
         Surface(
             modifier = Modifier
                 .padding(horizontal = 28.dp)
+                .wrapContentHeight(Alignment.Top)
                 .alpha(1F)
                 .padding(top = 100.dp)
                 .clip(RoundedCornerShape(20.dp)),
@@ -251,8 +253,9 @@ private fun QuestionsScreen(
         Surface(
             modifier = Modifier
                 .padding(horizontal = 28.dp)
+                .wrapContentHeight(Alignment.Bottom)
                 .alpha(1F)
-                .padding(top = 195.dp)
+                .padding(bottom = 195.dp)
                 .clip(RoundedCornerShape(20.dp)),
             content = {
                 Column {
