@@ -4,10 +4,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssignmentBlockDto(
+data class AssignmentsBlockDto(
     val id: Int,
     @SerialName("choice_replies")
-    val choiceReplies: List<AssignmentChoiceRepliesDto>?,
+    val choiceReplies: List<AssignmentsChoiceRepliesDto>?,
     @SerialName("left_pole")
     val leftPole: String,
     @SerialName("right_pole")
