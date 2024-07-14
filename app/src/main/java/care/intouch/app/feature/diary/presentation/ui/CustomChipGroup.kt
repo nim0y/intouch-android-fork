@@ -21,7 +21,7 @@ fun CustomChipGroup(modifier: Modifier, chips: List<Mood>, onChipClick: (String)
     FlowRow(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        maxItemsInEachRow = 33
+        maxItemsInEachRow = Int.MAX_VALUE
     ) {
         chips.forEach { chipText ->
             EmotionalChips(
