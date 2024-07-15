@@ -30,11 +30,9 @@ class IntroductoryViewModel @Inject constructor(
                         assignmentImageUrl = assignment.imageUrl
                     )
                 }
-
             }
         }
     }
-
 
     fun onEvent() {
         TODO()
