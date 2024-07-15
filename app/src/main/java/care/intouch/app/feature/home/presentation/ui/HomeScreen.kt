@@ -229,21 +229,21 @@ fun HomeScreen(
             }
         }
 
-        when {
-            isToastVisible -> {
-                Toast(
-                    modifier = Modifier
-                        .padding(start = 24.dp, end = 24.dp, bottom = 80.dp)
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .alpha(0.8F)
-                        .height(36.dp),
-                    text = toastState.massage.value()
-                )
-                toastState.onDismiss()
-            }
+        if (isToastVisible) {
+            Toast(
+                modifier = Modifier
+                    .padding(start = 24.dp, end = 24.dp, bottom = 80.dp)
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .alpha(0.8F)
+                    .height(36.dp),
+                text = toastState.massage.value()
+            )
+            toastState.onDismiss()
+        }
 
-            isDialogVisible && state.isConnectionLost -> {
+        if (isDialogVisible) {
+            if (state.isConnectionLost) {
                 OneButtonDialog(
                     modifier = Modifier.fillMaxSize(),
                     dialogHeaderText = dialogState.header.value(),
@@ -252,9 +252,7 @@ fun HomeScreen(
                     confirmButtonText = dialogState.onConfirmButtonText.value(),
                     onConfirmation = { dialogState.onConfirm() }
                 )
-            }
-
-            isDialogVisible && !state.isConnectionLost -> {
+            } else {
                 FoldingScreen()
                 Dialog(
                     modifier = Modifier
