@@ -10,7 +10,7 @@ import care.intouch.app.core.navigation.DiaryEntries
 import care.intouch.app.core.navigation.DiaryRouteBranch
 import care.intouch.app.core.navigation.EmotionChoice
 import care.intouch.app.feature.diary.CreatingNoteIntroductionScreen
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.EmotionChoiceScreen
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.EmotionChoiceScreen
 import care.intouch.app.feature.diary.presentation.ui.fillingOutScreen.FillingOutScreen
 
 fun NavGraphBuilder.addNestedDiaryGraph(

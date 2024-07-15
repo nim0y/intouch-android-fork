@@ -1,4 +1,4 @@
-package care.intouch.app.feature.diary.presentation.ui.EmotionScreens
+package care.intouch.app.feature.diary.presentation.ui.emotionScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import care.intouch.app.R
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDataEvent
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionScreenState
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.viewModel.EmotionViewModel
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionDataEvent
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionDesc
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionScreenState
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.viewModel.EmotionViewModel
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme

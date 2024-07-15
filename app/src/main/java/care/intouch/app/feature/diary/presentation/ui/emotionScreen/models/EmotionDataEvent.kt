@@ -1,4 +1,4 @@
-package care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models
+package care.intouch.app.feature.diary.presentation.ui.emotionScreen.models
 
 sealed class EmotionDataEvent {
     data class OnEmotionDescriptionClicked(val description: EmotionDescriptionTask) :

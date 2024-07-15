@@ -1,4 +1,4 @@
-package care.intouch.app.feature.diary.presentation.ui.EmotionScreens
+package care.intouch.app.feature.diary.presentation.ui.emotionScreen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionTask
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionDesc
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionTask
 import care.intouch.uikit.R
 import care.intouch.uikit.common.ImageVO
 import care.intouch.uikit.theme.InTouchTheme

@@ -2,9 +2,9 @@ package care.intouch.app.feature.diary.data
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDesc
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionEnum
-import care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models.EmotionDescriptionTask
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionDesc
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionDescriptionEnum
+import care.intouch.app.feature.diary.presentation.ui.emotionScreen.models.EmotionDescriptionTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString

@@ -1,4 +1,4 @@
-package care.intouch.app.feature.diary.presentation.ui.EmotionScreens.models
+package care.intouch.app.feature.diary.presentation.ui.emotionScreen.models
 
 enum class EmotionDescriptionEnum {
     Loss, Humility, Anxiety, Embarrassment, Depression, Fear, Anger, Excitement, Shame, Disgust, Guilt, Nervousness,
