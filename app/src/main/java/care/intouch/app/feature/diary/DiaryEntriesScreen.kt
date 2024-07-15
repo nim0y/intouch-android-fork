@@ -23,7 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.R
-import care.intouch.app.feature.diary.NewNoteViewModel
+import care.intouch.app.feature.diary.presentation.ui.CustomChipGroup
+import care.intouch.app.feature.diary.presentation.ui.EmotionPicker
 import care.intouch.app.feature.diary.presentation.ui.models.Mood
 import care.intouch.app.feature.diary.presentation.ui.models.newnote.Emotion
 import care.intouch.app.feature.diary.presentation.ui.models.newnote.NewNoteDataState
@@ -230,7 +231,7 @@ private fun DiaryEntriesScreen(
                         onCloseClick.invoke()
                     },
                     isEnabled = true,
-                    text = StringVO.Resource(care.intouch.app.R.string.save_button)
+                    text = StringVO.Resource(R.string.save_button)
                 )
             }
         }
