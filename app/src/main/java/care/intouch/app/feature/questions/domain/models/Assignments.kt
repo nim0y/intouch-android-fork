@@ -1,5 +1,6 @@
 package care.intouch.app.feature.questions.domain.models
 
+
 data class Assignments(
     val id: Int,
     val title: String,
@@ -15,7 +16,9 @@ data class Assignments(
     val blocks: List<AssignmentsBlock>,
     val author: Int,
     val authorName: String,
-    val isPublic: Boolean,
-    val isFavorite: Boolean,
-    val averageGrade: Float
+    val user: Int,
+    val visible: Boolean,
+    val grade: Int?,
+    val review: String?,
+    val assignmentRoot: Int
 )

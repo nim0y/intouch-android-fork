@@ -24,10 +24,10 @@ data class AssignmentsDto(
     val author: Int,
     @SerialName("author_name")
     val authorName: String,
-    @SerialName("is_public")
-    val isPublic: Boolean,
-    @SerialName("is_favorite")
-    val isFavorite: Boolean,
-    @SerialName("average_grade")
-    val averageGrade: Float
+    val user: Int,
+    val visible: Boolean,
+    val grade: Int?,
+    val review: String?,
+    @SerialName("assignment_root")
+    val assignmentRoot: Int
 )

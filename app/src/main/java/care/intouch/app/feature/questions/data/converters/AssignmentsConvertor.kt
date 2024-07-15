@@ -30,9 +30,11 @@ class AssignmentsConvertor @Inject constructor() {
             },
             author = assignments.author,
             authorName = assignments.authorName,
-            isPublic = assignments.isPublic,
-            isFavorite = assignments.isFavorite,
-            averageGrade = assignments.averageGrade,
+            user = assignments.user,
+            visible = assignments.visible,
+            grade = assignments.grade,
+            review = assignments.review,
+            assignmentRoot = assignments.assignmentRoot
         )
     }
 
@@ -81,9 +83,11 @@ class AssignmentsConvertor @Inject constructor() {
             },
             author = assignments.author,
             authorName = assignments.authorName,
-            isPublic = assignments.isPublic,
-            isFavorite = assignments.isFavorite,
-            averageGrade = assignments.averageGrade,
+            user = assignments.user,
+            visible = assignments.visible,
+            grade = assignments.grade,
+            review = assignments.review,
+            assignmentRoot = assignments.assignmentRoot
         )
     }
 

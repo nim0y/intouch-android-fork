@@ -23,7 +23,7 @@ class QuestionsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            getAssignments.invoke(559).onSuccess {
+            getAssignments.invoke(1).onSuccess {
                 ttt = it
             }
         }
