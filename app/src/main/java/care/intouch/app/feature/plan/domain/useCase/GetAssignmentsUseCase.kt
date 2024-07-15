@@ -2,7 +2,6 @@ package care.intouch.app.feature.plan.domain.useCase
 
 import care.intouch.app.feature.plan.domain.models.Assignment
 import care.intouch.app.feature.plan.domain.models.AssignmentStatus
-import care.intouch.uikit.common.ImageVO
 import javax.inject.Inject
 
 interface GetAssignmentsUseCase {

@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import care.intouch.app.R
 import care.intouch.app.feature.home.presentation.ui.FoldingScreen
 import care.intouch.app.feature.plan.domain.models.AssignmentStatus
 import care.intouch.app.feature.plan.domain.useCase.mockAssignments
@@ -27,6 +28,7 @@ import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.cards.ConformationDialog
 import care.intouch.uikit.ui.screens.my_plan.my_plan.CardHolder
+import care.intouch.uikit.ui.screens.my_plan.my_plan.ChipsRowItem
 import care.intouch.uikit.ui.screens.my_plan.my_plan.ChipsRow
 import care.intouch.uikit.ui.screens.my_plan.my_plan.PlanHeader
 
@@ -57,6 +59,41 @@ fun PlanScreen(
 ) {
     val context = LocalContext.current
 
+    val chipsRowList = listOf(
+        ChipsRowItem(
+            title = StringVO.Resource(care.intouch.uikit.R.string.show_all),
+            onItemClick = {
+                onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                    assignmentStatus = AssignmentStatus.SHOW_ALL
+                ))
+            }
+        ),
+        ChipsRowItem(
+            title = StringVO.Resource(care.intouch.uikit.R.string.to_do),
+            onItemClick = {
+                onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                    assignmentStatus = AssignmentStatus.TO_DO
+                ))
+            }
+        ),
+        ChipsRowItem(
+            title = StringVO.Resource(care.intouch.uikit.R.string.in_progress),
+            onItemClick = {
+                onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                    assignmentStatus = AssignmentStatus.IN_PROGRESS
+                ))
+            }
+        ),
+        ChipsRowItem(
+            title = StringVO.Resource(care.intouch.uikit.R.string.done),
+            onItemClick = {
+                onEvent(PlanScreenEvent.FilterAssignmentsEvent(
+                    assignmentStatus = AssignmentStatus.DONE
+                ))
+            }
+        ),
+    )
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -75,26 +112,7 @@ fun PlanScreen(
 
             ChipsRow(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                onFirstChipsClick = {
-                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
-                        assignmentStatus = AssignmentStatus.SHOW_ALL
-                    ))
-                },
-                onSecondChipsClick = {
-                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
-                        assignmentStatus = AssignmentStatus.TO_DO
-                    ))
-                },
-                onThirdChipsClick = {
-                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
-                        assignmentStatus = AssignmentStatus.IN_PROGRESS
-                    ))
-                },
-                onFourthChipsClick = {
-                    onEvent(PlanScreenEvent.FilterAssignmentsEvent(
-                        assignmentStatus = AssignmentStatus.DONE
-                    ))
-                }
+                chipsRowList = chipsRowList
             )
 
             LazyColumn(
@@ -103,7 +121,7 @@ fun PlanScreen(
             ) {
                 itemsIndexed(state.filteredAssignments) { index, assignment ->
                     CardHolder(
-                        chipText = StringVO.Plain(assignment.status.value),
+                        chipText = assignment.status.value,
                         text = assignment.title,
                         dateText = assignment.date,
                         onDuplicateMenuItemClick = {
@@ -148,16 +166,10 @@ fun PlanScreen(
                     Toast.makeText(context, "On confirm dialogue", Toast.LENGTH_SHORT).show()
                     onEvent(PlanScreenEvent.SetDialogueVisibilityEvent(isVisible = false))
                 },
-                headerText = buildString {
-                    append("Are you sure you want \n")
-                    append("to delete this task?\n")
-                },
-                dialogText = buildString {
-                    append("All your entered data will be\n")
-                    append("permanently removed.")
-                },
-                dismissButtonText = "Cancel",
-                confirmButtonText = "Yes, delete"
+                headerText = StringVO.Resource(resId = R.string.info_delete_task_question).value(),
+                dialogText = StringVO.Resource(resId = R.string.warning_delete).value(),
+                dismissButtonText = StringVO.Resource(resId = R.string.cancel_button).value(),
+                confirmButtonText = StringVO.Resource(resId = R.string.confirm_button).value()
             )
         }
     }

@@ -21,7 +21,7 @@ class PlanScreenViewModel @Inject constructor(
     val uiState: StateFlow<PlanScreenState> = _uiState.asStateFlow()
 
     init {
-        onEvent(PlanScreenEvent.GetAssignmentsEvent)
+        getAssignments()
     }
 
     fun onEvent(planScreenEvent: PlanScreenEvent) {

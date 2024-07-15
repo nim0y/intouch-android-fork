@@ -1,7 +1,6 @@
 package care.intouch.uikit.ui.screens.my_plan.my_plan
 
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
