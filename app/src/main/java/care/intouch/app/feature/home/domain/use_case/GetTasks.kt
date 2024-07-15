@@ -10,6 +10,7 @@ interface GetTasks {
     class Base @Inject constructor(private val repository: AssignmentRepository) : GetTasks {
         override suspend fun getTasks(userId: Int): Result<List<Task>> {
             val result = repository.getAssignments(userId = userId)
+
             return result
         }
 

@@ -132,14 +132,14 @@ fun HomeScreen(
     isToastVisible: Boolean = false,
     toastState: ToastState = ToastState(),
 ) {
-    val draggableState = rememberDraggableState {
-        onEvent(EventType.RefreshScreen)
-    }
     Box(
         modifier = Modifier
             .background(InTouchTheme.colors.white)
             .draggable(
-                state = draggableState,
+                state = rememberDraggableState { onDelta ->
+                    if (onDelta > 5f)
+                        onEvent(EventType.RefreshScreen)
+                },
                 orientation = Orientation.Vertical
             ),
         contentAlignment = Alignment.Center

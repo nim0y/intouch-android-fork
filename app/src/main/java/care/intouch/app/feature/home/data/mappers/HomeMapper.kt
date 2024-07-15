@@ -8,6 +8,7 @@ import care.intouch.app.feature.home.domain.models.DiaryEntry
 import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.app.feature.home.domain.models.Status
 import care.intouch.app.feature.home.domain.models.Task
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -89,12 +90,16 @@ class HomeMapper @Inject constructor() {
         val moodList = emotions.map {
             Mood.valueOf(it.name)
         }
+        val fullMoodList: MutableList<Mood> = mutableListOf()
+        if (primaryEmotion.isNotBlank()) {
 
-        moodList
-            .toMutableList()
-            .add(index = 0, element = Mood.valueOf(primaryEmotion))
+            fullMoodList.addAll(moodList)
+            fullMoodList.add(index = 0, element = Mood.valueOf(primaryEmotion))
+        }
 
-        return moodList
+        Timber.tag("fullMoodList").d(fullMoodList.toString())
+
+        return fullMoodList
 
     }
 
