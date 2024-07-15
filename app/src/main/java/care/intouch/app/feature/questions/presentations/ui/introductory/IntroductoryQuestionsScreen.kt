@@ -87,7 +87,7 @@ private fun IntroductoryQuestionsScreen(
                 AsyncImage(
                     model = state.assignmentImageUrl,
                     contentDescription = "task image on introductory questions screen",
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                     placeholder = painterResource(id = care.intouch.uikit.R.drawable.task_image_mock)
                 )
