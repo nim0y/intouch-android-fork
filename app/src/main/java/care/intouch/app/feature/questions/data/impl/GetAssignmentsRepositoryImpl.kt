@@ -11,10 +11,10 @@ class GetAssignmentsRepositoryImpl  @Inject constructor(
     private val json: Json
 ): GetAssignmentsRepository {
     override suspend fun getAssignments(id: Int): Result<Assignments> {
-//        try {
-//            val response = getAssignmentsApi.getAssignments(id)
-//            return Result.success()
-//        }
-        TODO()
+        try {
+            val response = getAssignmentsApi.getAssignments(id)
+            return Result.success()
+        }
+
     }
 }
