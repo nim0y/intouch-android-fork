@@ -56,7 +56,6 @@ fun FillingOutScreen(
         navigateState = navigateState
     )
 }
-
 @Composable
 fun FillingOutScreen(
     onNextClick: () -> Unit,
