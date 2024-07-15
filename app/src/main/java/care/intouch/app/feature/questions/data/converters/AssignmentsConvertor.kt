@@ -6,6 +6,8 @@ import care.intouch.app.feature.questions.data.models.AssignmentsDto
 import care.intouch.app.feature.questions.domain.models.Assignments
 import care.intouch.app.feature.questions.domain.models.AssignmentsBlock
 import care.intouch.app.feature.questions.domain.models.AssignmentsChoiceReplies
+import care.intouch.app.feature.questions.domain.models.BlockDescription
+import care.intouch.app.feature.questions.domain.models.TypeOfTitle
 import javax.inject.Inject
 
 class AssignmentsConvertor @Inject constructor() {
@@ -45,7 +47,8 @@ class AssignmentsConvertor @Inject constructor() {
             image = assignmentsBlock.image,
             question = assignmentsBlock.question,
             reply = assignmentsBlock.reply,
-            description = assignmentsBlock.description,
+            //description = assignmentsBlock.description,
+            description = "Нужно ли это поле вообще???",
             type = assignmentsBlock.type,
             startRange = assignmentsBlock.startRange,
             endRange = assignmentsBlock.endRange
@@ -95,7 +98,7 @@ class AssignmentsConvertor @Inject constructor() {
             image = assignmentsBlock.image,
             question = assignmentsBlock.question,
             reply = assignmentsBlock.reply,
-            description = assignmentsBlock.description,
+            description = descriptionParse(assignmentsBlock.description),
             type = assignmentsBlock.type,
             startRange = assignmentsBlock.startRange,
             endRange = assignmentsBlock.endRange
@@ -108,5 +111,32 @@ class AssignmentsConvertor @Inject constructor() {
             reply = choiceReplies.reply,
             checked = choiceReplies.checked
         )
+    }
+
+    private fun descriptionParse(str: String): List<BlockDescription>{
+        val result: MutableList<BlockDescription> = mutableListOf()
+        var description = str
+        val firstKey = "\\\"type\\\":\\\""
+        val secondKey = "\\\",\\\"text\\\":\\\""
+        val thirdKey = "\\\",\\\"characterList"
+        while(description.contains(firstKey)) {
+            val firstKeyPosition = description.indexOf(firstKey)
+            val secondKeyPosition = description.indexOf(secondKey)
+            val thirdKeyPosition = description.indexOf(thirdKey)
+            val type = description.substring(firstKeyPosition + firstKey.length, secondKeyPosition)
+            val text = description.substring(secondKeyPosition + secondKey.length, thirdKeyPosition)
+            result.add(BlockDescription(getTypeOfTitle(type), text))
+            description = description.substring(thirdKeyPosition + thirdKey.length)
+        }
+        return result
+    }
+
+    private fun getTypeOfTitle(str: String): TypeOfTitle{
+        return when(str){
+            "unstyled" -> TypeOfTitle.UNSTYLED
+            "header-one" -> TypeOfTitle.HEADER_ONE
+            "header-two" -> TypeOfTitle.HEADER_TWO
+            else -> TypeOfTitle.UNSTYLED
+        }
     }
 }
