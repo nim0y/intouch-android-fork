@@ -1,5 +1,6 @@
 package care.intouch.app.feature.questions.data.impl
 
+import care.intouch.app.feature.common.data.models.exception.NetworkException
 import care.intouch.app.feature.questions.data.api.GetAssignmentsApi
 import care.intouch.app.feature.questions.data.converters.AssignmentsConvertor
 import care.intouch.app.feature.questions.domain.models.Assignments
@@ -13,10 +14,22 @@ class GetAssignmentsRepositoryImpl  @Inject constructor(
     private val convertor: AssignmentsConvertor
 ): GetAssignmentsRepository {
     override suspend fun getAssignments(id: Int): Result<Assignments> {
-//        try {
-//            val response = getAssignmentsApi.getAssignments(id)
-//            return Result.success()
-//        }
-        TODO()
+        try {
+            val response = getAssignmentsApi.getAssignments(id)
+            return Result.success(
+                convertor.map(response)
+            )
+        } catch (e: NetworkException) {
+            return when(e) {
+                is NetworkException.BadRequest -> {
+                    val response = handleErrorResponse<Assignments>(e.errorBody)
+                    Result.failure(
+                        NetworkException.BadRequest(
+                            response.de
+                        )
+                    )
+                }
+            }
+        }
     }
 }
