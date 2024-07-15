@@ -1,6 +1,9 @@
 package care.intouch.app.feature.home.presentation.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +44,8 @@ import care.intouch.app.models.ToastState
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.LoadingContainer
 import care.intouch.uikit.ui.customShape.CustomHeaderShape
-import care.intouch.uikit.ui.events.ConformationDialog
+import care.intouch.uikit.ui.events.Dialog
+import care.intouch.uikit.ui.events.OneButtonDialog
 import care.intouch.uikit.ui.events.Toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,14 +66,15 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val popUpDelay = 1000L
 
+
     LaunchedEffect(key1 = sideEffect) {
         viewModel.sideEffect.collect { effect ->
             when (effect) {
                 is HomeScreenSideEffect.ShowDialog -> {
                     isDialogVisible = true
                     dialogState = DialogState(
-                        title = effect.title,
-                        massage = effect.massage,
+                        header = effect.header,
+                        message = effect.message,
                         onConfirmButtonText = effect.onConfirmButtonText,
                         onDismissButtonText = effect.onDismissButtonText,
                         onConfirm = {
@@ -86,7 +91,7 @@ fun HomeScreen(
                 is HomeScreenSideEffect.ShowToast -> {
                     isToastVisible = true
                     toastState = ToastState(
-                        massage = effect.massage,
+                        massage = effect.message,
                         onDismiss = {
                             effect.onDismiss()
                             coroutineScope.launch {
@@ -125,12 +130,18 @@ fun HomeScreen(
     isDialogVisible: Boolean = false,
     dialogState: DialogState = DialogState(),
     isToastVisible: Boolean = false,
-    toastState: ToastState = ToastState()
+    toastState: ToastState = ToastState(),
 ) {
+    val draggableState = rememberDraggableState {
+        onEvent(EventType.RefreshScreen)
+    }
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(InTouchTheme.colors.white),
+            .background(InTouchTheme.colors.white)
+            .draggable(
+                state = draggableState,
+                orientation = Orientation.Vertical
+            ),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -141,13 +152,13 @@ fun HomeScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(98.dp),
+                    .height(144.dp),
                 shape = CustomHeaderShape(),
                 color = InTouchTheme.colors.mainBlue
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(top = 24.dp),
+                        .padding(top = 84.dp),
                     text = stringResource(id = AppR.string.hi_title, state.userName),
                     style = InTouchTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
@@ -158,7 +169,7 @@ fun HomeScreen(
             HomeScreenSegment(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.55f)
+                    .fillMaxHeight(0.5f)
                     .padding(top = 28.dp),
                 isSeeAllVisible = state.isSeeAllPlanVisible,
                 titleText = stringResource(id = AppR.string.my_plan_sub_title),
@@ -191,7 +202,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(1f)
-                    .padding(top = 28.dp),
+                    .padding(top = 28.dp, bottom = 60.dp),
                 isSeeAllVisible = state.isDiaryListVisible,
                 titleText = stringResource(id = AppR.string.my_diary_sub_title),
                 seeAllClicked = { onSeeAllDiaryClicked() }
@@ -218,34 +229,47 @@ fun HomeScreen(
             }
         }
 
-        if (isToastVisible) {
-            Toast(
-                modifier = Modifier
-                    .padding(vertical = 24.dp)
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(36.dp),
-                text = toastState.massage.value()
-            )
-            toastState.onDismiss()
+        when {
+            isToastVisible -> {
+                Toast(
+                    modifier = Modifier
+                        .padding(start = 24.dp, end = 24.dp, bottom = 80.dp)
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .alpha(0.8F)
+                        .height(36.dp),
+                    text = toastState.massage.value()
+                )
+                toastState.onDismiss()
+            }
 
-        }
+            isDialogVisible && state.isConnectionLost -> {
+                OneButtonDialog(
+                    modifier = Modifier.fillMaxSize(),
+                    dialogHeaderText = dialogState.header.value(),
+                    dialogMessageText = dialogState.message.value(),
+                    dialogImage = dialogState.image,
+                    confirmButtonText = dialogState.onConfirmButtonText.value(),
+                    onConfirmation = { dialogState.onConfirm() }
+                )
+            }
 
-        if (isDialogVisible) {
-            FoldingScreen()
-            ConformationDialog(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(horizontal = 28.dp),
-                onDismissRequest = {
-                    dialogState.onDismiss()
-                },
-                onConfirmation = { dialogState.onConfirm() },
-                headerText = dialogState.title.value(),
-                dialogText = dialogState.massage.value(),
-                dismissButtonText = dialogState.onDismissButtonText.value(),
-                confirmButtonText = dialogState.onConfirmButtonText.value()
-            )
+            isDialogVisible && !state.isConnectionLost -> {
+                FoldingScreen()
+                Dialog(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 28.dp),
+                    onDismissRequest = {
+                        dialogState.onDismiss()
+                    },
+                    onConfirmation = { dialogState.onConfirm() },
+                    dialogHeaderText = dialogState.header.value(),
+                    dialogMessageText = dialogState.message.value(),
+                    dismissButtonText = dialogState.onDismissButtonText.value(),
+                    confirmButtonText = dialogState.onConfirmButtonText.value()
+                )
+            }
         }
     }
 }

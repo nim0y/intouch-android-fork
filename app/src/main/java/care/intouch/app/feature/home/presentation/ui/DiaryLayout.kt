@@ -27,13 +27,13 @@ fun DiaryLayout(
 ) {
     LazyColumn(
         modifier = Modifier
-            .padding(horizontal = 28.dp)
+            .padding(start = 28.dp, end = 28.dp, top = 16.dp)
             .fillMaxSize()
             .fillMaxHeight(),
     ) {
         itemsIndexed(diaryEntryList) { index, diaryEntry ->
             NoteCards(
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(bottom = 16.dp),
                 dateText = diaryEntry.date,
                 dateTextDivider = " ",
                 noteText = diaryEntry.note,

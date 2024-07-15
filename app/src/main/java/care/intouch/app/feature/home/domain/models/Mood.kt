@@ -2,7 +2,12 @@ package care.intouch.app.feature.home.domain.models
 
 import care.intouch.app.R
 
-enum class Mood(val nameId: Int){
+enum class Mood(val nameId: Int) {
+    Terrible(nameId = R.string.terrible_clarifying_emotional),
+    Bad(nameId = R.string.bad_clarifying_emotional),
+    Okay(nameId = R.string.okay_clarifying_emotional),
+    Good(nameId = R.string.good_clarifying_emotional),
+    Great(nameId = R.string.great_clarifying_emotional),
     Loss(nameId = R.string.loss_clarifying_emotional),
     Fear(nameId = R.string.fear_clarifying_emotional),
     Guilt(nameId = R.string.guilt_clarifying_emotional),

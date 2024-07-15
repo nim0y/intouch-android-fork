@@ -26,7 +26,7 @@ class AssignmentRepositoryImpl @Inject constructor(
     override suspend fun clearAssignment(assignmentId: Int): Result<String> {
         try {
             val response = homeApi.clearAssignment(id = assignmentId)
-            return Result.success(response.massage)
+            return Result.success(response.message)
 
         } catch (exception: Exception) {
             return Result.failure(exception)
@@ -36,7 +36,7 @@ class AssignmentRepositoryImpl @Inject constructor(
     override suspend fun setAssignmentVisible(assignmentId: Int): Result<String> {
         try {
             val response = homeApi.setAssignmentVisible(id = assignmentId)
-            return Result.success(response.massage)
+            return Result.success(response.message)
 
         } catch (exception: Exception) {
             return Result.failure(exception)

@@ -146,6 +146,11 @@
     <string name="good_primary_emotional">GOOD</string>
     <string name="great_primary_emotional">GREAT</string>
 
+    <string name="terrible_clarifying_emotional">Terrible</string>
+    <string name="bad_clarifying_emotional">Bad</string>
+    <string name="okay_clarifying_emotional">Okay</string>
+    <string name="good_clarifying_emotional">Good</string>
+    <string name="great_clarifying_emotional">Great</string>
     <string name="loss_clarifying_emotional">Loss</string>
     <string name="humility_clarifying_emotional">Humility</string>
     <string name="anxiety_clarifying_emotional">Anxiety</string>
@@ -202,4 +207,7 @@
     <string name="toast_failure_delete_diary_entry">No cleaning required. Status is "to do".</string>
     <string name="toast_failure_clear_task">Task was not cleared, server error</string>
     <string name="server_error">Server error</string>
+    <string name="no_internet_connection_header">Oooops!</string>
+    <string name="no_internet_connection_message">Unable to establish a connection.\nPlease check your internet connection and try again</string>
+    <string name="try_again">Try again</string>
 </resources>

@@ -15,6 +15,8 @@ import care.intouch.app.feature.home.presentation.models.HomeScreenState
 import care.intouch.app.feature.home.presentation.models.HomeUiState
 import care.intouch.uikit.common.StringVO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import care.intouch.uikit.R as UikitR
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -39,21 +42,13 @@ class HomeViewModel @Inject constructor(
     val homeUIState: StateFlow<HomeUiState> = _homeUIState.asStateFlow()
     private val _sideEffect = MutableSharedFlow<HomeScreenSideEffect>()
     val sideEffect: SharedFlow<HomeScreenSideEffect> = _sideEffect.asSharedFlow()
+    private var homeJob: Job? = null
 
     init {
         fetchUserInformation()
-        val userId = _stateScreen.value.userInformation.userId
-
-        viewModelScope.launch {
-            _stateScreen.update { state ->
-                state.copy(isLoading = true)
-            }
-            fetchTasks(userId)
-            fetchDiary(userId)
-            _stateScreen.update { state ->
-                state.copy(isLoading = false)
-            }
-        }
+        refreshScreenInformation(
+            userId = _stateScreen.value.userInformation.userId
+        )
 
         viewModelScope.launch {
             stateScreen.collect { state ->
@@ -70,6 +65,11 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        homeJob = null
     }
 
     private fun getState(): HomeScreenState = _stateScreen.value
@@ -101,12 +101,22 @@ class HomeViewModel @Inject constructor(
                     diaryId = event.diaryEntryId
                 )
             }
+
+            is EventType.SendRequestAgain -> {
+                sendRequestAgain()
+            }
+
+            is EventType.RefreshScreen -> {
+                refreshScreenInformation(
+                    userId = _stateScreen.value.userInformation.userId
+                )
+            }
         }
     }
 
     private fun clearTask(taskId: Int) {
         showDialog(
-            title = StringVO.Resource(R.string.info_delete_task_question),
+            header = StringVO.Resource(R.string.info_delete_task_question),
             massage = StringVO.Resource(R.string.warning_delete),
             onConfirmButtonText = StringVO.Resource(R.string.confirm_button),
             onDismissButtonText = StringVO.Resource(R.string.cancel_button),
@@ -121,7 +131,7 @@ class HomeViewModel @Inject constructor(
         _stateScreen.update { state ->
             state.copy(isLoading = true)
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             assignmentsInteractor.clearAssignment(assignmentId = taskId)
                 .onSuccess {
                     refreshTasks()
@@ -151,7 +161,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun shareTask(taskId: Int, index: Int, shareStatus: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             assignmentsInteractor.shareTaskWithDoctor(assignmentId = taskId)
                 .onSuccess {
                     val sharedTask = getState()
@@ -168,17 +178,24 @@ class HomeViewModel @Inject constructor(
                         onDismiss = {}
                     )
                 }
-                .onFailure {
-                    showToast(
-                        massage = StringVO.Resource(R.string.toast_failure_share_task),
-                        onDismiss = {}
-                    )
+                .onFailure { exception ->
+                    when (exception) {
+                        is NetworkException.NoInternetConnection -> showToast(
+                            massage = StringVO.Resource(R.string.problem_with_connection),
+                            onDismiss = {}
+                        )
+
+                        else -> showToast(
+                            massage = StringVO.Resource(R.string.toast_failure_share_task),
+                            onDismiss = {}
+                        )
+                    }
                 }
         }
     }
 
     private fun shareDiaryEntry(diaryEntryId: Int, index: Int, isShared: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             diaryEntriesInteractor.shareDiaryEntryWithDoctor(diaryNoteId = diaryEntryId)
                 .onSuccess {
                     val sharedTask = getState()
@@ -195,11 +212,18 @@ class HomeViewModel @Inject constructor(
                         onDismiss = {}
                     )
                 }
-                .onFailure {
-                    showToast(
-                        massage = StringVO.Resource(R.string.toast_failure_share_diary_entry),
-                        onDismiss = {}
-                    )
+                .onFailure { exception ->
+                    when (exception) {
+                        is NetworkException.NoInternetConnection -> showToast(
+                            massage = StringVO.Resource(R.string.problem_with_connection),
+                            onDismiss = {}
+                        )
+
+                        else -> showToast(
+                            massage = StringVO.Resource(R.string.toast_failure_share_diary_entry),
+                            onDismiss = {}
+                        )
+                    }
                 }
         }
 
@@ -207,7 +231,7 @@ class HomeViewModel @Inject constructor(
 
     private fun deleteDiaryEntry(diaryId: Int) {
         showDialog(
-            title = StringVO.Resource(R.string.info_delete_node_question),
+            header = StringVO.Resource(R.string.info_delete_node_question),
             massage = StringVO.Resource(R.string.warning_delete),
             onConfirmButtonText = StringVO.Resource(R.string.confirm_button),
             onDismissButtonText = StringVO.Resource(R.string.cancel_button),
@@ -222,7 +246,7 @@ class HomeViewModel @Inject constructor(
         _stateScreen.update { state ->
             state.copy(isLoading = true)
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             diaryEntriesInteractor.deleteDiaryEntry(diaryNoteId = diaryId)
                 .onSuccess {
                     refreshDiary()
@@ -234,9 +258,6 @@ class HomeViewModel @Inject constructor(
                                 massage = StringVO.Resource(R.string.problem_with_connection),
                                 onDismiss = {}
                             )
-                            _stateScreen.update { state ->
-                                state.copy(isLoading = false)
-                            }
                         }
 
                         else -> {
@@ -244,9 +265,6 @@ class HomeViewModel @Inject constructor(
                                 massage = StringVO.Resource(R.string.toast_failure_delete_diary_entry),
                                 onDismiss = {}
                             )
-                            _stateScreen.update { state ->
-                                state.copy(isLoading = false)
-                            }
                         }
                     }
                 }
@@ -263,6 +281,41 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun sendRequestAgain() {
+        homeJob?.start()
+    }
+
+    private fun refreshDiary() {
+        viewModelScope.launch(Dispatchers.IO) {
+            fetchDiary(_stateScreen.value.userInformation.userId)
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+    }
+
+    private fun refreshTasks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            fetchTasks(_stateScreen.value.userInformation.userId)
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+    }
+
+    private fun refreshScreenInformation(userId: Int) {
+        homeJob = viewModelScope.launch(Dispatchers.IO) {
+            _stateScreen.update { state ->
+                state.copy(isLoading = true)
+            }
+            fetchTasks(userId = userId)
+            fetchDiary(userId = userId)
+            _stateScreen.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+    }
+
     private suspend fun fetchTasks(userId: Int) {
         getTasks.getTasks(userId)
             .onSuccess { task ->
@@ -273,7 +326,21 @@ class HomeViewModel @Inject constructor(
             .onFailure { exception ->
                 when (exception) {
                     is NetworkException.NoInternetConnection -> {
-
+                        _stateScreen.update { state ->
+                            state.copy(isConnectionLost = true)
+                        }
+                        showInternetConnectionDialog(
+                            header = StringVO.Resource(R.string.no_internet_connection_header),
+                            message = StringVO.Resource(R.string.no_internet_connection_message),
+                            image = UikitR.drawable.illustration_internet_connection_lost,
+                            onConfirmButtonText = StringVO.Resource(R.string.try_again),
+                            onConfirm = {
+                                _stateScreen.update { state ->
+                                    state.copy(isConnectionLost = false)
+                                }
+                                sendRequestAgain()
+                            }
+                        )
                     }
 
                     else -> {
@@ -286,25 +353,6 @@ class HomeViewModel @Inject constructor(
             }
     }
 
-    private fun refreshDiary() {
-        viewModelScope.launch {
-            fetchDiary(_stateScreen.value.userInformation.userId)
-            _stateScreen.update { state ->
-                state.copy(isLoading = false)
-            }
-        }
-
-    }
-
-    private fun refreshTasks() {
-        viewModelScope.launch {
-            fetchTasks(_stateScreen.value.userInformation.userId)
-            _stateScreen.update { state ->
-                state.copy(isLoading = false)
-            }
-        }
-
-    }
 
     private suspend fun fetchDiary(userId: Int) {
         getDiaryEntries.execute(userId)
@@ -316,7 +364,21 @@ class HomeViewModel @Inject constructor(
             .onFailure { exception ->
                 when (exception) {
                     is NetworkException.NoInternetConnection -> {
-
+                        _stateScreen.update { state ->
+                            state.copy(isConnectionLost = true)
+                        }
+                        showInternetConnectionDialog(
+                            header = StringVO.Resource(R.string.no_internet_connection_header),
+                            message = StringVO.Resource(R.string.no_internet_connection_message),
+                            image = UikitR.drawable.illustration_internet_connection_lost,
+                            onConfirmButtonText = StringVO.Resource(R.string.try_again),
+                            onConfirm = {
+                                _stateScreen.update { state ->
+                                    state.copy(isConnectionLost = false)
+                                }
+                                sendRequestAgain()
+                            }
+                        )
                     }
 
                     else -> {
@@ -330,7 +392,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun showDialog(
-        title: StringVO,
+        header: StringVO,
         massage: StringVO,
         onConfirmButtonText: StringVO,
         onDismissButtonText: StringVO,
@@ -340,8 +402,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _sideEffect.emit(
                 HomeScreenSideEffect.ShowDialog(
-                    title = title,
-                    massage = massage,
+                    header = header,
+                    message = massage,
                     onConfirmButtonText = onConfirmButtonText,
                     onDismissButtonText = onDismissButtonText,
                     onConfirm = onConfirm,
@@ -351,11 +413,31 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun showInternetConnectionDialog(
+        header: StringVO,
+        message: StringVO,
+        image: Int,
+        onConfirmButtonText: StringVO,
+        onConfirm: () -> Unit,
+    ) {
+        viewModelScope.launch {
+            _sideEffect.emit(
+                HomeScreenSideEffect.ShowDialog(
+                    header = header,
+                    message = message,
+                    image = image,
+                    onConfirmButtonText = onConfirmButtonText,
+                    onConfirm = onConfirm,
+                )
+            )
+        }
+    }
+
     private fun showToast(massage: StringVO, onDismiss: () -> Unit) {
         viewModelScope.launch {
             _sideEffect.emit(
                 HomeScreenSideEffect.ShowToast(
-                    massage = massage,
+                    message = massage,
                     onDismiss = onDismiss
                 )
             )

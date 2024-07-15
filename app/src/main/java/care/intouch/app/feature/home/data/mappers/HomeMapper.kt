@@ -1,13 +1,13 @@
 package care.intouch.app.feature.home.data.mappers
 
 import care.intouch.app.feature.home.data.models.AssignmentsResponse
+import care.intouch.app.feature.home.data.models.ClarifyingEmotionDto
 import care.intouch.app.feature.home.data.models.DiaryNotesResponse
 import care.intouch.app.feature.home.data.models.StatusDto
 import care.intouch.app.feature.home.domain.models.DiaryEntry
 import care.intouch.app.feature.home.domain.models.Mood
 import care.intouch.app.feature.home.domain.models.Status
 import care.intouch.app.feature.home.domain.models.Task
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -23,19 +23,16 @@ class HomeMapper @Inject constructor() {
                 status = mapStatus(assignment.status)
             )
         }
-        Timber.tag("mappedResponse").d(mappedResponse.toString())
         val mappedResponseList = mutableListOf<Task>()
-        val onlyToDo =
-            mappedResponse.filter { it.status == Status.TO_DO }.take(MAX_COUNT_OF_TASK_BY_STATUS)
-        val onlyInProgress = mappedResponse.filter { it.status == Status.IN_PROGRESS }
+        val onlyToDo = mappedResponse
+            .filter { it.status == Status.TO_DO }
             .take(MAX_COUNT_OF_TASK_BY_STATUS)
-        Timber.tag("onlyInProgress").d(onlyInProgress.toString())
-        Timber.tag("onlyToDo").d(onlyToDo.toString())
+        val onlyInProgress = mappedResponse
+            .filter { it.status == Status.IN_PROGRESS }
+            .take(MAX_COUNT_OF_TASK_BY_STATUS)
 
         mappedResponseList.addAll(onlyToDo)
-        Timber.tag("mappedResponseList1").d(mappedResponseList.toString())
         mappedResponseList.addAll(onlyInProgress)
-        Timber.tag("mappedResponseList2").d(mappedResponseList.toString())
 
         return mappedResponseList.toList()
     }
@@ -46,13 +43,13 @@ class HomeMapper @Inject constructor() {
                 id = diaryNote.id,
                 date = formatDate(diaryNote.addDate),
                 note = diaryNote.eventDetails,
-                moodList = diaryNote.clarifyingEmotion.map {
-                    Mood.valueOf(it.name)
-                },
+                moodList = mapEmotions(
+                    emotions = diaryNote.clarifyingEmotion,
+                    primaryEmotion = diaryNote.primaryEmotion
+                ),
                 isSharedWithDoctor = diaryNote.visible
             )
         }
-        Timber.tag("diaryEntries").d(diaryEntries.toString())
         return diaryEntries
     }
 
@@ -60,12 +57,12 @@ class HomeMapper @Inject constructor() {
         userId: Int, limit: Int? = null,
         page: Int? = null
     ): HashMap<String, String> {
-        val request = hashMapOf("user" to "$userId")
+        val request = hashMapOf(USER to "$userId")
         if (limit != 0) {
-            request["limit"] = "$limit"
+            request[LIMIT] = "$limit"
         }
         if (page != 0) {
-            request["page"] = "$page"
+            request[PAGE] = "$page"
         }
         return request
     }
@@ -75,20 +72,35 @@ class HomeMapper @Inject constructor() {
         limit: Int? = null,
         page: Int? = null
     ): HashMap<String, String> {
-        val request = hashMapOf("user" to "$userId")
+        val request = hashMapOf(USER to "$userId")
         if (limit != null) {
-            request["limit"] = "$limit"
+            request[LIMIT] = "$limit"
         }
         if (page != null) {
-            request["page"] = "$page"
+            request[PAGE] = "$page"
         }
         return request
     }
 
+    private fun mapEmotions(
+        emotions: List<ClarifyingEmotionDto>,
+        primaryEmotion: String
+    ): List<Mood> {
+        val moodList = emotions.map {
+            Mood.valueOf(it.name)
+        }
+
+        moodList
+            .toMutableList()
+            .add(index = 0, element = Mood.valueOf(primaryEmotion))
+
+        return moodList
+
+    }
+
     private fun mapStatus(status: String): Status {
-        Timber.tag("status").d(status)
         val statusResult = when (status) {
-            StatusDto.TO_DO.status-> Status.TO_DO
+            StatusDto.TO_DO.status -> Status.TO_DO
             StatusDto.IN_PROGRESS.status -> Status.IN_PROGRESS
             StatusDto.DONE.status -> Status.DONE
             else -> Status.TO_DO
@@ -98,7 +110,9 @@ class HomeMapper @Inject constructor() {
     }
 
     private fun formatDate(date: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        val inputFormat = SimpleDateFormat(
+            "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault()
+        )
         val outputFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
         inputFormat.timeZone = TimeZone.getTimeZone("UTC")
 
@@ -117,7 +131,9 @@ class HomeMapper @Inject constructor() {
     companion object {
         const val MAX_COUNT_OF_TASK_BY_STATUS = 3
         const val MAX_COUNT_OF_DIARY_NOTES = 6
-
+        const val LIMIT = "limit"
+        const val PAGE = "page"
+        const val USER = "user"
     }
 
 }

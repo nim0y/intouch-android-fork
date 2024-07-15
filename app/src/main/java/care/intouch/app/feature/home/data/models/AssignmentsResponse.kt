@@ -4,4 +4,4 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AssignmentsResponse( @SerialName("results")val assignments: List<AssignmentDto>)
+data class AssignmentsResponse(@SerialName("results") val assignments: List<AssignmentDto>)

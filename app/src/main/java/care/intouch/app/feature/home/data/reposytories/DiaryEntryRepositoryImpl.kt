@@ -4,6 +4,7 @@ import care.intouch.app.feature.home.data.api.DiaryNotesApi
 import care.intouch.app.feature.home.data.mappers.HomeMapper
 import care.intouch.app.feature.home.domain.DiaryEntryRepository
 import care.intouch.app.feature.home.domain.models.DiaryEntry
+import timber.log.Timber
 import javax.inject.Inject
 
 class DiaryEntryRepositoryImpl @Inject constructor(
@@ -24,10 +25,12 @@ class DiaryEntryRepositoryImpl @Inject constructor(
 
     override suspend fun deleteDiaryEntry(diaryNoteId: Int): Result<String> {
         try {
-            diaryNoteApi.deleteDiaryNote(id = diaryNoteId)
+            val response = diaryNoteApi.deleteDiaryNote(id = diaryNoteId)
+            Timber.tag("responseDelete").d("Response: $response")
             return Result.success(DELETE_RESPONSE)
 
         } catch (exception: Exception) {
+            Timber.tag("responseDelete").d("Response: $exception")
             return Result.failure(exception)
         }
     }
@@ -35,7 +38,7 @@ class DiaryEntryRepositoryImpl @Inject constructor(
     override suspend fun setDiaryEntryVisible(diaryNoteId: Int): Result<String> {
         try {
             val response = diaryNoteApi.setDiaryNoteVisible(id = diaryNoteId)
-            return Result.success(response.massage)
+            return Result.success(response.message)
 
         } catch (exception: Exception) {
             return Result.failure(exception)
