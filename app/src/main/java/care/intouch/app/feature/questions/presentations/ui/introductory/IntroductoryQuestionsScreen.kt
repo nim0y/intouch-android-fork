@@ -65,9 +65,13 @@ private fun IntroductoryQuestionsScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(55.dp))
-            TopPanel(text = StringVO.Resource(resId = R.string.name_task_mock))
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+            TopPanel(
+                backButtonClick = {
+                    onBackClick.invoke() },
+                text = StringVO.Resource(resId = R.string.name_task_mock)
+            )
+            Spacer(modifier = Modifier.height(51.dp))
             Text(
                 text = StringVO.Resource(resId = R.string.description_task_mock).value(),
                 modifier = Modifier.padding(horizontal = 28.dp),
@@ -89,7 +93,9 @@ private fun IntroductoryQuestionsScreen(
             }
             Spacer(modifier = Modifier.height(24.dp))
             IntouchButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    onNextClick.invoke()
+                },
                 modifier = Modifier,
                 text = StringVO.Resource(R.string.next_button)
             )

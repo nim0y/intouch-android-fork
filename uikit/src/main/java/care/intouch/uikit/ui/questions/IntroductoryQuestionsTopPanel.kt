@@ -1,6 +1,7 @@
 package care.intouch.uikit.ui.questions
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import care.intouch.uikit.theme.InTouchTheme
 
 @Composable
 fun TopPanel(
+    backButtonClick: () -> Unit,
     text: StringVO,
     icon: ImageVO = ImageVO.Resource(R.drawable.icon_arrow_left),
     modifier: Modifier = Modifier
@@ -33,6 +35,9 @@ fun TopPanel(
             modifier = Modifier
                 .size(24.dp)
                 .align(Alignment.CenterStart)
+                .clickable {
+                    backButtonClick.invoke()
+                }
         )
         Text(
             text = text.value(),
@@ -46,5 +51,9 @@ fun TopPanel(
 @Preview(showBackground = true, backgroundColor = 0x80338C8B)
 @Composable
 fun TopPanelPreview() {
-    InTouchTheme { TopPanel(text = StringVO.Plain("Socratic Dialogue")) }
+    InTouchTheme {
+        TopPanel(
+            backButtonClick = {},
+            text = StringVO.Plain("Socratic Dialogue")
+        ) }
 }

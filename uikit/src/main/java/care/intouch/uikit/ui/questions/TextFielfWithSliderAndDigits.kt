@@ -27,6 +27,10 @@ fun TextFieldWithSliderAndDigits(
     subtitleText: StringVO = StringVO.Plain(BLANC_STRING),
     captionText: StringVO = StringVO.Plain(BLANC_STRING),
     backgroundColor: Color = InTouchTheme.colors.input85,
+    leftEvaluateText: StringVO = StringVO.Plain("Dissatisfied"),
+    rightEvaluateText: StringVO = StringVO.Plain("Satisfied"),
+    onValueChange: (Int) -> Unit,
+    isError: Boolean = false
 ) {
     Column(
         modifier = modifier.width(MultilineTextFieldDefaults.MinWidth)
@@ -73,18 +77,18 @@ fun TextFieldWithSliderAndDigits(
                 .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
                 .border(
                     width = 1.dp,
-                    color = backgroundColor,
+                    color = if (isError) InTouchTheme.colors.errorRed else backgroundColor,
                     shape = RoundedCornerShape(12.dp),
                 )
         ) {
             SliderWidgetWithScaleAndTenSteps(
-                leftEvaluateText = "Dissatisfied",
-                rightEvaluateText = "Satisfied",
-                modifier = Modifier.padding(vertical = 14.dp, horizontal = 11.dp)
-            ) {
-                
-            }
-
+                leftEvaluateText = leftEvaluateText.value(),
+                rightEvaluateText = rightEvaluateText.value(),
+                modifier = Modifier.padding(vertical = 14.dp, horizontal = 11.dp),
+                onValueChange = { value ->
+                    onValueChange(value)
+                }
+            )
         }
     }
 }
@@ -97,7 +101,10 @@ fun TextFieldWithSliderAndDigitsPreview() {
             titleText = StringVO.Plain("Title small "),
             subtitleText = StringVO.Plain("Body semi bold "),
             captionText = StringVO.Plain("Caption "),
-            modifier = Modifier.padding(45.dp)
+            modifier = Modifier.padding(45.dp),
+            onValueChange = {
+
+            }
         )
     }
 }

@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -40,6 +44,7 @@ import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.navigation.TopBarArcButton
+import care.intouch.uikit.ui.questions.PopupQuestions
 import care.intouch.uikit.ui.questions.TextFieldQuestion
 import care.intouch.uikit.ui.questions.TextFieldWithCheckbox
 import care.intouch.uikit.ui.questions.TextFieldWithCheckmars
@@ -73,10 +78,20 @@ private fun QuestionsScreen(
     onEvent: () -> Unit,
     state: QuestionsState
 ) {
+
     var answerText by remember { mutableStateOf("") }
     val systemKeyboardController = LocalSoftwareKeyboardController.current
     var isCheckedToggle by remember {
         mutableStateOf(false)
+    }
+    var isShowClosingDialog by remember {
+        mutableStateOf(false)
+    }
+    var isShowCompleteTaskDialog by remember {
+        mutableStateOf(false)
+    }
+    var currentSliderPosition by remember {
+        mutableStateOf(0)
     }
     Box(
         modifier = Modifier
@@ -84,17 +99,22 @@ private fun QuestionsScreen(
             .verticalScroll(rememberScrollState())
             .clickable {
                 systemKeyboardController?.hide()
+                isShowClosingDialog = false
+                isShowCompleteTaskDialog = false
             }
+            .alpha(if (isShowClosingDialog) 0.2f else 1f)
     ) {
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 27.dp),
+                .padding(horizontal = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             TopBarArcButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    isShowClosingDialog = true
+                },
                 enabled = true,
                 modifier = Modifier.align(Alignment.End)
             )
@@ -108,7 +128,7 @@ private fun QuestionsScreen(
                 onValueChange = {
                     answerText = it
                 },
-                isError = false,
+                isError = if (isShowCompleteTaskDialog && answerText.isBlank()) true else false,
                 enabled = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
@@ -137,7 +157,11 @@ private fun QuestionsScreen(
             Spacer(modifier = Modifier.height(40.dp))
             TextFieldWithSliderAndDigits(
                 subtitleText = StringVO.Resource(R.string.scale_questions),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onValueChange = { value ->
+                    currentSliderPosition = value
+                },
+                isError = if (currentSliderPosition == 0 && isShowCompleteTaskDialog) true else false
             )
             Spacer(modifier = Modifier.height(40.dp))
             TextFieldQuestion(
@@ -160,7 +184,7 @@ private fun QuestionsScreen(
                     .padding(top = 14.dp, bottom = 20.dp)) {
                     Text(
                         text = StringVO.Resource(R.string.dunning_kruger_effect).value(),
-                        style = InTouchTheme.typography.bodySemibold,
+                        style = InTouchTheme.typography.caption1Bold,
                         color = InTouchTheme.colors.textGreen
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -179,7 +203,7 @@ private fun QuestionsScreen(
                 Text(
                     text = StringVO.Resource(R.string.share_with_therapist).value(),
                     style = InTouchTheme.typography.bodySemibold,
-                    color = InTouchTheme.colors.textGreen,
+                    color = InTouchTheme.colors.textGreen
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Toggle(
@@ -191,17 +215,67 @@ private fun QuestionsScreen(
             }
             Spacer(modifier = Modifier.height(36.dp))
             IntouchButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    isShowCompleteTaskDialog = true
+                },
+                isEnabled = if (isShowCompleteTaskDialog) false else true,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = StringVO.Resource(R.string.complete_task),
                 contentPadding = PaddingValues(horizontal = 51.dp, vertical = 13.dp)
             )
             Spacer(modifier = Modifier.height(40.dp))
         }
+        }
+    if (isShowClosingDialog) {
+        Surface(
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
+                .wrapContentHeight(Alignment.Top)
+                .alpha(1F)
+                .padding(top = 100.dp)
+                .clip(RoundedCornerShape(20.dp)),
+            content = {
+                PopupQuestions(
+                    inTouchButtonClick = {
+
+                    },
+                    secondaryButtonClick = {
+                        isShowClosingDialog = !isShowClosingDialog
+                    },
+                    firstLineText = StringVO.Resource(R.string.questions_popap_closing_task_first_line),
+                    secondLineText = StringVO.Resource(R.string.questions_popup_closing_task_second_line),
+                    intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
+                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
+            }
+        )
+    }
+    if (isShowCompleteTaskDialog) {
+        Surface(
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
+                .wrapContentHeight(Alignment.Bottom)
+                .alpha(1F)
+                .padding(bottom = 195.dp)
+                .clip(RoundedCornerShape(20.dp)),
+            content = {
+                Column {
+                    PopupQuestions(
+                        inTouchButtonClick = {
+                            isShowCompleteTaskDialog = !isShowCompleteTaskDialog
+                        },
+                        secondaryButtonClick = {
+
+                        },
+                        firstLineText = StringVO.Resource(R.string.questions_popap_not_all_filled),
+                        intouchButtonText = StringVO.Resource(R.string.back_button),
+                        secondaryButtonText = StringVO.Resource(R.string.complete_as_is_button))
+                }
+                }
+        )
     }
 }
 
-@Preview(showBackground = true, heightDp = 1950)
+@Preview(showBackground = true, heightDp = 1960)
 @Composable
 fun QuestionsScreenPreview() {
     val state = QuestionsState("")
