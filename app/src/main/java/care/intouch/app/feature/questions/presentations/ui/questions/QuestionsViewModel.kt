@@ -72,7 +72,7 @@ class QuestionsViewModel @Inject constructor(
         _state.value.blocks.forEach {
             when(it.type) {
 
-                TypeOfBlocks.OPEN, TypeOfBlocks.TEXT -> {
+                TypeOfBlocks.OPEN -> {
                     if(it.reply.isEmpty()) {
                         result.add(it.copy(
                             blockIsValid = false
@@ -99,7 +99,7 @@ class QuestionsViewModel @Inject constructor(
                     }
                 }
 
-                else -> {       // Сюда идут TypeOfBlocks.UNDEFINED, TypeOfBlocks.IMAGE, TypeOfBlocks.RANGE
+                else -> {       // Сюда идут TypeOfBlocks.UNDEFINED, TypeOfBlocks.IMAGE, TypeOfBlocks.RANGE, TypeOfBlocks.TEXT
                     result.add(it)
                 }
             }
