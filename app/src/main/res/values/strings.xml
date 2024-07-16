@@ -132,9 +132,9 @@
     <string name="thoughts_sub_title_emotional">Thoughts Analysis</string>
     <string name="emotional_type_sub_title_emotional">Emotional Type</string>
     <string name="sensations_sub_title_emotional">Physical Sensations</string>
-    <string name="event_desc_emotional">Describe the event or situaton. What happened?</string>
+    <string name="event_desc_emotional">Describe the event or situation.\nWhat happened?</string>
     <string name="thoughts_desc_emotional">Reflect on your thoughts related to the situation. What were you thinking?</string>
-    <string name="emotional_type_desc_emotional">How are you feeling? Describe your emotions or choose from our prompt.</string>
+    <string name="emotional_type_desc_emotional">How are you feeling? Describe your emotions\nor choose from our prompt.</string>
     <string name="sensations_desc_emotional">Describe any physical sensations or changes you noticed in your body. For example, tension, butterflies, etc.</string>
 
 

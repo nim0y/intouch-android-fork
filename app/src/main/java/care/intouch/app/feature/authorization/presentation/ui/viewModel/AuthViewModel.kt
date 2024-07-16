@@ -2,7 +2,6 @@ package care.intouch.app.feature.authorization.presentation.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import care.intouch.app.feature.authorization.domain.useCase.GetAccountStateUC
 import care.intouch.app.feature.authorization.domain.useCase.LoginByEmailUC
 import care.intouch.app.feature.authorization.presentation.ui.models.AuthScreenState
 import care.intouch.app.feature.authorization.presentation.ui.models.AuthenticationDataEvent
@@ -21,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModule @Inject constructor(
     private val loginByEmailUC: LoginByEmailUC,
-    private val getAccountStateUC: GetAccountStateUC,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(

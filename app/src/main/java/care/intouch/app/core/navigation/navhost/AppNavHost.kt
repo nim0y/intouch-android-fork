@@ -12,11 +12,10 @@ import care.intouch.app.core.navigation.Home
 import care.intouch.app.core.navigation.PasswordChange
 import care.intouch.app.core.navigation.Plan
 import care.intouch.app.core.navigation.PlanBottomNav
-import care.intouch.app.core.navigation.PlanRouteBranch
 import care.intouch.app.core.navigation.Profile
 import care.intouch.app.core.navigation.ProfileRouteBranch
 import care.intouch.app.core.navigation.QuestionsRouteBranch
-import care.intouch.app.feature.diary.presentation.ui.DiaryNoteScreen
+import care.intouch.app.feature.diary.DiaryNoteScreen
 import care.intouch.app.feature.home.presentation.ui.HomeScreen
 import care.intouch.app.feature.plan.presentation.ui.PlanScreen
 import care.intouch.app.feature.profile.presentation.ui.profile.ui.ProfileScreen
