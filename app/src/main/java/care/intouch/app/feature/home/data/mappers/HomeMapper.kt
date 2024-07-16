@@ -108,7 +108,7 @@ class HomeMapper @Inject constructor() {
             StatusDto.TO_DO.status -> Status.TO_DO
             StatusDto.IN_PROGRESS.status -> Status.IN_PROGRESS
             StatusDto.DONE.status -> Status.DONE
-            else -> Status.TO_DO
+            else -> Status.UNKNOWN
         }
 
         return statusResult
