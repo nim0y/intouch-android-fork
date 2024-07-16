@@ -54,6 +54,7 @@ import care.intouch.uikit.ui.toggle.Toggle
 import coil.compose.AsyncImage
 import care.intouch.app.feature.questions.domain.models.BlockDescription
 import care.intouch.app.feature.questions.domain.models.TypeOfTitle
+import care.intouch.app.feature.questions.presentations.ui.models.QuestionEvent
 
 @Composable
 fun QuestionsScreen(
@@ -67,7 +68,7 @@ fun QuestionsScreen(
         onCloseClick = onCloseClick,
         onCompleteTaskClick = onCompleteTaskClick,
         onEvent = {
-            viewModel.onEvent()
+            viewModel.onEvent(it)
         },
         state = state
     )
@@ -78,7 +79,7 @@ fun QuestionsScreen(
 private fun QuestionsScreen(
     onCloseClick: () -> Unit,
     onCompleteTaskClick: () -> Unit,
-    onEvent: () -> Unit,
+    onEvent: (QuestionEvent) -> Unit,
     state: QuestionsState
 ) {
 
@@ -255,6 +256,7 @@ private fun QuestionsScreen(
             Spacer(modifier = Modifier.height(36.dp))
             IntouchButton(
                 onClick = {
+                    onEvent(QuestionEvent.OnCloseButton())
                     isShowCompleteTaskDialog = true
                 },
                 isEnabled = if (isShowCompleteTaskDialog) false else true,
@@ -276,10 +278,11 @@ private fun QuestionsScreen(
             content = {
                 PopupQuestions(
                     inTouchButtonClick = {
-
+                        onEvent(QuestionEvent.OnCloseButton())
                     },
                     secondaryButtonClick = {
                         isShowClosingDialog = !isShowClosingDialog
+                        onEvent(QuestionEvent.OnCloseButton())
                     },
                     firstLineText = StringVO.Resource(R.string.questions_popap_closing_task_first_line),
                     secondLineText = StringVO.Resource(R.string.questions_popup_closing_task_second_line),

@@ -6,6 +6,7 @@ import care.intouch.app.feature.questions.domain.models.Assignments
 import care.intouch.app.feature.questions.domain.models.AssignmentsBlock
 import care.intouch.app.feature.questions.domain.models.TypeOfBlocks
 import care.intouch.app.feature.questions.domain.useCase.GetAssignmentsUseCase
+import care.intouch.app.feature.questions.presentations.ui.models.QuestionEvent
 import care.intouch.app.feature.questions.presentations.ui.models.QuestionsBlock
 import care.intouch.app.feature.questions.presentations.ui.models.QuestionsState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,8 +37,12 @@ class QuestionsViewModel @Inject constructor(
         }
     }
 
-    fun onEvent() {
-        TODO()
+    fun onEvent(event: QuestionEvent) {
+        when(event) {
+            is QuestionEvent.OnCloseButton -> {
+
+            }
+        }
     }
 
     private fun addBlocksInState(blocks: List<AssignmentsBlock>) {  //конвертирую блоки с сервера в блоки для стейта и выставляю на доп поля значения по хардкоду
@@ -60,6 +65,11 @@ class QuestionsViewModel @Inject constructor(
                     blockIsValid = true     // ставлю true  чтоб поле не отрисовывалось красным при изначальной отрисовке экрана
                 )                           // blockIsValid будет проверяться только при нажатии кнопки на отправку.
                 // Вот функция для этого checkTheValidityOfBlocks()
+            )
+        }
+        _state.update {     // обновляем стейт
+            _state.value.copy(
+                blocks = result
             )
         }
     }
