@@ -1,4 +1,4 @@
-package care.intouch.app.feature.profile.presentation.ui.profile
+package care.intouch.app.feature.profile.presentation.ui.profile.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,9 +26,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import care.intouch.app.feature.profile.presentation.ui.profile.models.ChangeProfileDataEvent
-import care.intouch.app.feature.profile.presentation.ui.profile.models.ProfileDataState
-import care.intouch.app.feature.profile.presentation.ui.profile.models.ProfileInformationData
+import care.intouch.app.feature.profile.presentation.ui.profile.models.ProfileDataEvent
 import care.intouch.app.feature.profile.presentation.ui.profile.models.ProfileState
 import care.intouch.app.feature.profile.presentation.ui.profile.models.ViewsComponentsState
 import care.intouch.uikit.R
@@ -38,7 +36,7 @@ import care.intouch.uikit.ui.buttons.PrimaryButtonWhite
 import care.intouch.uikit.ui.profile.PersonalData
 import care.intouch.uikit.ui.profile.ProfileButton
 import care.intouch.uikit.ui.profile.RowWithMessage
-import care.intouch.uikit.ui.profile.TopPanel
+import care.intouch.uikit.ui.profile.TopPanelWithoutArrow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -46,12 +44,15 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     onSecurityClick: () -> Unit,
     onChangePinCode: () -> Unit,
+    onSingOut: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+
     ProfileScreen(
         onSecurityClick = onSecurityClick,
         onChangePinCode = onChangePinCode,
+        onSingOut = onSingOut,
         onEvent = { viewModel.onEvent(it) },
         state = state
     )
@@ -61,7 +62,8 @@ fun ProfileScreen(
 private fun ProfileScreen(
     onSecurityClick: () -> Unit,
     onChangePinCode: () -> Unit,
-    onEvent: (ChangeProfileDataEvent) -> Unit,
+    onSingOut: () -> Unit,
+    onEvent: (ProfileDataEvent) -> Unit,
     state: ProfileState
 ) {
     val scope = rememberCoroutineScope()
@@ -82,19 +84,19 @@ private fun ProfileScreen(
 
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.height(66.dp))
-            TopPanel(text = StringVO.Resource(resId = care.intouch.app.R.string.profile_title))
+            TopPanelWithoutArrow(text = StringVO.Resource(resId = care.intouch.app.R.string.profile_title))
             Spacer(modifier = Modifier.height(104.dp))
             PersonalData(
                 naming = StringVO.Resource(resId = care.intouch.app.R.string.name_info_profile),
-                value = state.profileDataState.name.data.value(),
-                textFieldEnabled = state.viewsComponentsState.nameTextFieldEnabled,
+                value = state.name.value(),
+                textFieldEnabled = state.nameTextFieldEnabled,
                 modifier = Modifier.padding(horizontal = 32.dp),
                 onValueChange = {
-                    onEvent(ChangeProfileDataEvent.OnChangeName(name = it))
+                    onEvent(ProfileDataEvent.OnName(name = it))
                 },
                 onIconClick = {
-                    if (state.profileDataState.dataIsValid) {
-                        onEvent(ChangeProfileDataEvent.OnEditNameButtonClick())
+                    if (state.dataIsValid) {
+                        onEvent(ProfileDataEvent.OnEditNameButtonClick())
                         scope.launch {
                             delay(200)  // the delay of 0,2 seconds
                             nameFocusRequester.requestFocus()
@@ -102,20 +104,20 @@ private fun ProfileScreen(
                     }
                 },
                 focusRequester = nameFocusRequester,
-                buttonEnabled = state.viewsComponentsState.nameButtonEnabled,
+                buttonEnabled = state.nameButtonEnabled,
             )
             Spacer(modifier = Modifier.height(16.dp))
             PersonalData(
                 naming = StringVO.Resource(resId = care.intouch.app.R.string.last_name_info_profile),
-                value = state.profileDataState.lastName.data.value(),
-                textFieldEnabled = state.viewsComponentsState.lastNameTextFieldEnabled,
+                value = state.lastName.value(),
+                textFieldEnabled = state.lastNameTextFieldEnabled,
                 modifier = Modifier.padding(horizontal = 32.dp),
                 onValueChange = {
-                    onEvent(ChangeProfileDataEvent.OnChangeLastName(lastName = it))
+                    onEvent(ProfileDataEvent.OnLastName(lastName = it))
                 },
                 onIconClick = {
-                    if (state.profileDataState.dataIsValid) {
-                        onEvent(ChangeProfileDataEvent.OnEditLastNameButtonClick())
+                    if (state.dataIsValid) {
+                        onEvent(ProfileDataEvent.OnEditLastNameButtonClick())
                         scope.launch {
                             delay(200)  // the delay of 0,2 seconds
                             lastNameFocusRequester.requestFocus()
@@ -123,20 +125,20 @@ private fun ProfileScreen(
                     }
                 },
                 focusRequester = lastNameFocusRequester,
-                buttonEnabled = state.viewsComponentsState.lastNameButtonEnabled,
+                buttonEnabled = state.lastNameButtonEnabled,
             )
             Spacer(modifier = Modifier.height(16.dp))
             PersonalData(
                 naming = StringVO.Resource(resId = care.intouch.app.R.string.email_info_profile),
-                value = state.profileDataState.email.data.value(),
-                textFieldEnabled = state.viewsComponentsState.emailTextFieldEnabled,
+                value = state.email.value(),
+                textFieldEnabled = state.emailTextFieldEnabled,
                 modifier = Modifier.padding(horizontal = 32.dp),
                 onValueChange = {
-                    onEvent(ChangeProfileDataEvent.OnChangeEmail(email = it))
+                    onEvent(ProfileDataEvent.OnEmail(email = it))
                 },
                 onIconClick = {
-                    if (state.profileDataState.dataIsValid) {
-                        onEvent(ChangeProfileDataEvent.OnEditEmailButtonClick())
+                    if (state.dataIsValid) {
+                        onEvent(ProfileDataEvent.OnEditEmailButtonClick())
                         scope.launch {
                             delay(200)  // the delay of 0,2 seconds
                             emailFocusRequester.requestFocus()
@@ -144,34 +146,44 @@ private fun ProfileScreen(
                     }
                 },
                 focusRequester = emailFocusRequester,
-                buttonEnabled = state.viewsComponentsState.emailButtonEnabled,
+                buttonEnabled = state.emailButtonEnabled,
             )
-            if (state.profileDataState.dataIsValid) {  // Show or not a message about date incorrectness
+            if (state.dataIsValid) {  // Show or not a message about data incorrectness
                 Spacer(modifier = Modifier.height(22.dp))
             } else {
                 Spacer(modifier = Modifier.height(16.dp))
                 RowWithMessage(
-                    successOrError = state.profileDataState.dataIsValid,
-                    messageText = state.profileDataState.errorMessage,
+                    textIsGreenOrRed = false,
+                    messageText = state.dataIsNotValidMessage,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            if (state.viewsComponentsState.informationIsUpdate) {    // Show message "Information successfully updated"
+            if (state.nameResponseHasBeenReceived) {  // Show message about name request result
                 RowWithMessage(
-                    successOrError = state.profileDataState.dataIsValid,
-                    messageText = state.profileDataState.successMessage,
+                    textIsGreenOrRed = state.nameResponseIsSuccess,
+                    messageText = state.resultMessageOfChangeNameRequest,
                 )
+            }
+            if (state.emailResponseIsSuccess) {  // Show message about email request result
+                if (state.nameResponseHasBeenReceived){
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                RowWithMessage(
+                    textIsGreenOrRed = state.emailColorMessageIsGreenOrRed,
+                    messageText = state.resultMessageOfChangeEmailRequest,
+                )
+            }
+            if (state.nameResponseHasBeenReceived || state.emailResponseIsSuccess || !state.dataIsValid) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            if (state.viewsComponentsState.saveChangesButtonVisibility) {
+            if (state.saveChangesButtonVisibility) {
                 IntouchButton(
-                    text = StringVO.Resource(resId = care.intouch.app.R.string.save_changes_button),  //save_changes_button
+                    text = StringVO.Resource(resId = care.intouch.app.R.string.save_changes_button),
                     onClick = {
-                        onEvent(ChangeProfileDataEvent.OnSaveChangesButtonClick())
+                        onEvent(ProfileDataEvent.OnSaveChangesButtonClick())
                     },
-                    isEnabled = state.profileDataState.dataIsValid,
+                    isEnabled = state.dataIsValid,
                     contentPadding = PaddingValues(horizontal = 72.dp, vertical = 16.dp),
                     modifier = Modifier.align(CenterHorizontally),
                 )
@@ -208,10 +220,13 @@ private fun ProfileScreen(
         }
         PrimaryButtonWhite(
             text = StringVO.Resource(resId = care.intouch.app.R.string.sign_out_button),
-            onClick = {},
+            onClick = {
+                onEvent(ProfileDataEvent.OnSingOutButtonClick())
+                onSingOut.invoke()
+            },
             modifier = Modifier
                 .align(BottomCenter)
-                .padding(bottom = 96.dp)
+                .padding(bottom = 40.dp)
         )
     }
 }
@@ -219,20 +234,26 @@ private fun ProfileScreen(
 @Composable
 @Preview(showBackground = true)
 fun ProfileScreenPreview() {
-    val profileData = ProfileDataState(
+    val profileData = ProfileState(
         dataIsValid = true,
-        name = ProfileInformationData(StringVO.Plain("MyName"), true),
-        lastName = ProfileInformationData(StringVO.Plain("MyLastName"), true),
-        email = ProfileInformationData(StringVO.Plain("gogo@gmail.com"), true),
-        errorMessage = StringVO.Plain(""),
-        successMessage = StringVO.Resource(care.intouch.app.R.string.info_about_change_profile_data)
+        name = StringVO.Plain("MyName"),
+        nameIsValid = true,
+        lastName = StringVO.Plain("MyLastName"),
+        lastNameIsValid = true,
+        email = StringVO.Plain("gogo@gmail.com"),
+        emailIsValid = true,
+        resultMessageOfChangeEmailRequest = StringVO.Resource(care.intouch.app.R.string.info_about_change_profile_data),
+        emailColorMessageIsGreenOrRed = false,
+        emailResponseIsSuccess = true,
+        saveChangesButtonVisibility = true
     )
-    val state = ProfileState(profileData, ViewsComponentsState())
+    val state = profileData
 
     InTouchTheme {
         ProfileScreen(
             onSecurityClick = {},
             onChangePinCode = {},
+            onSingOut = {},
             onEvent = {},
             state = state
         )

@@ -1,4 +1,4 @@
-package care.intouch.app.feature.diary.presentation.ui
+package care.intouch.app.feature.diary
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

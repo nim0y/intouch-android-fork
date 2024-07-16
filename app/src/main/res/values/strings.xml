@@ -107,7 +107,7 @@
     <string name="password_not_match_error">Passwords don\'t match</string>
     <string name="password_not_match_try_again_error">Passwords don\'t match. Please try again</string>
     <string name="password_update_error">Password update failed. Please try again later</string>
-    <string name="problem_with_connection">Unable to establish a connection. Please check your internet connection and try again</string>
+    <string name="problem_with_connection">Unable to establish a connection.\n Please check your internet connection and try again</string>
     <string name="email_not_valid_error">Not a valid e-mail address.</string>
     <string name="profile_invalid_char_error">Invalid characters. Only letters, spaces,\nand periods are allowed.</string>
     <string name="profile_small_name_error">Please enter a name with at least 2 characters.</string>
@@ -132,9 +132,9 @@
     <string name="thoughts_sub_title_emotional">Thoughts Analysis</string>
     <string name="emotional_type_sub_title_emotional">Emotional Type</string>
     <string name="sensations_sub_title_emotional">Physical Sensations</string>
-    <string name="event_desc_emotional">Describe the event or situaton. What happened?</string>
+    <string name="event_desc_emotional">Describe the event or situation.\nWhat happened?</string>
     <string name="thoughts_desc_emotional">Reflect on your thoughts related to the situation. What were you thinking?</string>
-    <string name="emotional_type_desc_emotional">How are you feeling? Describe your emotions or choose from our prompt.</string>
+    <string name="emotional_type_desc_emotional">How are you feeling? Describe your emotions\nor choose from our prompt.</string>
     <string name="sensations_desc_emotional">Describe any physical sensations or changes you noticed in your body. For example, tension, butterflies, etc.</string>
 
 
