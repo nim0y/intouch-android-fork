@@ -39,11 +39,13 @@ class QuestionsViewModel @Inject constructor(
 
     fun onEvent(event: QuestionEvent) {
         when(event) {
-            is QuestionEvent.OnCloseButton -> {
-
+            is QuestionEvent.OnBlockChange -> {
+                updateState(event)
             }
         }
     }
+
+
 
     private fun addBlocksInState(blocks: List<AssignmentsBlock>) {  //конвертирую блоки с сервера в блоки для стейта и выставляю на доп поля значения по хардкоду
         val result: MutableList<QuestionsBlock> = mutableListOf()
@@ -112,6 +114,55 @@ class QuestionsViewModel @Inject constructor(
                 else -> {       // Сюда идут TypeOfBlocks.UNDEFINED, TypeOfBlocks.IMAGE, TypeOfBlocks.RANGE, TypeOfBlocks.TEXT
                     result.add(it)
                 }
+            }
+        }
+        _state.update {     // обновляем стейт
+            _state.value.copy(
+                blocks = result
+            )
+        }
+    }
+
+    private fun updateState(event: QuestionEvent.OnBlockChange) {       // Поганое решение, но пока самое простое что в голову пришло
+        val result: MutableList<QuestionsBlock> = mutableListOf()
+        when(event.type) {
+            TypeOfBlocks.OPEN -> {
+                _state.value.blocks.forEach {
+                    if(it.id == event.id){
+                        result.add(it.copy(
+                            reply = event.reply!!
+                        ))
+                    } else {
+                        result.add(it)
+                    }
+                }
+            }
+
+            TypeOfBlocks.SINGLE, TypeOfBlocks.MULTIPLE -> {
+                _state.value.blocks.forEach {
+                    if(it.id == event.id){
+                        result.add(it.copy(
+                            choiceReplies = event.choiceReplies!!
+                        ))
+                    } else {
+                        result.add(it)
+                    }
+                }
+            }
+            TypeOfBlocks.RANGE -> {
+                _state.value.blocks.forEach {
+                    if(it.id == event.id){
+                        result.add(it.copy(
+                            selectedValue = event.selectedValue!!
+                        ))
+                    } else {
+                        result.add(it)
+                    }
+                }
+            }
+
+            else ->{
+
             }
         }
         _state.update {     // обновляем стейт

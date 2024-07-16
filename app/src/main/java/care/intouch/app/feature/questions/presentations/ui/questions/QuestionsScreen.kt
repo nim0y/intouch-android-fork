@@ -83,7 +83,7 @@ private fun QuestionsScreen(
     state: QuestionsState
 ) {
 
-    var answerText by remember { mutableStateOf("") }
+    //var answerText by remember { mutableStateOf("") }
     val systemKeyboardController = LocalSoftwareKeyboardController.current
     var isCheckedToggle by remember {
         mutableStateOf(false)
@@ -131,13 +131,17 @@ private fun QuestionsScreen(
                        MultilineTextField(
                            subtitleText = StringVO.Plain(block.question),
                            captionText = StringVO.Resource(R.string.inscribe_motivates_question),
-                           value = answerText,
+                           value = block.reply,
                            modifier = Modifier.fillMaxWidth(),
                            hint = StringVO.Resource(R.string.write_your_answer_here),
                            onValueChange = {
-                               answerText = it
+                               onEvent(QuestionEvent.OnBlockChange(
+                                   id = block.id,
+                                   reply = it,
+                                   type = TypeOfBlocks.OPEN,
+                               ))
                            },
-                           isError = if (isShowCompleteTaskDialog && answerText.isBlank()) true else false,
+                           isError = if (isShowCompleteTaskDialog && block.reply.isBlank()) true else false,
                            enabled = true,
                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                            keyboardActions = KeyboardActions(onDone = {
@@ -256,7 +260,6 @@ private fun QuestionsScreen(
             Spacer(modifier = Modifier.height(36.dp))
             IntouchButton(
                 onClick = {
-                    onEvent(QuestionEvent.OnCloseButton())
                     isShowCompleteTaskDialog = true
                 },
                 isEnabled = if (isShowCompleteTaskDialog) false else true,
@@ -278,11 +281,9 @@ private fun QuestionsScreen(
             content = {
                 PopupQuestions(
                     inTouchButtonClick = {
-                        onEvent(QuestionEvent.OnCloseButton())
                     },
                     secondaryButtonClick = {
                         isShowClosingDialog = !isShowClosingDialog
-                        onEvent(QuestionEvent.OnCloseButton())
                     },
                     firstLineText = StringVO.Resource(R.string.questions_popap_closing_task_first_line),
                     secondLineText = StringVO.Resource(R.string.questions_popup_closing_task_second_line),
