@@ -6,13 +6,14 @@ import care.intouch.app.feature.home.presentation.models.UserInformation
 import javax.inject.Inject
 
 interface GetUserInformation {
-    fun execute(): UserInformation
+    suspend fun execute(): UserInformation
 
     class Base @Inject constructor(
         private val mapper: UserInformationMapper,
         private val repository: UserStorage
     ) : GetUserInformation {
-        override fun execute(): UserInformation {
+        override suspend fun execute(): UserInformation {
+
             val user = repository.read()
             return mapper.map(user = user)
         }

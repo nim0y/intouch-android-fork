@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.feature.profile.presentation.ui.profile.models.ProfileDataEvent
 import care.intouch.app.feature.profile.presentation.ui.profile.models.ProfileState
-import care.intouch.app.feature.profile.presentation.ui.profile.models.ViewsComponentsState
 import care.intouch.uikit.R
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.ui.buttons.IntouchButton

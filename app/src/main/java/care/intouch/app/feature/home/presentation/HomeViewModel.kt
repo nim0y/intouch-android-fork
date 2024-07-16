@@ -275,9 +275,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchUserInformation() {
-        val userInformation = getUserInformation.execute()
-        _stateScreen.update { state ->
-            state.copy(userInformation = userInformation)
+        viewModelScope.launch(Dispatchers.IO) {
+            val userInformation = getUserInformation.execute()
+            _stateScreen.update { state ->
+                state.copy(userInformation = userInformation)
+            }
         }
     }
 
