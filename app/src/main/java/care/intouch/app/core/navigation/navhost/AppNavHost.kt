@@ -48,6 +48,9 @@ fun AppNavHost(
             PlanScreen(
                 onTaskListItemClick = {
                     navController.navigate(route = QuestionsRouteBranch.route/*PlanRouteBranch.route*/)
+                },
+                onBackArrowClick = {
+                    navController.navigate(route = Home.route)
                 }
             )
         }

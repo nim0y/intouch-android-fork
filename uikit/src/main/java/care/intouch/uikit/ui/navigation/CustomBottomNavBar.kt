@@ -141,7 +141,7 @@ fun CustomBottomNavBar(
     onFocusTint: Color = InTouchTheme.colors.mainGreen,
     outFocusTint: Color = InTouchTheme.colors.mainGreen40,
     firstItemText: String = stringResource(id = R.string.bottom_nav_home),
-    secondItemText: String = stringResource(id = R.string.bottom_nav_my_plan),
+    secondItemText: String = stringResource(id = R.string.my_plan),
     thirdItemText: String = stringResource(id = R.string.bottom_nav_my_diary),
     fourthItemText: String = stringResource(id = R.string.bottom_nav_profile),
     firstItemImage: Painter = painterResource(id = R.drawable.icon_home),
