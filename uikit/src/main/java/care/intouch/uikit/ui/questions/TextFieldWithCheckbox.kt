@@ -31,18 +31,15 @@ import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults.TextPadding
 @Composable
 fun TextFieldWithCheckbox(
     modifier: Modifier = Modifier,
+    onClick: (Int) -> Unit,
     titleText: StringVO = StringVO.Plain(BLANC_STRING),
     subtitleText: StringVO = StringVO.Plain(BLANC_STRING),
     captionText: StringVO = StringVO.Plain(BLANC_STRING),
-    checkboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    secondCheckboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    thirdCheckboxText: StringVO = StringVO.Plain(BLANC_STRING),
-    fourthCheckboxText: StringVO = StringVO.Plain(BLANC_STRING),
     textPadding: Dp = TextPadding,
     backgroundColor: Color = InTouchTheme.colors.input85,
+    listOfChoiceReplise: MutableList<Pair<String, Int>> = mutableListOf()
 ) {
-    val items = listOf(checkboxText, secondCheckboxText, thirdCheckboxText, fourthCheckboxText)
-    val (selected, setSelected) = remember { mutableStateOf(items[0]) }
+    val (selected, setSelected) = remember { mutableStateOf(listOfChoiceReplise[0]) }
 
     Column(
         modifier = modifier.width(MultilineTextFieldDefaults.MinWidth)
@@ -98,14 +95,15 @@ fun TextFieldWithCheckbox(
                     .fillMaxWidth()
                     .selectableGroup()
             ) {
-                items.forEach { item ->
+                listOfChoiceReplise.forEach { item ->
                     Spacer(modifier = Modifier.height(10.dp))
                     Checkbox(
                         isChecked = selected == item,
-                        text = item.value(),
+                        text = item.first,
                         modifier = Modifier.padding(start = 24.dp, end = 22.dp),
                         onClick = {
                             setSelected(item)
+                            onClick(item.second)
                         }
                     )
                 }
@@ -118,16 +116,18 @@ fun TextFieldWithCheckbox(
 @Preview(showBackground = true)
 @Composable
 fun TextFieldWithCheckboxPreview() {
+    val items = mutableListOf(
+        Pair("Первый", 1),
+        Pair("Второй", 2),
+        Pair("Третий", 3))
     InTouchTheme {
         TextFieldWithCheckbox(
             titleText = StringVO.Plain("Title small "),
             subtitleText = StringVO.Plain("Body semi bold "),
             captionText = StringVO.Plain("Caption "),
-            checkboxText = StringVO.Plain("First variant"),
-            secondCheckboxText = StringVO.Plain("Second variant"),
-            thirdCheckboxText = StringVO.Plain("Third variant"),
-            fourthCheckboxText = StringVO.Plain("Fourth variant"),
-            modifier = Modifier.padding(45.dp)
+            modifier = Modifier.padding(45.dp),
+            listOfChoiceReplise = items,
+            onClick = {}
         )
     }
 }

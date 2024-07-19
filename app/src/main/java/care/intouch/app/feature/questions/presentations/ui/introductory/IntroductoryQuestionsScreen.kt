@@ -1,7 +1,5 @@
 package care.intouch.app.feature.questions.presentations.ui.introductory
 
-import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,8 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,10 +28,10 @@ import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
 import care.intouch.uikit.ui.buttons.IntouchButton
 import care.intouch.uikit.ui.questions.TopPanel
+import coil.compose.AsyncImage
 
 @Composable
 fun IntroductoryQuestionsScreen(
-    itemId: Int?,
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     viewModel: IntroductoryViewModel = hiltViewModel()
@@ -72,11 +68,11 @@ private fun IntroductoryQuestionsScreen(
             TopPanel(
                 backButtonClick = {
                     onBackClick.invoke() },
-                text = StringVO.Resource(resId = R.string.name_task_mock)
+                text = StringVO.Plain(state.assignmentTitle)
             )
             Spacer(modifier = Modifier.height(51.dp))
             Text(
-                text = StringVO.Resource(resId = R.string.description_task_mock).value(),
+                text = StringVO.Plain(state.assignmentDescription).value(),
                 modifier = Modifier.padding(horizontal = 28.dp),
                 color = InTouchTheme.colors.textBlue,
                 style = InTouchTheme.typography.bodySemibold
@@ -87,10 +83,10 @@ private fun IntroductoryQuestionsScreen(
                 .padding(horizontal = 28.dp)
                 .clip(RoundedCornerShape(8.dp))
             ) {
-                Image(
-                    painter = painterResource(id = care.intouch.uikit.R.drawable.task_image_mock),
+                AsyncImage(
+                    model = state.assignmentImageUrl,
                     contentDescription = "task image on introductory questions screen",
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -110,7 +106,7 @@ private fun IntroductoryQuestionsScreen(
 @Preview(showBackground = true)
 @Composable
 fun IntroductoryQuestionsScreenPreview() {
-    val state = IntroductoryState("")
+    val state = IntroductoryState("","","")
     InTouchTheme {
         IntroductoryQuestionsScreen(
             onBackClick = {},

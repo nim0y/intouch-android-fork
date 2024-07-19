@@ -3,7 +3,6 @@ package care.intouch.app.feature.questions.presentations.ui.questions
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,9 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -39,6 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import care.intouch.app.R
+import care.intouch.app.feature.questions.domain.models.AssignmentsChoiceReplies
+import care.intouch.app.feature.questions.domain.models.BlockDescription
+import care.intouch.app.feature.questions.domain.models.TypeOfBlocks
+import care.intouch.app.feature.questions.domain.models.TypeOfTitle
+import care.intouch.app.feature.questions.presentations.ui.models.QuestionEvent
+import care.intouch.app.feature.questions.presentations.ui.models.QuestionsBlock
 import care.intouch.app.feature.questions.presentations.ui.models.QuestionsState
 import care.intouch.uikit.common.StringVO
 import care.intouch.uikit.theme.InTouchTheme
@@ -51,6 +53,7 @@ import care.intouch.uikit.ui.questions.TextFieldWithCheckmars
 import care.intouch.uikit.ui.questions.TextFieldWithSliderAndDigits
 import care.intouch.uikit.ui.textFields.MultilineTextField
 import care.intouch.uikit.ui.toggle.Toggle
+import coil.compose.AsyncImage
 
 @Composable
 fun QuestionsScreen(
@@ -64,47 +67,34 @@ fun QuestionsScreen(
         onCloseClick = onCloseClick,
         onCompleteTaskClick = onCompleteTaskClick,
         onEvent = {
-            viewModel.onEvent()
+            viewModel.onEvent(it)
         },
         state = state
     )
-
 }
 
 @Composable
 private fun QuestionsScreen(
     onCloseClick: () -> Unit,
     onCompleteTaskClick: () -> Unit,
-    onEvent: () -> Unit,
+    onEvent: (QuestionEvent) -> Unit,
     state: QuestionsState
 ) {
 
-    var answerText by remember { mutableStateOf("") }
     val systemKeyboardController = LocalSoftwareKeyboardController.current
-    var isCheckedToggle by remember {
-        mutableStateOf(false)
-    }
-    var isShowClosingDialog by remember {
-        mutableStateOf(false)
-    }
-    var isShowCompleteTaskDialog by remember {
-        mutableStateOf(false)
-    }
-    var currentSliderPosition by remember {
-        mutableStateOf(0)
-    }
+
     Box(
         modifier = Modifier
             .background(InTouchTheme.colors.mainBlue)
             .verticalScroll(rememberScrollState())
             .clickable {
                 systemKeyboardController?.hide()
-                isShowClosingDialog = false
-                isShowCompleteTaskDialog = false
+                onEvent(QuestionEvent.OnShowClosingDialog(false))
+                onEvent(QuestionEvent.OnShowCompleteTaskDialog(false))
             }
-            .alpha(if (isShowClosingDialog) 0.2f else 1f)
+            .alpha(if (state.isShowClosingDialog || state.isShowCompleteTaskDialog) 0.2f else 1f)
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 28.dp),
@@ -113,90 +103,174 @@ private fun QuestionsScreen(
             Spacer(modifier = Modifier.height(8.dp))
             TopBarArcButton(
                 onClick = {
-                    isShowClosingDialog = true
+                    onEvent(QuestionEvent.OnShowClosingDialog(true))
                 },
                 enabled = true,
                 modifier = Modifier.align(Alignment.End)
             )
             Spacer(modifier = Modifier.height(48.dp))
-            MultilineTextField(
-                subtitleText = StringVO.Resource(R.string.motivates_question),
-                captionText = StringVO.Resource(R.string.inscribe_motivates_question),
-                value = answerText,
-                modifier = Modifier.fillMaxWidth(),
-                hint = StringVO.Resource(R.string.write_your_answer_here),
-                onValueChange = {
-                    answerText = it
-                },
-                isError = if (isShowCompleteTaskDialog && answerText.isBlank()) true else false,
-                enabled = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    systemKeyboardController?.hide()
-                })
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-            TextFieldWithCheckbox(
-                modifier = Modifier.fillMaxWidth(),
-                subtitleText = StringVO.Resource(R.string.skills_question),
-                checkboxText = StringVO.Resource(R.string.skills_leadership_answer),
-                secondCheckboxText = StringVO.Resource(R.string.skills_communication_answer),
-                thirdCheckboxText = StringVO.Resource(R.string.skills_problem_solving_answer),
-                fourthCheckboxText = StringVO.Resource(R.string.skills_technical_expertise_answer)
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-            TextFieldWithCheckmars(
-                modifier = Modifier.fillMaxWidth(),
-                subtitleText = StringVO.Resource(R.string.professional_development_question),
-                captionText = StringVO.Resource(R.string.inscribe_professional_development_question),
-                checkmarkText = StringVO.Resource(R.string.professional_development_attending_workshops_or_conferences_answer),
-                secondCheckmarkText = StringVO.Resource(R.string.professional_development_pursuing_further_education_or_certifications),
-                thirdCheckmarkText = StringVO.Resource(R.string.professional_development_participating_in_mentorship_programs),
-                fourthCheckmarkText = StringVO.Resource(R.string.professional_development_joining_industry_related_associations)
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-            TextFieldWithSliderAndDigits(
-                subtitleText = StringVO.Resource(R.string.scale_questions),
-                modifier = Modifier.fillMaxWidth(),
-                onValueChange = { value ->
-                    currentSliderPosition = value
-                },
-                isError = if (currentSliderPosition == 0 && isShowCompleteTaskDialog) true else false
-            )
-            Spacer(modifier = Modifier.height(40.dp))
-            TextFieldQuestion(
-                modifier = Modifier.fillMaxWidth(),
-                isError = false,
-                enabled = true,
-                topTitleText = StringVO.Resource(R.string.navigating_professional_development),
-                topSubtitleText = StringVO.Resource(R.string.skills_survey),
-                topCaptionText = StringVO.Resource(R.string.skills_survey_discription),
-                bottomSubtitleText = StringVO.Resource(R.string.professional_development_snapshot),
-                bottomCaptionText = StringVO.Resource(R.string.professional_development_snapshot_description)
-                )
-            Spacer(modifier = Modifier.height(40.dp))
-            Box(modifier = Modifier
-                .background(color = InTouchTheme.colors.input85, shape = RoundedCornerShape(8.dp))
-                .fillMaxWidth()
-            ) {
-                Column (modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 14.dp, bottom = 20.dp)) {
-                    Text(
-                        text = StringVO.Resource(R.string.dunning_kruger_effect).value(),
-                        style = InTouchTheme.typography.caption1Bold,
-                        color = InTouchTheme.colors.textGreen
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Image(
-                        painter = painterResource(id = care.intouch.uikit.R.drawable.dunning_kruger_effect_image),
-                        contentDescription = "task image on introductory questions screen",
-                        contentScale = ContentScale.Fit
-                    )
+
+            state.blocks.forEachIndexed { index, block ->
+                when (block.type) {
+                    TypeOfBlocks.OPEN -> {
+                        MultilineTextField(
+                            subtitleText = StringVO.Plain(block.question),
+                            captionText = StringVO.Resource(R.string.inscribe_motivates_question),
+                            value = block.reply,
+                            modifier = Modifier.fillMaxWidth(),
+                            hint = StringVO.Resource(R.string.write_your_answer_here),
+                            onValueChange = {
+                                onEvent(
+                                    QuestionEvent.OnBlockChange(
+                                        id = block.id,
+                                        reply = it,
+                                        type = TypeOfBlocks.OPEN,
+                                    )
+                                )
+                            },
+                            isError = block.answerNotSpecified,
+                            enabled = true,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = {
+                                systemKeyboardController?.hide()
+                            })
+                        )
+
+                        Spacer(modifier = Modifier.height(if (state.blocks.size - 1 == index) 34.dp else 40.dp))
+                    }
+
+                    TypeOfBlocks.SINGLE -> {
+                        val replyTextList: MutableList<Pair<String, Int>> = mutableListOf()
+                        block.choiceReplies?.forEach {
+                            replyTextList.add(Pair(it.reply, it.id))
+                        }
+                        TextFieldWithCheckbox(
+                            modifier = Modifier.fillMaxWidth(),
+                            subtitleText = StringVO.Plain(block.question),
+                            listOfChoiceReplise = replyTextList,
+                            onClick = {
+                                val choiceRepliesList =
+                                    updateSingleChoiceReplies(block.choiceReplies!!, it)
+                                onEvent(
+                                    QuestionEvent.OnBlockChange(
+                                        id = block.id,
+                                        choiceReplies = choiceRepliesList,
+                                        type = TypeOfBlocks.SINGLE,
+                                    )
+                                )
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(if (state.blocks.size - 1 == index) 34.dp else 40.dp))
+                    }
+
+                    TypeOfBlocks.MULTIPLE -> {
+                        val replyTextList: MutableList<Pair<String, Int>> = mutableListOf()
+                        block.choiceReplies?.forEach {
+                            replyTextList.add(Pair(it.reply, it.id))
+                        }
+                        TextFieldWithCheckmars(
+                            modifier = Modifier.fillMaxWidth(),
+                            subtitleText = StringVO.Plain(block.question),
+                            captionText = StringVO.Resource(R.string.inscribe_professional_development_question),
+                            listOfChoiceReplise = replyTextList,
+                            onClick = {
+                                val choiceRepliesList =
+                                    updateMultipleChoiceReplies(block.choiceReplies!!, it)
+                                onEvent(
+                                    QuestionEvent.OnBlockChange(
+                                        id = block.id,
+                                        choiceReplies = choiceRepliesList,
+                                        type = TypeOfBlocks.SINGLE,
+                                    )
+                                )
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(if (state.blocks.size - 1 == index) 34.dp else 40.dp))
+                    }
+
+                    TypeOfBlocks.RANGE -> {
+                        TextFieldWithSliderAndDigits(
+                            subtitleText = StringVO.Plain(block.question),
+                            modifier = Modifier.fillMaxWidth(),
+                            onValueChange = {
+                                onEvent(
+                                    QuestionEvent.OnBlockChange(
+                                        id = block.id,
+                                        selectedValue = it,
+                                        type = TypeOfBlocks.RANGE,
+                                    )
+                                )
+                            },
+                            isError = block.answerNotSpecified,
+                            leftEvaluateText = StringVO.Plain(block.leftPole),
+                            rightEvaluateText = StringVO.Plain(block.rightPole)
+                        )
+                        Spacer(modifier = Modifier.height(if (state.blocks.size - 1 == index) 34.dp else 40.dp))
+                    }
+
+                    TypeOfBlocks.TEXT -> {
+                        val itemsOfDescriptionBlock: MutableList<Pair<String, String>> =
+                            mutableListOf()
+                        block.description.forEach { itemOfBlockDescription ->
+                            itemsOfDescriptionBlock.add(
+                                Pair(
+                                    when (itemOfBlockDescription.type) {
+                                        TypeOfTitle.UNSTYLED -> "unstyled"
+                                        TypeOfTitle.HEADER_ONE -> "header-one"
+                                        TypeOfTitle.HEADER_TWO -> "header-two"
+                                    },
+                                    itemOfBlockDescription.text
+                                )
+                            )
+                        }
+                        TextFieldQuestion(
+                            modifier = Modifier.fillMaxWidth(),
+                            isError = false,
+                            enabled = true,
+                            listOfBlockDescription = itemsOfDescriptionBlock
+                        )
+                        Spacer(modifier = Modifier.height(if (state.blocks.size - 1 == index) 34.dp else 40.dp))
+                    }
+
+                    TypeOfBlocks.IMAGE -> {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = InTouchTheme.colors.input85,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 14.dp, bottom = 20.dp)
+                            )
+                            {
+                                Text(
+                                    text = StringVO.Plain(block.question).value(),
+                                    style = InTouchTheme.typography.caption1Bold,
+                                    color = InTouchTheme.colors.textGreen
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                AsyncImage(
+                                    model = block.image,
+                                    contentDescription = "task image on questions screen",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize(),
+                                    placeholder = painterResource(id = care.intouch.uikit.R.drawable.dunning_kruger_effect_image)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(if (state.blocks.size - 1 == index) 34.dp else 40.dp))
+                    }
+
+                    else -> {
+
+                    }
                 }
             }
-            Spacer(modifier = Modifier.height(34.dp))
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -207,26 +281,26 @@ private fun QuestionsScreen(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Toggle(
-                    isChecked = isCheckedToggle,
+                    isChecked = state.isCheckedToggle,
                     onChange = {
-                        isCheckedToggle = !isCheckedToggle
+                        onEvent(QuestionEvent.OnCheckedToggle(!state.isCheckedToggle))
                     }
                 )
             }
             Spacer(modifier = Modifier.height(36.dp))
             IntouchButton(
                 onClick = {
-                    isShowCompleteTaskDialog = true
+                    onEvent(QuestionEvent.OnShowCompleteTaskDialog(true))
                 },
-                isEnabled = if (isShowCompleteTaskDialog) false else true,
+                isEnabled = if (state.isShowCompleteTaskDialog) false else true,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = StringVO.Resource(R.string.complete_task),
                 contentPadding = PaddingValues(horizontal = 51.dp, vertical = 13.dp)
             )
             Spacer(modifier = Modifier.height(40.dp))
         }
-        }
-    if (isShowClosingDialog) {
+    }
+    if (state.isShowClosingDialog) {
         Surface(
             modifier = Modifier
                 .padding(horizontal = 28.dp)
@@ -237,48 +311,135 @@ private fun QuestionsScreen(
             content = {
                 PopupQuestions(
                     inTouchButtonClick = {
-
                     },
                     secondaryButtonClick = {
-                        isShowClosingDialog = !isShowClosingDialog
+                        onEvent(QuestionEvent.OnShowClosingDialog(false))
                     },
                     firstLineText = StringVO.Resource(R.string.questions_popap_closing_task_first_line),
                     secondLineText = StringVO.Resource(R.string.questions_popup_closing_task_second_line),
                     intouchButtonText = StringVO.Resource(R.string.save_in_progress_button),
-                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button))
+                    secondaryButtonText = StringVO.Resource(R.string.discard_close_button)
+                )
             }
         )
     }
-    if (isShowCompleteTaskDialog) {
+    if (state.isShowCompleteTaskDialog) {
         Surface(
             modifier = Modifier
                 .padding(horizontal = 28.dp)
-                .wrapContentHeight(Alignment.Bottom)
+                .wrapContentHeight(Alignment.CenterVertically)
                 .alpha(1F)
-                .padding(bottom = 195.dp)
+                .padding(top = 100.dp)
                 .clip(RoundedCornerShape(20.dp)),
             content = {
                 Column {
                     PopupQuestions(
                         inTouchButtonClick = {
-                            isShowCompleteTaskDialog = !isShowCompleteTaskDialog
+                            onEvent(QuestionEvent.OnShowCompleteTaskDialog(false))
                         },
                         secondaryButtonClick = {
-
+                            onEvent(QuestionEvent.OnPatchBlocksAssignment())
                         },
                         firstLineText = StringVO.Resource(R.string.questions_popap_not_all_filled),
                         intouchButtonText = StringVO.Resource(R.string.back_button),
-                        secondaryButtonText = StringVO.Resource(R.string.complete_as_is_button))
+                        secondaryButtonText = StringVO.Resource(R.string.complete_as_is_button)
+                    )
                 }
-                }
+            }
         )
     }
+}
+
+private fun updateSingleChoiceReplies(
+    list: List<AssignmentsChoiceReplies>,
+    id: Int
+): List<AssignmentsChoiceReplies> {
+    val result: MutableList<AssignmentsChoiceReplies> = mutableListOf()
+    list.forEach {
+        if (it.id == id) {
+            result.add(
+                it.copy(
+                    checked = true
+                )
+            )
+        } else {
+            result.add(
+                it.copy(
+                    checked = false
+                )
+            )
+        }
+    }
+    return result
+}
+
+private fun updateMultipleChoiceReplies(
+    list: List<AssignmentsChoiceReplies>,
+    id: Int
+): List<AssignmentsChoiceReplies> {
+    val result: MutableList<AssignmentsChoiceReplies> = mutableListOf()
+    list.forEach {
+        if (it.id == id) {
+            result.add(
+                it.copy(
+                    checked = !it.checked
+                )
+            )
+        } else {
+            result.add(it)
+        }
+    }
+    return result
 }
 
 @Preview(showBackground = true, heightDp = 1960)
 @Composable
 fun QuestionsScreenPreview() {
-    val state = QuestionsState("")
+    val blocks: MutableList<QuestionsBlock> = mutableListOf(
+        QuestionsBlock(
+            id = 7,
+            choiceReplies = null,
+            leftPole = "",
+            rightPole = "",
+            image = null,
+            question = "Это текстовый блок (text)\n\nЭто заголовок 1\n\nЭто заголовок 2",
+            reply = "",
+            description = mutableListOf(
+                BlockDescription(
+                    type = TypeOfTitle.UNSTYLED,
+                    text = "Это текстовый блок (text)",
+                ),
+                BlockDescription(
+                    type = TypeOfTitle.UNSTYLED,
+                    text = "",
+                ),
+                BlockDescription(
+                    type = TypeOfTitle.HEADER_ONE,
+                    text = "Это заголовок 1",
+                ),
+                BlockDescription(
+                    type = TypeOfTitle.HEADER_ONE,
+                    text = "Это заголовок 1",
+                ),
+                BlockDescription(
+                    type = TypeOfTitle.HEADER_ONE,
+                    text = "",
+                ),
+                BlockDescription(
+                    type = TypeOfTitle.HEADER_TWO,
+                    text = "Это заголовок 2",
+                ),
+            ),
+            type = TypeOfBlocks.TEXT,
+            startRange = 1,
+            endRange = 10,
+            selectedValue = 1,
+            answerNotSpecified = true,
+        )
+    )
+    val state = QuestionsState(
+        blocks = blocks
+    )
     InTouchTheme {
         QuestionsScreen(
             onCloseClick = {},

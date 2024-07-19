@@ -1,6 +1,5 @@
 package care.intouch.uikit.ui.questions
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -30,21 +29,18 @@ import care.intouch.uikit.ui.textFields.MultilineTextFieldDefaults.BLANC_STRING
 @Composable
 fun TextFieldWithCheckmars(
     modifier: Modifier = Modifier,
+    onClick: (Int) -> Unit,
     titleText: StringVO = StringVO.Plain(BLANC_STRING),
     subtitleText: StringVO = StringVO.Plain(BLANC_STRING),
     captionText: StringVO = StringVO.Plain(BLANC_STRING),
-    checkmarkText: StringVO = StringVO.Plain(BLANC_STRING),
-    secondCheckmarkText: StringVO = StringVO.Plain(BLANC_STRING),
-    thirdCheckmarkText: StringVO = StringVO.Plain(BLANC_STRING),
-    fourthCheckmarkText: StringVO = StringVO.Plain(BLANC_STRING),
     backgroundColor: Color = InTouchTheme.colors.input85,
+    listOfChoiceReplise: MutableList<Pair<String, Int>> = mutableListOf()
 ) {
     Column(
         modifier = modifier.width(MultilineTextFieldDefaults.MinWidth)
     ) {
-        val items = listOf(checkmarkText, secondCheckmarkText, thirdCheckmarkText, fourthCheckmarkText)
         val selectedOptions = remember {
-            mutableStateOf(setOf<StringVO>())
+            mutableStateOf(setOf<String>())
         }
 
         if (titleText.value().isNotBlank()
@@ -97,23 +93,22 @@ fun TextFieldWithCheckmars(
                 modifier = Modifier.fillMaxWidth()
                     .selectableGroup()
             ) {
-                items.forEach { item ->
+                listOfChoiceReplise.forEach { item ->
                     Spacer(modifier = Modifier.height(10.dp))
                     CheckmarkWithText(
-                        isChecked = selectedOptions.value.contains(item),
-                        text = item.value(),
+                        isChecked = selectedOptions.value.contains(item.first),
+                        text = item.first,
                         modifier = Modifier.padding(start = 24.dp, end = 22.dp),
                         onChangeState = { selected ->
                             val currentSelected = selectedOptions.value.toMutableSet()
                             if (selected) {
-                                currentSelected.remove(item)
-                                Log.d("Test", "Произошел add в onChangeState")
+                                currentSelected.remove(item.first)
                             }
                             else {
-                                currentSelected.add(item)
-                                Log.d("Test", "Произошло удаление в onChangeState")
+                                currentSelected.add(item.first)
                             }
                             selectedOptions.value = currentSelected
+                            onClick(item.second)
                         }
                     )
                 }
@@ -127,16 +122,18 @@ fun TextFieldWithCheckmars(
 @Preview
 @Composable
 fun TextFieldWithCheckmarksPreview() {
+    val items = mutableListOf(
+        Pair("Первый", 1),
+        Pair("Второй", 2),
+        Pair("Третий", 3))
     InTouchTheme {
         TextFieldWithCheckmars(
             titleText = StringVO.Plain("Title small "),
             subtitleText = StringVO.Plain("Body semi bold "),
             captionText = StringVO.Plain("Caption "),
-            checkmarkText = StringVO.Plain("First variant"),
-            secondCheckmarkText = StringVO.Plain("Second variant"),
-            thirdCheckmarkText = StringVO.Plain("Third variant"),
-            fourthCheckmarkText = StringVO.Plain("Fourth variant"),
-            modifier = Modifier.padding(45.dp)
+            modifier = Modifier.padding(45.dp),
+            listOfChoiceReplise = items,
+            onClick = {}
         )
     }
 }
